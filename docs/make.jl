@@ -1,23 +1,25 @@
 using ThermoelasticAcoustic
 using Documenter
 
-DocMeta.setdocmeta!(ThermoelasticAcoustic, :DocTestSetup, :(using ThermoelasticAcoustic); recursive=true)
+DocMeta.setdocmeta!(
+    ThermoelasticAcoustic, :DocTestSetup, :(using ThermoelasticAcoustic); recursive = true)
 
 makedocs(;
-    modules=[ThermoelasticAcoustic],
-    authors="Bruno Alves do Carmo <bruno.carmo@ppgi.ufrj.br>",
-    sitename="ThermoelasticAcoustic.jl",
-    format=Documenter.HTML(;
-        canonical="https://bacarmo.github.io/ThermoelasticAcoustic.jl",
-        edit_link="main",
-        assets=String[],
+    modules = [ThermoelasticAcoustic],
+    authors = "Bruno Alves do Carmo <bruno.carmo@ppgi.ufrj.br>",
+    sitename = "ThermoelasticAcoustic.jl",
+    format = Documenter.HTML(;
+        canonical = "https://bacarmo.github.io/ThermoelasticAcoustic.jl",
+        edit_link = "main",
+        assets = String[]
     ),
-    pages=[
+    pages = [
         "Home" => "index.md",
-    ],
+        "api.md"
+    ]
 )
 
 deploydocs(;
-    repo="github.com/bacarmo/ThermoelasticAcoustic.jl",
-    devbranch="main",
+    repo = "github.com/bacarmo/ThermoelasticAcoustic.jl",
+    devbranch = "main"
 )

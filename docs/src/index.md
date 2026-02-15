@@ -2,13 +2,5 @@
 CurrentModule = ThermoelasticAcoustic
 ```
 
-# ThermoelasticAcoustic
-
-Documentation for [ThermoelasticAcoustic](https://github.com/bacarmo/ThermoelasticAcoustic.jl).
-
-```@index
-```
-
-```@autodocs
-Modules = [ThermoelasticAcoustic]
-```
+## Overview
+This package provides numerical solutions for a nonlinear thermoelastic system with acoustic boundary conditions.
