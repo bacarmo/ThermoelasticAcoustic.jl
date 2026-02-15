@@ -3,11 +3,8 @@ uuid = "bc13a611-4105-49a1-97a9-04cd0a26510a"
 authors = ["Bruno Alves do Carmo <bruno.carmo@ppgi.ufrj.br>"]
 version = "0.1.0"
 
+[workspace]
+projects = ["test", "docs"]
+
 [compat]
 julia = "1.12"
-
-[extras]
-Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-
-[targets]
-test = ["Test"]
