@@ -16,6 +16,7 @@ makedocs(;
     pages = [
         "Home" => "index.md",
         "Model" => "model.md",
+        "Approximation Problem" => "methods/crank_nicolson_galerkin.md",
         "API" => "api.md"
     ]
 )
