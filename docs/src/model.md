@@ -1,4 +1,3 @@
-# Model
 ## Strong Formulation
 We seek functions ``u``, ``\theta``, and ``z`` satisfying the following system of equations:
 ```math

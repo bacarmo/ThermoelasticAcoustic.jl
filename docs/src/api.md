@@ -1,5 +1,3 @@
-# API
-
 Documentation for [ThermoelasticAcoustic](https://github.com/bacarmo/ThermoelasticAcoustic.jl).
 
 ```@index
