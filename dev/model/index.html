@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Model · ThermoelasticAcoustic.jl</title><meta name="title" content="Model · ThermoelasticAcoustic.jl"/><meta property="og:title" content="Model · ThermoelasticAcoustic.jl"/><meta property="twitter:title" content="Model · ThermoelasticAcoustic.jl"/><meta name="description" content="Documentation for ThermoelasticAcoustic.jl."/><meta property="og:description" content="Documentation for ThermoelasticAcoustic.jl."/><meta property="twitter:description" content="Documentation for ThermoelasticAcoustic.jl."/><meta property="og:url" content="https://bacarmo.github.io/ThermoelasticAcoustic.jl/model/"/><meta property="twitter:url" content="https://bacarmo.github.io/ThermoelasticAcoustic.jl/model/"/><link rel="canonical" href="https://bacarmo.github.io/ThermoelasticAcoustic.jl/model/"/><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../search_index.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../">ThermoelasticAcoustic.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li class="is-active"><a class="tocitem" href>Model</a><ul class="internal"><li><a class="tocitem" href="#Strong-Formulation"><span>Strong Formulation</span></a></li></ul></li><li><a class="tocitem" href="../api/">API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Model</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Model</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/bacarmo/ThermoelasticAcoustic.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/bacarmo/ThermoelasticAcoustic.jl/blob/main/docs/src/model.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Model"><a class="docs-heading-anchor" href="#Model">Model</a><a id="Model-1"></a><a class="docs-heading-anchor-permalink" href="#Model" title="Permalink"></a></h1><h2 id="Strong-Formulation"><a class="docs-heading-anchor" href="#Strong-Formulation">Strong Formulation</a><a id="Strong-Formulation-1"></a><a class="docs-heading-anchor-permalink" href="#Strong-Formulation" title="Permalink"></a></h2><p>We seek functions <span>$u$</span>, <span>$\theta$</span>, and <span>$z$</span> satisfying the following system of equations:</p><p class="math-container">\[\begin{align*}
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Model · ThermoelasticAcoustic.jl</title><meta name="title" content="Model · ThermoelasticAcoustic.jl"/><meta property="og:title" content="Model · ThermoelasticAcoustic.jl"/><meta property="twitter:title" content="Model · ThermoelasticAcoustic.jl"/><meta name="description" content="Documentation for ThermoelasticAcoustic.jl."/><meta property="og:description" content="Documentation for ThermoelasticAcoustic.jl."/><meta property="twitter:description" content="Documentation for ThermoelasticAcoustic.jl."/><meta property="og:url" content="https://bacarmo.github.io/ThermoelasticAcoustic.jl/model/"/><meta property="twitter:url" content="https://bacarmo.github.io/ThermoelasticAcoustic.jl/model/"/><link rel="canonical" href="https://bacarmo.github.io/ThermoelasticAcoustic.jl/model/"/><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../search_index.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../">ThermoelasticAcoustic.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li class="is-active"><a class="tocitem" href>Model</a><ul class="internal"><li><a class="tocitem" href="#Strong-Formulation"><span>Strong Formulation</span></a></li><li><a class="tocitem" href="#Weak-Formulation"><span>Weak Formulation</span></a></li></ul></li><li><a class="tocitem" href="../api/">API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Model</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Model</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/bacarmo/ThermoelasticAcoustic.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/bacarmo/ThermoelasticAcoustic.jl/blob/main/docs/src/model.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h2 id="Strong-Formulation"><a class="docs-heading-anchor" href="#Strong-Formulation">Strong Formulation</a><a id="Strong-Formulation-1"></a><a class="docs-heading-anchor-permalink" href="#Strong-Formulation" title="Permalink"></a></h2><p>We seek functions <span>$u$</span>, <span>$\theta$</span>, and <span>$z$</span> satisfying the following system of equations:</p><p class="math-container">\[\begin{align*}
 &amp; u^{\prime\prime}(x,t) 
 - \alpha(t)\Delta u(x,t) 
 + f\big(u(x,t)\big) 
@@ -12,9 +12,9 @@
 = f_2(x,t),
 \quad(x,t)\in\Omega\times(0,+\infty),
 \\[5pt]
-&amp; q_1 z^{\prime\prime}(x,t)
-+ q_2 z^\prime(x,t)
-+ q_3 z(x,t)
+&amp; q_1(x) z^{\prime\prime}(x,t)
++ q_2(x) z^\prime(x,t)
++ q_3(x) z(x,t)
 + q_4 u^\prime(x,t)
 = f_3(x,t),
 \quad(x,t)\in\Gamma_1\times(0,+\infty),
@@ -34,13 +34,13 @@
 \\
 &amp; z(x,0) = z_0(x),\quad
   z^\prime(x,0) = r_0(x) \equiv \frac{\partial u_0}{\partial\nu}(x) + g\big(x,v_0(x)\big),\quad x\in\Gamma_1,
-\end{align*}\]</p><p>where <span>$\Omega$</span> is a bounded open subset of <span>$\mathbb{R}^n$</span>, <span>$n\geq 2$</span>, with smooth boundary <span>$\Gamma=\Gamma_0\cup\Gamma_1$</span> and disjoint <span>$\Gamma_0$</span>, <span>$\Gamma_1$</span>.</p><p>The existence, uniqueness, and asymptotic behavior of global solutions to this problem were investigated in <a href="https://link.springer.com/article/10.1007/s40314-015-0236-1">Braz e Silva et al. (2017)</a>.  When the source terms <span>$f_1$</span>, <span>$f_2$</span>, and <span>$f_3$</span> are identically zero and the nonlinear term <span>$f$</span> takes the form <span>$f(s) = s|s|^\rho$</span>, the authors establish that the total energy </p><p class="math-container">\[\begin{align*}
+\end{align*}\]</p><p>where <span>$\Omega$</span> is a bounded open subset of <span>$\mathbb{R}^n$</span>, <span>$n\geq 2$</span>, with smooth boundary <span>$\Gamma=\Gamma_0\cup\Gamma_1$</span> and disjoint <span>$\Gamma_0$</span>, <span>$\Gamma_1$</span>.</p><p>The existence, uniqueness, and asymptotic behavior of global solutions to this problem were investigated in <a href="https://link.springer.com/article/10.1007/s40314-015-0236-1">Braz e Silva et al. (2017)</a>.  When the source terms <span>$f_1$</span>, <span>$f_2$</span>, and <span>$f_3$</span> are identically zero and the nonlinear term <span>$f$</span> takes the form <span>$f(s) = \lambda s|s|^\rho$</span>, the authors establish that the total energy </p><p class="math-container">\[\begin{align*}
 E(t) 
 =&amp;  
   \frac{1}{2}\Big[
   \|u^\prime(t)\|^2
 + \|\theta(t)\|^2
-+ \frac{1}{\rho+2}\|u(t)\|_{L^{\rho+2}(\Omega)}^{\rho+2}
++ \frac{\lambda}{\rho+2}\|u(t)\|_{L^{\rho+2}(\Omega)}^{\rho+2}
 +
   \alpha(t)\big(
   \|\nabla u(t)\|^2
@@ -48,4 +48,106 @@ E(t)
 + \|\sqrt{q_3}z(t)\|_{\Gamma_1}^2
 \big)
 \Big]
-\end{align*}\]</p><p>associated with the strong global solution exhibits exponential decay.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.16.1 on <span class="colophon-date" title="Sunday 15 February 2026 12:31">Sunday 15 February 2026</span>. Using Julia version 1.12.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+\end{align*}\]</p><p>associated with the strong global solution exhibits exponential decay.</p><details class="admonition is-details" id="Assumptions-for-existence-and-uniqueness-6f97c6eb43ce5f33"><summary class="admonition-header">Assumptions for existence and uniqueness<a class="admonition-anchor" href="#Assumptions-for-existence-and-uniqueness-6f97c6eb43ce5f33" title="Permalink"></a></summary><div class="admonition-body"><ul><li><span>$\Omega \subset \mathbb{R}^n$</span>, <span>$n\geq 2$</span>, is a bounded, open, and connected domain, such that its boundary <span>$\Gamma$</span> is locally situated on one side.</li><li><span>$\Gamma$</span> is a <span>$C^2$</span>-class boundary, partitioned into two disjoint, connected components <span>$\Gamma_0$</span> and <span>$\Gamma_1$</span>, each having positive measure.</li><li><span>$\alpha \in L^\infty_{loc}(\mathbb{R}^+)$</span>, <span>$\alpha&#39;\in L^1(\mathbb{R}^+)$</span>, and <span>$\alpha(t) \geq \alpha_0 &gt; 0,\;\forall t \geq 0$</span>.</li><li>The constant <span>$\mathbf{a}\in\mathbb{R}^n$</span>, and <span>$(\mathbf{a}\cdot\nabla)$</span> is the operator <span>$\sum_{i=1}^n \mathbf{a}_i\frac{\partial}{\partial x_i}$</span>.</li><li><span>$f(s)= \lambda |s|^\rho s$</span>, with <span>$\lambda &gt; 0$</span>. For <span>$n = 2$</span>, <span>$\rho &gt; 0$</span>; for <span>$n \geq 3$</span>, <span>$\frac{1}{n} \leq \rho \leq \frac{2}{n-2}$</span>.</li><li><span>$\beta^\prime\in L_{loc}^\infty(\mathbb{R})$</span> and <span>$\beta(s)\geq\beta_0&gt;0$</span>.</li><li><span>$x\mapsto g(x,s)$</span> is continuous <span>$\forall s\in\mathbb{R}$</span> fixed; <span>$|g(x,s)-g(x,r)|\leq g_0|s-r|$</span>, for all <span>$x\in\Gamma_1,\,s,r\in\mathbb{R}$</span>; <span>$\;[g(x,s)-g(x,r)](s-r)\geq g_1(s-r)^2$</span>; <span>$\;g(x,0)=0$</span>;  <span>$\;g_0,g_1&gt;0$</span>.</li><li><span>$q_1,q_2,q_3\in C^0(\Gamma_1)$</span>, with <span>$q_1(x),q_3(x)&gt;0$</span>, and <span>$q_2(x)\geq 0$</span>, for all <span>$x\in\Gamma_1$</span>.</li><li><span>$u_0\in H_{\Gamma_0}^1(\Omega)\cap H_\Delta(\Omega)$</span>, <span>$\;v_0\in H_{\Gamma_0}^1(\Omega)$</span>, <span>$\;\theta_0\in H_0^1(\Omega)$</span>, <span>$\;z_0\in L^2(\Gamma_1)$</span>.</li></ul><div class="admonition is-info" id="Beware!-2c4273ad6dfe0c51"><header class="admonition-header">Beware!<a class="admonition-anchor" href="#Beware!-2c4273ad6dfe0c51" title="Permalink"></a></header><div class="admonition-body"><p>The source functions <span>$f_1$</span>, <span>$f_2$</span>, and <span>$f_3$</span>, and the constant term <span>$q_4$</span> in the model are not present in the original formulation analyzed in <a href="https://link.springer.com/article/10.1007/s40314-015-0236-1">Braz e Silva et al. (2017)</a>. The inclusion of the sources terms serves exclusively to construct an exact solution for the model, which is required to verify the convergence order of the corresponding approximate solution. The constant <span>$q_4$</span> is introduced to facilitate validation: setting <span>$q_4=0$</span> decouples the acoustic solution <span>$z$</span> from the remaining equations, allowing independent verification.</p></div></div></div></details><details class="admonition is-details" id="Supplementary-assumptions-for-energy-decay-45ab138580d5e6ff"><summary class="admonition-header">Supplementary assumptions for energy decay<a class="admonition-anchor" href="#Supplementary-assumptions-for-energy-decay-45ab138580d5e6ff" title="Permalink"></a></summary><div class="admonition-body"><ul><li><span>$\Gamma_0$</span> and <span>$\Gamma_1$</span> have a special geometry: they are closed, connected and disjoints sets (<span>$\overline{\Gamma_0}\cap\overline{\Gamma_1}=\empty$</span>) with positive measure. Furthermore, there exists a function <span>$m(x) = x - x_0$</span>, for some fixed <span>$x_0 \in \mathbb{R}^n$</span>, such that</li></ul><p class="math-container">\[\Gamma_0 = \{ x \in \Gamma ; m(x) \cdot \nu(x) \leq 0 \}, \quad
+\Gamma_1 = \{ x \in \Gamma ; m(x) \cdot \nu(x) &gt; 0 \}.\]</p><ul><li><span>$q_2(x)&gt;0$</span>, <span>$\;\forall x\in\Gamma_1$</span>.</li><li><span>$g$</span> has the special form:</li></ul><p class="math-container">\[\begin{aligned}
+&amp; g(x,s) = [m(x)\cdot\nu(x)]\widetilde{g}(s),\quad\forall x\in\Gamma_1,
+\\[5pt]
+&amp; |\widetilde{g}(s)| \leq \widetilde{g}_0|s|,\quad \forall s\in\mathbb{R},
+\\[5pt]
+&amp; [\widetilde{g}(s)-\widetilde{g}(r)](s-r)\geq\widetilde{g}_1(s-r)^2,\quad\forall s,r\in\mathbb{R},\hbox{ for some }\widetilde{g}_0,\widetilde{g}_1&gt;0.
+\end{aligned}\]</p><ul><li><span>$\alpha_0\leq\alpha(t)\leq\alpha_1\; \hbox{ a.e. in }\mathbb{R}^+$</span>, and <span>$|\alpha^\prime(t)|\leq\alpha_0\epsilon,\;\forall t\in\mathbb{R}$</span>, where </li></ul><p class="math-container">\[\begin{aligned}
+&amp; \epsilon
+= \min\Big\{
+\frac{\beta_0}{\kappa_2+\frac{1}{2\lambda_1}},
+\frac{\widetilde{g}_1}{\kappa_3},
+\frac{\overline{q}_2}{\kappa_4\widehat{q}_1}
+\Big\};
+\quad
+\overline{q}_i = \underset{x\in\overline{\Gamma}_1}{\min\,}q_i(x);
+\quad
+\widehat{q}_i = \underset{x\in\overline{\Gamma}_1}{\max\,}q_i(x);
+\\
+&amp; \lambda_1
+  \hbox{ is the first eigenvalue of the Laplace operator, } \lambda_1\|v\|^2\leq\|\nabla v\|^2,\,\forall v\in H_{\Gamma_0}^1(\Omega);
+\\
+&amp; \kappa_2 
+= \frac{|\mathbf{a}|_\infty^2}{\alpha_0}
+\Big(
+  16\widehat{m}^2 + \frac{2n}{\lambda_1}(n-\frac{1}{2})^2
+\Big);
+\;\; \widehat{m} = \underset{x\in\overline{\Omega}}{\max\,}|m(x)|_{\mathbb{R}^n};
+\;\; |\mathbf{a}|_\infty = \underset{1\leq i\leq n}{\max\,}|\mathbf{a}_i|;
+\\
+&amp; \kappa_3
+= 2\widehat{m}^2\widetilde{g}_0^2 
++ \frac{1}{\alpha_0}
++ 2C_1(n-\frac{1}{2})^2\widetilde{g}_0^2
++ \alpha_0
++ \frac{3}{2}\alpha_1;
+\\
+&amp; \kappa_4
+= \frac{2\widehat{m}^2 + 2C_1(n-\frac{1}{2})^2}{\zeta\overline{q}_1}
++ (\alpha_0 + \frac{3}{2}\alpha_1)\frac{\widehat{q}_2}{\overline{q}_1}
++ \alpha_0\epsilon;
+\;\;
+\zeta=\underset{x\in\overline{\Gamma}_1}{\min}\{m(x)\cdot\nu(x)\};
+\\
+&amp;
+C_1\in\mathbb{R}^+\hbox{ such that }
+\|\sqrt{m\cdot\nu}\,v\|_{\Gamma_1}^2\leq\frac{C_1}{2}\|\nabla v\|^2,\;\forall v\in H_{\Gamma_0}^1(\Omega) \hbox{(mapping trace continuity)}.
+\end{aligned}\]</p><div class="admonition is-warning" id="Beware!-f69983757937ca37"><header class="admonition-header">Beware!<a class="admonition-anchor" href="#Beware!-f69983757937ca37" title="Permalink"></a></header><div class="admonition-body"><p>The definition of <span>$\epsilon$</span> depends on <span>$\kappa_4$</span>, which in turn depends on <span>$\epsilon$</span>. How to solve this circular dependency?</p></div></div></div></details><details class="admonition is-details" id="Notation:-Functional-spaces,-inner-products,-and-norms-a94308b5a19d0bc5"><summary class="admonition-header">Notation: Functional spaces, inner products, and norms<a class="admonition-anchor" href="#Notation:-Functional-spaces,-inner-products,-and-norms-a94308b5a19d0bc5" title="Permalink"></a></summary><div class="admonition-body"><p>We consider the function spaces</p><p class="math-container">\[    \begin{aligned}
+    H^1(\Omega) &amp;= \{ v \in L^2(\Omega) : \nabla v \in (L^2(\Omega))^n \},\\
+    H_0^1(\Omega) &amp;= \{ v \in H^1(\Omega) : v|_{\Gamma} = 0 \}, \\
+    H_{\Gamma_0}^1(\Omega) &amp;= \{ v \in H^1(\Omega) : v|_{\Gamma_0} = 0 \}, \\
+    H_\Delta(\Omega) &amp;= \{ v \in H^1(\Omega) : \Delta v \in L^2(\Omega) \}.
+    \end{aligned}\]</p><p>We denote the inner products and norms in <span>$L^2(\Omega)$</span> and <span>$L^2(\Gamma_1)$</span> as follows:</p><p class="math-container">\[(\cdot, \cdot),\quad
+\|\cdot\|,
+\qquad\text{and}\qquad
+(\cdot, \cdot)_{\Gamma_1},\quad
+\|\cdot\|_{\Gamma_1}.\]</p></div></details><h2 id="Weak-Formulation"><a class="docs-heading-anchor" href="#Weak-Formulation">Weak Formulation</a><a id="Weak-Formulation-1"></a><a class="docs-heading-anchor-permalink" href="#Weak-Formulation" title="Permalink"></a></h2><p>We seek functions <span>$u(t)\in H_{\Gamma_0}^1(\Omega)$</span>, <span>$\theta(t)\in H_0^1(\Omega)$</span>, and <span>$z(t)\in L^2(\Gamma_1)$</span> such that</p><p class="math-container">\[\begin{align*}
+&amp; \big(\varphi,u^{\prime\prime}(t)\big)
++ \alpha(t)\Big[
+    \big(\nabla\varphi,\nabla u(t)\big)
+  - \big(\varphi,z^\prime(t))_{\Gamma_1}
+  + \big(\varphi,g\big(u^\prime(t)\big)\big)_{\Gamma_1}\Big]
++ \big(\varphi,f\big(u(t)\big)\big) 
+= \big(\varphi,f_1(t)\big),
+\quad\forall\varphi\in H_{\Gamma_0}^1(\Omega),
+\\
+&amp; \big(\psi,\theta^{\prime}(t)\big)
++ \beta\Big(\int_\Omega\theta(t)dx\Big)\big(\nabla\psi,\nabla\theta(t)\big)
++ \big(\psi,(\mathbf{a}\cdot\nabla)u^\prime(t)\big)
+= \big(\psi,f_2(t)\big),
+\quad\forall\psi\in H_0^1(\Omega),
+\\[5pt]
+&amp; \big(\phi,q_1z^{\prime\prime}(t)
++ q_2z^\prime(t)
++ q_3z(t)
++ q_4u^\prime(t)\big)_{\Gamma_1}
+= \big(\phi,f_3(t)\big)_{\Gamma_1},
+\quad\forall\phi\in L^2(\Gamma_1),
+\end{align*}\]</p><p>with  <span>$u(0)=u_0$</span>,  <span>$u^\prime(0)=v_0$</span>,  <span>$\theta(0)=\theta_0$</span>, <span>$z(0)=z_0$</span>, and  <span>$z^\prime(0) = r_0 \equiv \frac{\partial u_0}{\partial\nu} + g(v_0)$</span>. </p><p>By introducing the auxiliary variables <span>$v(t)=u^\prime(t)$</span> and <span>$r(t)=z^\prime(t)$</span>, we obtain the equivalent first-order system: find functions <span>$u(t),v(t)\in H_{\Gamma_0}^1(\Omega)$</span>, <span>$\theta(t)\in H_0^1(\Omega)$</span>,  and <span>$z(t),r(t)\in L^2(\Gamma_1)$</span> such that</p><p class="math-container">\[\begin{align*}
+&amp; \big(\varphi,v^{\prime}(t)\big)
++ \alpha(t)\Big[
+    \big(\nabla\varphi,\nabla u(t)\big)
+  - \big(\varphi,r(t)\big)_{\Gamma_1}
+  + \big(\varphi,g\big(v(t)\big)\big)_{\Gamma_1}\Big]
++ \big(\varphi,f\big(u(t)\big)\big) 
+= \big(\varphi,f_1(t)\big),
+\quad\forall\varphi\in H_{\Gamma_0}^1(\Omega),
+\\
+&amp; \big(\psi,\theta^{\prime}(t)\big)
++ \beta\Big(\int_\Omega\theta(t)dx\Big)\big(\nabla\psi,\nabla\theta(t)\big)
++ \big(\psi,(\mathbf{a}\cdot\nabla)u^\prime(t)\big)
+= \big(\psi,f_2(t)\big),
+\quad\forall\psi\in H_0^1(\Omega),
+\\[5pt]
+&amp; \big(\phi,q_1r^{\prime}(t)
++ q_2r(t)
++ q_3z(t)
++ q_4v(t)\big)_{\Gamma_1}
+= \big(\phi,f_3(t)\big)_{\Gamma_1},
+\quad\forall\phi\in L^2(\Gamma_1),
+\\[5pt]
+&amp; u^\prime(t)=v(t),\quad z^\prime(t)=r(t),
+\end{align*}\]</p><p>with initial conditions <span>$u(0)=u_0$</span>,  <span>$v(0)=v_0$</span>, <span>$\theta(0)=\theta_0$</span>,  <span>$z(0)=z_0$</span>, and  <span>$r(0) = r_0 \equiv \frac{\partial u_0}{\partial\nu} + g(v_0)$</span>.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.16.1 on <span class="colophon-date" title="Monday 16 February 2026 19:29">Monday 16 February 2026</span>. Using Julia version 1.12.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
