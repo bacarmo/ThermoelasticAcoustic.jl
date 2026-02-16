@@ -14,9 +14,9 @@ We seek functions ``u``, ``\theta``, and ``z`` satisfying the following system o
 = f_2(x,t),
 \quad(x,t)\in\Omega\times(0,+\infty),
 \\[5pt]
-& q_1 z^{\prime\prime}(x,t)
-+ q_2 z^\prime(x,t)
-+ q_3 z(x,t)
+& q_1(x) z^{\prime\prime}(x,t)
++ q_2(x) z^\prime(x,t)
++ q_3(x) z(x,t)
 + q_4 u^\prime(x,t)
 = f_3(x,t),
 \quad(x,t)\in\Gamma_1\times(0,+\infty),
