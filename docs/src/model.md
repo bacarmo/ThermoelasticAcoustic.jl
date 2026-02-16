@@ -45,7 +45,7 @@ with initial conditions
 where ``\Omega`` is a bounded open subset of ``\mathbb{R}^n``, ``n\geq 2``, with smooth boundary ``\Gamma=\Gamma_0\cup\Gamma_1`` and disjoint ``\Gamma_0``, ``\Gamma_1``.
 
 The existence, uniqueness, and asymptotic behavior of global solutions to this problem were investigated in [Braz e Silva et al. (2017)](https://link.springer.com/article/10.1007/s40314-015-0236-1). 
-When the source terms $f_1$, $f_2$, and $f_3$ are identically zero and the nonlinear term ``f`` takes the form $f(s) = s|s|^\rho$, the authors establish that the total energy 
+When the source terms $f_1$, $f_2$, and $f_3$ are identically zero and the nonlinear term ``f`` takes the form $f(s) = \lambda s|s|^\rho$, the authors establish that the total energy 
 ```math
 \begin{align*}
 E(t) 
@@ -53,7 +53,7 @@ E(t)
   \frac{1}{2}\Big[
   \|u^\prime(t)\|^2
 + \|\theta(t)\|^2
-+ \frac{1}{\rho+2}\|u(t)\|_{L^{\rho+2}(\Omega)}^{\rho+2}
++ \frac{\lambda}{\rho+2}\|u(t)\|_{L^{\rho+2}(\Omega)}^{\rho+2}
 +
   \alpha(t)\big(
   \|\nabla u(t)\|^2
