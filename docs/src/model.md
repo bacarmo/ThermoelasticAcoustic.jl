@@ -4,7 +4,8 @@ We seek functions ``u``, ``\theta``, and ``z`` satisfying the following system o
 \begin{align*}
 & u^{\prime\prime}(x,t) 
 - \alpha(t)\Delta u(x,t) 
-+ f\big(u(x,t)\big) 
++ f\big(u(x,t)\big)
++ (\mathbf{a}\cdot\nabla)\theta(x,t) 
 = f_1(x,t),
 \quad(x,t)\in\Omega\times(0,+\infty),
 \\
@@ -175,6 +176,7 @@ We seek functions ``u(t)\in H_{\Gamma_0}^1(\Omega)``, ``\theta(t)\in H_0^1(\Omeg
   - \big(\varphi,z^\prime(t))_{\Gamma_1}
   + \big(\varphi,g\big(u^\prime(t)\big)\big)_{\Gamma_1}\Big]
 + \big(\varphi,f\big(u(t)\big)\big) 
++ \big(\varphi,(\mathbf{a}\cdot\nabla)\theta(t)\big) 
 = \big(\varphi,f_1(t)\big),
 \quad\forall\varphi\in H_{\Gamma_0}^1(\Omega),
 \\
@@ -208,6 +210,7 @@ By introducing the auxiliary variables ``v(t)=u^\prime(t)`` and ``r(t)=z^\prime(
   - \big(\varphi,r(t)\big)_{\Gamma_1}
   + \big(\varphi,g\big(v(t)\big)\big)_{\Gamma_1}\Big]
 + \big(\varphi,f\big(u(t)\big)\big) 
++ \big(\varphi,(\mathbf{a}\cdot\nabla)\theta(t)\big) 
 = \big(\varphi,f_1(t)\big),
 \quad\forall\varphi\in H_{\Gamma_0}^1(\Omega),
 \\
