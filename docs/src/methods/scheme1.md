@@ -74,7 +74,7 @@ find  ``U^0,\, V^0 \in \mathcal{V}_{m_1}``, ``\Theta^0 \in \mathcal{V}_{m_2}``, 
       ```
       where ``t_{n-\frac{1}{2}}`` denotes the midpoint of ``[t_{n-1}, t_n]``.
 
-## Matrix formulation
+## Matrix Formulation
 Representing the approximate solutions in terms of the basis functions,
 ```math
 U^n      = \sum_{j=1}^{m_1} d_j^n\varphi_j,\;
