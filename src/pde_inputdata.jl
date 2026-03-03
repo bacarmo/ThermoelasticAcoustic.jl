@@ -164,11 +164,15 @@ end
 Manufactured solution with oscillatory wave–acoustic coupling
 ``g(x, s) = (1 + e^{-x^2})(\\sin(s) + 2s)``:
 ```math
-u(x,y,t) = (x^p - x)(y^p - 1)(4 + t^2),
-\\qquad
-θ(x,y,t) = \\sin(πx)\\sin(πy)\\,e^{-t},
+\\begin{alignat*}{2}
+& u(x,y,t)   &&= (x^p - x)(y^p - 1)(4 + t^2), \\\\
+& θ(x,y,t)   &&= \\sin(πx)\\sin(πy)\\,e^{-t}, \\\\
+& z(x,t)     &&= \\sin(\\pi x) + (1+e^{-x^2})
+                  \\left[\\frac{\\cos\\big(-2t(x^p-x)\\big)-1}{2(x^p-x)}
+                  - 2t^2(x^p-x)\\right],
+\\end{alignat*}
 ```
-and the acoustic displacement ``z(x,t)`` is obtained by integrating
+where the acoustic displacement ``z(x,t)`` is obtained by integrating
 ```math
 \\frac{∂z}{∂t}(x,t) = -\\frac{∂u}{∂y}(x,y_{\\min},t) + g\\!\\left(x,\\,\\frac{∂u}{∂t}(x,y_{\\min},t)\\right).
 ```
@@ -229,7 +233,6 @@ function example1_manufactured(p::Float64 = 2.4)
         xp_minus_x = xp - x
         two_t = 2.0 * t
         exp_term = 1.0 + exp(-x * x)
-
         return sinpi(x) +
                exp_term * ((cos(-xp_minus_x * two_t) - 1.0) /
                 (2.0 * xp_minus_x) - xp_minus_x * (two_t * t))
@@ -238,7 +241,6 @@ function example1_manufactured(p::Float64 = 2.4)
         xp = x^p
         xp_minus_x = xp - x
         exp_term = 1.0 + exp(-x * x)
-
         return exp_term * (sin(-xp_minus_x * (2.0 * t)) - xp_minus_x * (4.0 * t))
     end
 
@@ -254,7 +256,6 @@ function example1_manufactured(p::Float64 = 2.4)
         xp_minus_2 = x^p_minus_2
         yp_minus_2 = y^p_minus_2
         time_term = 4.0 + t * t
-
         return ((p_vs_p_minus_1 * xp_minus_2) * (yp - 1.0) +
                 (xp - x) * (p_vs_p_minus_1 * yp_minus_2)) * time_term
     end
@@ -425,11 +426,13 @@ end
 
 Manufactured solution with linear coupling ``g(x,s) = (1+e^{-x^2})s``:
 ```math
-u(x,y,t) = (x^p - x)(y^p - 1)(4 + t^2),
-\\qquad
-θ(x,y,t) = \\sin(πx)\\sin(πy)\\,e^{-t},
+\\begin{alignat*}{2}
+& u(x,y,t)   &&= (x^p - x)(y^p - 1)(4 + t^2), \\\\
+& θ(x,y,t)   &&= \\sin(πx)\\sin(πy)\\,e^{-t}, \\\\
+& z(x,t)     &&= \\sin(\\pi x) - (1+e^{-x^2})(x^p-x)t^2,
+\\end{alignat*}
 ```
-and the acoustic displacement ``z(x,t)`` is obtained by integrating
+where the acoustic displacement ``z(x,t)`` is obtained by integrating
 ```math
 \\frac{∂z}{∂t}(x,t) = -\\frac{∂u}{∂y}(x,y_{\\min},t) + g\\!\\left(x,\\,\\frac{∂u}{∂t}(x,y_{\\min},t)\\right).
 ```
@@ -509,7 +512,6 @@ function example2_manufactured(p::Float64 = 2.4)
         xp_minus_2 = x^p_minus_2
         yp_minus_2 = y^p_minus_2
         time_term = 4.0 + t * t
-
         return ((p_vs_p_minus_1 * xp_minus_2) * (yp - 1.0) +
                 (xp - x) * (p_vs_p_minus_1 * yp_minus_2)) * time_term
     end
