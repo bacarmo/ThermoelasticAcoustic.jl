@@ -1,0 +1,93 @@
+"""
+    pde_solve(Nx, fe, tspan, input_data, solver, callback)
+
+Solve the coupled thermo-wave-acoustic PDE system.
+
+## Arguments
+- `Nx::NTuple{2,Integer}`: Number of elements per direction
+- `fe::FEFamily`: Finite element family (e.g. `Lagrange{1}()`, `Hermite{3}()`)
+- `tspan::StepRangeLen`: Time grid defined as `0:τ:t_end`
+- `input_data::PDEInputData`: Problem configuration with manufactured solution
+- `solver::ODESolver`: Time integration scheme
+- `callback::AbstractCallback`: Callback invoked at each accepted time step
+
+## Returns
+- The populated `callback` object
+
+## Examples
+```julia
+Nx     = (10, 10)
+fe     = Lagrange{1}()
+tspan  = 0.0:0.01:1.0
+id     = example1_manufactured()
+cb     = L2ErrorCallback(tspan)
+result = pde_solve(Nx, fe, tspan, id, CrankNicolson(), cb)
+```
+"""
+function pde_solve(
+        Nx::NTuple{2, I},
+        fe::F,
+        tspan::StepRangeLen{T},
+        input_data::PDEInputData,
+        solver::S,
+        callback::C
+) where {I <: Integer, F <: FEFamily, T <: AbstractFloat,
+        S <: ODESolver, C <: AbstractCallback}
+    # ========================================
+    # Spatial discretization
+    # ========================================
+    pmin, pmax = input_data.pmin, input_data.pmax
+
+    mesh1D = CartesianMesh((pmin[1],), (pmax[1],), (Nx[1],))
+    mesh2D = CartesianMesh(pmin, pmax, Nx)
+
+    # ========================================
+    # Specialize FEFamily
+    # ========================================
+    fe1D = specialize(fe, Val(1))
+    fe2D = specialize(fe, Val(2))
+
+    # ========================================
+    # Quadrature setup (Gauss-Legendre)
+    # ========================================
+    quad = QuadratureSetup(fe1D, fe2D, mesh2D.Δx, pmin)
+
+    # ========================================
+    # Local-to-global mapping
+    # ========================================
+    dof_map_m₁ = DOFMap(mesh2D, fe2D, LeftRightTop())
+    dof_map_m₂ = DOFMap(mesh2D, fe2D, LeftRightBottomTop())
+    dof_map_m₃ = DOFMap(mesh1D, fe1D, LeftRight())
+
+    # ========================================
+    # Assemble matrices
+    # ========================================
+    matrices = SystemMatrices(
+        mesh1D, mesh2D, fe1D, fe2D, dof_map_m₁, dof_map_m₂, dof_map_m₃)
+
+    # ========================================
+    # Compute initial state v⁰, d⁰, c⁰, r⁰, z⁰ 
+    # ========================================
+    initial_state = compute_initial_state(
+        matrices.K_m₁xm₁, matrices.K_m₂xm₂, matrices.M_m₃xm₃,
+        dof_map_m₁, dof_map_m₂, dof_map_m₃,
+        mesh2D, mesh1D, quad, input_data)
+
+    apply!(callback, initial_state,
+        mesh1D, mesh2D, dof_map_m₁, dof_map_m₂, dof_map_m₃, quad, input_data)
+
+    # ========================================
+    # Compute vⁿ, dⁿ, rⁿ, and zⁿ for n ≥ 1
+    # ========================================
+    #return ode_solve(
+    #    solver,
+    #    initial_state,
+    #    matrices,
+    #    dof_map_m₁, dof_map_m₂, dof_map_m₃,
+    #    mesh1D, mesh2D,
+    #    quad,
+    #    tspan,
+    #    input_data,
+    #    callback)
+    return callback
+end
