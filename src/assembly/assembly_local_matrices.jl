@@ -111,6 +111,43 @@ function assembly_local_matrix_∇ϕx∇ϕ(mesh::CartesianMesh{2}, family::FEFam
 end
 
 """
+    assembly_local_matrix_ϕxc∇ϕ(mesh, family)
+
+Assemble the local stiffness matrix ∫_{Ωₑ} ϕₐᵉ (c·∇)ϕᵦᵉ dx for an arbitrary element Ωₑ.
+
+# Arguments
+- `c::NTuple{2,T}`: Constant vector
+- `mesh::CartesianMesh{2}`: Uniform 2D Cartesian mesh defining element geometry
+- `family::FEFamily`: Finite element family
+
+# Returns
+- `SMatrix{N,N}`: Local stiffness matrix where `N = num_local_dof(family)`
+"""
+function assembly_local_matrix_ϕxc∇ϕ(c::NTuple{2, T}, mesh::CartesianMesh{2},
+        family::FEFamily) where {T <: AbstractFloat}
+    Δx, Δy = mesh.Δx
+    deg = polynomial_degree(family)
+    Npg = deg + 1
+    P, W = legendre(Npg)
+
+    N = num_local_dof(family)
+    K = zeros(N, N)
+    scale_x = c[1] * Δy / 2   # c₁ * (2 / Δx) * (Δx * Δy / 4))
+    scale_y = c[2] * Δx / 2   # c₂ * (2 / Δy) * (Δx * Δy / 4))
+
+    for i in 1:Npg, j in 1:Npg
+        φ = basis_functions(family, P[i], P[j])
+        ∂φ∂ξ, ∂φ∂η = basis_functions_derivatives(family, P[i], P[j])
+        w = W[i] * W[j]
+        for b in 1:N, a in 1:N
+            K[a, b] += w * φ[a] * (∂φ∂ξ[b] * scale_x + ∂φ∂η[b] * scale_y)
+        end
+    end
+
+    return SMatrix{N, N}(K)
+end
+
+"""
     assembly_local_matrix_DG!(DG, ∂ₛg, v, m, eq, xeP, W_ϕPϕP, ϕP)
 
 DGₐᵦ = ∫ ϕₐ(ξ) * ϕᵦ(ξ) * ∂ₛg(x(ξ), Vₕ(x(ξ))) dx over Ω = (-1,1), with Vₕ(x(ξ)) = Σ v[eq[j]] ϕⱼ(ξ).
