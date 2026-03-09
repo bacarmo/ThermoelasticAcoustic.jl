@@ -45,7 +45,7 @@ function SystemMatrices(
     Me_m₁xm₁ = Symmetric(assembly_local_matrix_ϕxϕ(mesh2D, fe2D))
     Me_m₃xm₃ = Symmetric(assembly_local_matrix_ϕxϕ(mesh1D, fe1D))
     Ke_m₁xm₁ = Symmetric(assembly_local_matrix_∇ϕx∇ϕ(mesh2D, fe2D))
-    Ae = assemble_local_matrix_ϕxc∇ϕ(a, mesh2D, fe2D)
+    Ae = assembly_local_matrix_ϕxc∇ϕ(a, mesh2D, fe2D)
 
     return SystemMatrices(
         assembly_global_matrix(Me_m₁xm₁, dof_map_m₁),

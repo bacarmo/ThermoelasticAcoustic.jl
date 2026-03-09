@@ -63,7 +63,7 @@ function pde_solve(
     # Assemble matrices
     # ========================================
     matrices = SystemMatrices(
-        mesh1D, mesh2D, fe1D, fe2D, dof_map_m₁, dof_map_m₂, dof_map_m₃)
+        input_data.a, mesh1D, mesh2D, fe1D, fe2D, dof_map_m₁, dof_map_m₂, dof_map_m₃)
 
     # ========================================
     # Compute initial state v⁰, d⁰, c⁰, r⁰, z⁰ 

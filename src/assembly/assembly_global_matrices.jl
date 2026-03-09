@@ -137,8 +137,8 @@ function assembly_global_matrix(
         dof_map_i::DOFMap{<:AbstractVector, I},
         dof_map_j::DOFMap{<:AbstractVector, I}
 ) where {N, T, I <: Integer}
-    mᵢ = dof_map_left.m
-    mⱼ = dof_map_right.m
+    mᵢ = dof_map_i.m
+    mⱼ = dof_map_j.m
     Neᵢ = length(dof_map_i.EQoLG)
     Neⱼ = length(dof_map_j.EQoLG)
     @assert Neᵢ==Neⱼ "DOF maps must have the same number of elements (got $Neᵢ vs $Neⱼ)"
