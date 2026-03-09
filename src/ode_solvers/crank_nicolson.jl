@@ -12,5 +12,4 @@ function ode_solve(
         input_data::PDEInputData,
         callback::AbstractCallback
 ) where {T <: AbstractFloat, I <: Integer}
-    return callback
 end

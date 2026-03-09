@@ -1,7 +1,7 @@
 """
     pde_solve(Nx, fe, tspan, input_data, solver, callback)
 
-Solve the coupled thermo-wave-acoustic PDE system.
+Solve the coupled thermo-wave-acoustic PDE system, populating `callback` in-place.
 
 ## Arguments
 - `Nx::NTuple{2,Integer}`: Number of elements per direction
@@ -11,9 +11,6 @@ Solve the coupled thermo-wave-acoustic PDE system.
 - `solver::ODESolver`: Time integration scheme
 - `callback::AbstractCallback`: Callback invoked at each accepted time step
 
-## Returns
-- The populated `callback` object
-
 ## Examples
 ```julia
 Nx     = (10, 10)
@@ -21,7 +18,7 @@ fe     = Lagrange{1}()
 tspan  = 0.0:0.01:1.0
 id     = example1_manufactured()
 cb     = L2ErrorCallback(tspan)
-result = pde_solve(Nx, fe, tspan, id, CrankNicolson(), cb)
+pde_solve(Nx, fe, tspan, id, CrankNicolson(), cb)
 ```
 """
 function pde_solve(
@@ -79,15 +76,16 @@ function pde_solve(
     # ========================================
     # Compute vⁿ, dⁿ, rⁿ, and zⁿ for n ≥ 1
     # ========================================
-    #return ode_solve(
-    #    solver,
-    #    initial_state,
-    #    matrices,
-    #    dof_map_m₁, dof_map_m₂, dof_map_m₃,
-    #    mesh1D, mesh2D,
-    #    quad,
-    #    tspan,
-    #    input_data,
-    #    callback)
-    return callback
+    ode_solve(
+        solver,
+        initial_state,
+        matrices,
+        dof_map_m₁, dof_map_m₂, dof_map_m₃,
+        mesh1D, mesh2D,
+        quad,
+        tspan,
+        input_data,
+        callback)
+
+    return nothing
 end
