@@ -6,6 +6,10 @@ Global FEM matrices for the coupled thermo-wave-acoustic system.
 ## Fields
 - `M_m₁xm₁`, `M_m₂xm₂`, `M_m₃xm₃`: Mass matrices
 - `K_m₁xm₁`, `K_m₂xm₂`: Stiffness matrices
+- `A_m₁xm₂`: Matrix with test functions in `m₁` and trial
+  functions in `m₂`; arises from term ``(\\varphi, (\\mathbf{a}\\cdot\\nabla)\\Theta^{\\ast n})``
+- `A_m₂xm₁`: Matrix with test functions in `m₂` and trial
+  functions in `m₁`; arises from the term ``(\\psi, (\\mathbf{a}\\cdot\\nabla)\\widehat{V}^n)``
 """
 struct SystemMatrices{T <: AbstractFloat, I <: Integer}
     M_m₁xm₁::Symmetric{T, SparseMatrixCSC{T, I}}
