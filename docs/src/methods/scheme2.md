@@ -260,7 +260,7 @@ With ``\hat{v}^n``, ``\hat{c}^n``, and ``\hat{r}^n`` determined, the remaining u
     In this way,
     ```math
     JH(X) 
-    = Q +
+    = Q + \tau\alpha^{n-\frac{1}{2}}
       \begin{bmatrix}\displaystyle
       JG^{m_3\times m_3}(X_{1:m_3}) & 0^{m_3\times(m_1-m_3)}
       \\[10pt]
