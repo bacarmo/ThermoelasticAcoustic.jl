@@ -76,8 +76,10 @@ function pde_solve(
     # ========================================
     # Compute vⁿ, dⁿ, rⁿ, and zⁿ for n ≥ 1
     # ========================================
+    cache = build_cache(solver, matrices, dof_map_m₁, dof_map_m₂, dof_map_m₃)
     ode_solve(
         solver,
+        cache,
         initial_state,
         matrices,
         dof_map_m₁, dof_map_m₂, dof_map_m₃,
