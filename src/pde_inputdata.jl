@@ -672,3 +672,155 @@ function example2_zero_source(p::Float64 = 2.4)
         nothing, nothing, nothing, nothing, nothing
     )
 end
+
+# ============================================================================
+# Example 3: Linear Decoupled Test Case
+# ============================================================================
+"""
+    example3_manufactured() -> PDEInputData
+
+Manufactured solution for the fully linear, decoupled system with
+``f(s) = 0``, ``g(x,s) = 0``, ``β(s) = 1``, ``\\mathbf{a} = (0,0)``,
+``α(t) = 1``, ``q_4 = 0``:
+```math
+\\begin{alignat*}{2}
+& u(x,y,t)   &&= \\sin(\\pi x)(y - 1)\\,e^{-t}, \\\\
+& θ(x,y,t)   &&= \\sin(\\pi x)\\sin(\\pi y)\\,e^{-t}, \\\\
+& z(x,t)     &&= \\sin(\\pi x)\\,e^{-t}.
+\\end{alignat*}
+```
+
+The manufactured source terms are:
+```math
+\\begin{alignat*}{2}
+& f_1(x,y,t) &&= \\sin(\\pi x)(y-1)e^{-t}\\bigl[1 + \\pi^2\\bigr], \\\\
+& f_2(x,y,t) &&= (2\\pi^2 - 1)\\sin(\\pi x)\\sin(\\pi y)\\,e^{-t}, \\\\
+& f_3(x,t)   &&= \\sin(\\pi x)\\,e^{-t}.
+\\end{alignat*}
+```
+
+# Returns
+`PDEInputData` with analytical solution for convergence study.
+"""
+function example3_manufactured()
+    # Physical parameters
+    a = (0.0, 0.0)
+    q₁ = q₂ = q₃ = 1.0
+    q₄ = 0.0
+
+    # Coefficient functions (linear, decoupled)
+    α = t -> 1.0
+    β = s -> 1.0
+    dβ = s -> 0.0
+    f = s -> 0.0
+    df = s -> 0.0
+    g = (x, s) -> 0.0
+    ∂ₛg = (x, s) -> 0.0
+
+    # Analytical solutions
+    u = (x, y, t) -> sinpi(x) * (y - 1.0) * exp(-t)
+    v = (x, y, t) -> -sinpi(x) * (y - 1.0) * exp(-t)    # ∂ₜu
+
+    θ = (x, y, t) -> sinpi(x) * sinpi(y) * exp(-t)
+
+    z = (x, t) -> sinpi(x) * exp(-t)
+    r = (x, t) -> -sinpi(x) * exp(-t)                    # ∂ₜz(x,t)=-∂ᵧu(x,0,t)
+
+    # Manufactured source terms
+    pi2 = pi^2
+    c_f1 = 1.0 + pi2
+    c_f2 = 2.0 * pi2 - 1.0
+    f₁ = (x, y, t) -> c_f1 * sinpi(x) * (y - 1.0) * exp(-t)
+    f₂ = (x, y, t) -> c_f2 * sinpi(x) * sinpi(y) * exp(-t)
+    f₃ = (x, t) -> sinpi(x) * exp(-t)
+
+    # Initial conditions (t = 0)
+    u₀ = (x, y) -> sinpi(x) * (y - 1.0)
+    ∂ₓu₀ = (x, y) -> π * cospi(x) * (y - 1.0)
+    ∂ᵧu₀ = (x, y) -> sinpi(x)
+
+    v₀ = (x, y) -> -sinpi(x) * (y - 1.0)
+    ∂ₓv₀ = (x, y) -> -π * cospi(x) * (y - 1.0)
+    ∂ᵧv₀ = (x, y) -> -sinpi(x)
+
+    θ₀ = (x, y) -> sinpi(x) * sinpi(y)
+    ∂ₓθ₀ = (x, y) -> π * cospi(x) * sinpi(y)
+    ∂ᵧθ₀ = (x, y) -> π * sinpi(x) * cospi(y)
+
+    z₀ = x -> sinpi(x)
+    r₀ = x -> -sinpi(x)    # = -∂ᵧu₀(x, 0) = -sinpi(x)
+
+    return PDEInputData(
+        (0.0, 0.0),
+        (1.0, 1.0),
+        a,
+        q₁, q₂, q₃, q₄,
+        α, β, dβ, f, df, g, ∂ₛg,
+        u₀, ∂ₓu₀, ∂ᵧu₀,
+        v₀, ∂ₓv₀, ∂ᵧv₀,
+        θ₀, ∂ₓθ₀, ∂ᵧθ₀,
+        z₀, r₀,
+        f₁, f₂, f₃,
+        u, v, θ, z, r
+    )
+end
+
+"""
+    example3_zero_source() -> PDEInputData
+
+Same configuration as `example3_manufactured` but with f₁ = f₂ = f₃ = 0.
+No analytical solution available.
+
+# Returns
+`PDEInputData` with analytical solutions set to `nothing`.
+"""
+function example3_zero_source()
+    # Physical parameters
+    a = (0.0, 0.0)
+    q₁ = q₂ = q₃ = 1.0
+    q₄ = 0.0
+
+    # Coefficient functions (linear, decoupled)
+    α = t -> 1.0
+    β = s -> 1.0
+    dβ = s -> 0.0
+    f = s -> 0.0
+    df = s -> 0.0
+    g = (x, s) -> 0.0
+    ∂ₛg = (x, s) -> 0.0
+
+    # Source terms
+    f₁ = (x, y, t) -> 0.0
+    f₂ = (x, y, t) -> 0.0
+    f₃ = (x, t) -> 0.0
+
+    # Initial conditions (same as example3_manufactured at t = 0)
+    u₀ = (x, y) -> sinpi(x) * (y - 1.0)
+    ∂ₓu₀ = (x, y) -> π * cospi(x) * (y - 1.0)
+    ∂ᵧu₀ = (x, y) -> sinpi(x)
+
+    v₀ = (x, y) -> -sinpi(x) * (y - 1.0)
+    ∂ₓv₀ = (x, y) -> -π * cospi(x) * (y - 1.0)
+    ∂ᵧv₀ = (x, y) -> -sinpi(x)
+
+    θ₀ = (x, y) -> sinpi(x) * sinpi(y)
+    ∂ₓθ₀ = (x, y) -> π * cospi(x) * sinpi(y)
+    ∂ᵧθ₀ = (x, y) -> π * sinpi(x) * cospi(y)
+
+    z₀ = x -> sinpi(x)
+    r₀ = x -> -sinpi(x)
+
+    return PDEInputData(
+        (0.0, 0.0),
+        (1.0, 1.0),
+        a,
+        q₁, q₂, q₃, q₄,
+        α, β, dβ, f, df, g, ∂ₛg,
+        u₀, ∂ₓu₀, ∂ᵧu₀,
+        v₀, ∂ₓv₀, ∂ᵧv₀,
+        θ₀, ∂ₓθ₀, ∂ᵧθ₀,
+        z₀, r₀,
+        f₁, f₂, f₃,
+        nothing, nothing, nothing, nothing, nothing
+    )
+end
