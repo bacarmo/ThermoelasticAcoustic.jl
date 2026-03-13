@@ -62,15 +62,13 @@ w^0,                             &amp; \text{if } n = \text{“1,0&#39;&#39;},
 \bar{\partial}z^n = \widehat{r}^n.
 \end{align*}\]</p><h2 id="Solving-the-Algebraic-Systems"><a class="docs-heading-anchor" href="#Solving-the-Algebraic-Systems">Solving the Algebraic Systems</a><a id="Solving-the-Algebraic-Systems-1"></a><a class="docs-heading-anchor-permalink" href="#Solving-the-Algebraic-Systems" title="Permalink"></a></h2><p>Proceeding analogously to Strategy 2 of Scheme 1, the matrix formulation can be rewritten as:</p><p class="math-container">\[\begin{align*}
 &amp;
-Q(n) \widehat{v}^n
+\big[Q_1(n)\big]^{m_1\times m_1} \widehat{v}^n
 + \tau\alpha^{n-\frac{1}{2}} G^{m_1}(\widehat{v}^n) 
-+ \tau F^{m_1}(d^{\ast n})
-+ \tau A^{m_1\times m_2} c^{\ast n}
-- L_1(n) = 0,
+- L_1(n,d^{\ast n},c^{\ast n}) = 0,
 \\[10pt]
 &amp;
-\big[2M^{m_2\times m_2} + \tau\beta\big(\mathbf{b}\cdot c^{\ast n}\big)K^{m_2\times m_2}\big]\widehat{c}^n
-= L_2(n) - \tau A^{m_2\times m_1} \widehat{v}^n,
+\big[Q_2(c^{\ast n})\big]^{m_2\times m_2}\widehat{c}^n
+= L_2(n,\widehat{v}^n),
 \\[10pt]
 &amp; \hat{r}^n
 =
@@ -85,7 +83,7 @@ Q(n) \widehat{v}^n
 \quad r^n = 2\hat{r}^n - r^{n-1},
 \quad d^n = \tau\hat{v}^n + d^{n-1},
 \quad z^n = \tau\hat{r}^n + z^{n-1}.
-\end{align*}\]</p><details class="admonition is-details" id="Details-e623a07a1e362a50"><summary class="admonition-header">Details<a class="admonition-anchor" href="#Details-e623a07a1e362a50" title="Permalink"></a></summary><div class="admonition-body"><p>Rewriting the matrix formulation in terms of <span>$\widehat{v}^n$</span>, <span>$\widehat{c}^n$</span>, and <span>$\widehat{r}^n$</span>, we obtain:</p><p class="math-container">\[\begin{align*}
+\end{align*}\]</p><details class="admonition is-details" id="Details-695f57faeb19be2a"><summary class="admonition-header">Details<a class="admonition-anchor" href="#Details-695f57faeb19be2a" title="Permalink"></a></summary><div class="admonition-body"><p>Rewriting the matrix formulation in terms of <span>$\widehat{v}^n$</span>, <span>$\widehat{c}^n$</span>, and <span>$\widehat{r}^n$</span>, we obtain:</p><p class="math-container">\[\begin{align*}
 &amp; M^{m_1\times m_1} \big(\frac{2}{\tau}\widehat{v}^n-\frac{2}{\tau}v^{n-1}\big)
 + \alpha^{n-\frac{1}{2}}\Big[  
     K^{m_1\times m_1} \big(\frac{\tau}{2}\widehat{v}^n+d^{n-1}\big)
@@ -143,15 +141,13 @@ Q(n) \widehat{v}^n
   \mathcal{F}^{m_3}(f_3^{n-\frac{1}{2}}).
 \end{align*}\]</p><p>Isolating <span>$\widehat{v}^n$</span> and <span>$\widehat{c}^n$</span>:</p><p class="math-container">\[\begin{align*}
 &amp;
-Q(n) \widehat{v}^n
+Q_1(n) \widehat{v}^n
 + \tau\alpha^{n-\frac{1}{2}} G^{m_1}(\widehat{v}^n) 
-+ \tau F^{m_1}(d^{\ast n})
-+ \tau A^{m_1\times m_2} c^{\ast n}
-- L_1(n) = 0,
+- L_1(n,d^{\ast n},c^{\ast n}) = 0,
 \\[10pt]
 &amp;
-\big[2M^{m_2\times m_2} + \tau\beta\big(\mathbf{b}\cdot c^{\ast n}\big)K^{m_2\times m_2}\big]\widehat{c}^n
-= L_2(n) - \tau A^{m_2\times m_1} \widehat{v}^n,
+Q_2(c^{\ast n})\widehat{c}^n
+= L_2(n,\widehat{v}^n),
 \\[10pt]
 &amp; \hat{r}^n
 =
@@ -160,8 +156,8 @@ Q(n) \widehat{v}^n
 - \frac{\tau q_3}{q_5} z^{n-1}
 + \frac{\tau}{q_5} \Big(M^{m_3\times m_3}\Big)^{-1}
   \mathcal{F}^{m_3}(f_3^{n-\frac{1}{2}}).
-\end{align*}\]</p></div></details><details class="admonition is-details" id="Matrix-and-vector-definitions-1d6139a25a489f44"><summary class="admonition-header">Matrix and vector definitions<a class="admonition-anchor" href="#Matrix-and-vector-definitions-1d6139a25a489f44" title="Permalink"></a></summary><div class="admonition-body"><p class="math-container">\[\begin{align*}
-Q =&amp; 
+\end{align*}\]</p></div></details><details class="admonition is-details" id="Matrix-and-vector-definitions-ba41e5d033495dcc"><summary class="admonition-header">Matrix and vector definitions<a class="admonition-anchor" href="#Matrix-and-vector-definitions-ba41e5d033495dcc" title="Permalink"></a></summary><div class="admonition-body"><p class="math-container">\[\begin{align*}
+Q_1 =&amp; 
 2M^{m_1\times m_1} 
 + \frac{\tau^2}{2}\alpha^{n-\frac{1}{2}}K^{m_1\times m_1}
 + \frac{\tau^2q_4}{q_5}\alpha^{n-\frac{1}{2}}
@@ -170,8 +166,12 @@ M^{m_3\times m_3}       &amp; 0^{m_3\times(m_1-m_3)}\\[5pt]
 0^{(m_1-m_3)\times m_3} &amp; 0^{(m_1-m_3)\times(m_1-m_3)}
 \end{bmatrix}
 \\[10pt]
+Q_2 =&amp; 2M^{m_2\times m_2} + \tau\beta\big(\mathbf{b}\cdot c^{\ast n}\big)K^{m_2\times m_2}
+\\[10pt]
 L_1 =&amp;
-2M^{m_1\times m_1}v^{n-1}
+- \tau F^{m_1}(d^{\ast n})
+- \tau A^{m_1\times m_2} c^{\ast n}
++ 2M^{m_1\times m_1}v^{n-1}
 - \tau \alpha^{n-\frac{1}{2}}K^{m_1\times m_1} d^{n-1}
 + \tau \mathcal{F}^{m_1}(f_1^{n-\frac{1}{2}})
 \\
@@ -184,18 +184,15 @@ L_1 =&amp;
   0^{(m_1-m_3)}
 \end{bmatrix}
 \\[20pt]
-L_2 =&amp; 
-2M^{m_2\times m_2} c^{n-1} 
+L_2 =&amp;
+- \tau A^{m_2\times m_1} \widehat{v}^n
++ 2M^{m_2\times m_2} c^{n-1} 
 + \tau \mathcal{F}^{m_2}(f_2^{n-\frac{1}{2}})
-\end{align*}\]</p></div></details><details class="admonition is-details" id="Jacobian-matrix-calculation-ab6f9734eb05b9bc"><summary class="admonition-header"> Jacobian matrix calculation<a class="admonition-anchor" href="#Jacobian-matrix-calculation-ab6f9734eb05b9bc" title="Permalink"></a></summary><div class="admonition-body"><p>Initially, note that:</p><p class="math-container">\[H_i(X) 
-= \sum_{\ell=1}^{m_1}Q_{i,\ell}X_\ell
+\end{align*}\]</p></div></details><details class="admonition is-details" id="Jacobian-matrix-calculation-5fd9b60ce8d662b"><summary class="admonition-header"> Jacobian matrix calculation<a class="admonition-anchor" href="#Jacobian-matrix-calculation-5fd9b60ce8d662b" title="Permalink"></a></summary><div class="admonition-body"><p>Initially, note that:</p><p class="math-container">\[H_i(X) 
+= \sum_{\ell=1}^{m_1}[Q_1]_{i,\ell}X_\ell
 + \tau\alpha^{n-\frac{1}{2}} G_i^{m_1}\big(X\big) 
-+ \big[
-  \tau F^{m_1}(d^{\ast n})
-  + \tau A^{m_1\times m_2} c^{\ast n}
-  - L_1
-  \big]_i.\]</p><p>In this way,</p><p class="math-container">\[JH(X) 
-= Q +
+- \big[L_1\big]_i.\]</p><p>In this way,</p><p class="math-container">\[JH(X) 
+= Q_1 + \tau\alpha^{n-\frac{1}{2}}
   \begin{bmatrix}\displaystyle
   JG^{m_3\times m_3}(X_{1:m_3}) &amp; 0^{m_3\times(m_1-m_3)}
   \\[10pt]
@@ -203,4 +200,4 @@ L_2 =&amp;
   \end{bmatrix} ,\]</p><p>where</p><p class="math-container">\[\big[JG^{m_3\times m_3}(X_{1:m_3})\big]_{i,j}
 =
 \int_{\Gamma_1} \psi_i(x)\psi_j(x)
-\frac{\partial g}{\partial s}\Big(x,\sum_{\ell=1}^{m_3}X_\ell\psi_\ell(x)\Big)d\Gamma.\]</p></div></details></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../scheme1/">« Scheme 1</a><a class="docs-footer-nextpage" href="../../api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Monday 9 March 2026 13:11">Monday 9 March 2026</span>. Using Julia version 1.12.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+\frac{\partial g}{\partial s}\Big(x,\sum_{\ell=1}^{m_3}X_\ell\psi_\ell(x)\Big)d\Gamma.\]</p></div></details></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../scheme1/">« Scheme 1</a><a class="docs-footer-nextpage" href="../../api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Friday 13 March 2026 22:58">Friday 13 March 2026</span>. Using Julia version 1.12.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
