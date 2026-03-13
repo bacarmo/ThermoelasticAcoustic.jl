@@ -11,7 +11,9 @@ makedocs(;
     format = Documenter.HTML(;
         canonical = "https://bacarmo.github.io/ThermoelasticAcoustic.jl",
         edit_link = "main",
-        assets = String[]
+        assets = String[],
+        size_threshold = 300 * 1024,  # error threshold: 300 KiB
+        size_threshold_warn = 200 * 1024   # warning threshold: 200 KiB
     ),
     pages = [
         "Home" => "index.md",
