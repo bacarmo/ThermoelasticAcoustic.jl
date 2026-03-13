@@ -85,15 +85,13 @@ Proceeding analogously to Strategy 2 of Scheme 1, the matrix formulation can be 
 ```math
 \begin{align*}
 &
-Q(n) \widehat{v}^n
+\big[Q_1(n)\big]^{m_1\times m_1} \widehat{v}^n
 + \tau\alpha^{n-\frac{1}{2}} G^{m_1}(\widehat{v}^n) 
-+ \tau F^{m_1}(d^{\ast n})
-+ \tau A^{m_1\times m_2} c^{\ast n}
-- L_1(n) = 0,
+- L_1(n,d^{\ast n},c^{\ast n}) = 0,
 \\[10pt]
 &
-\big[2M^{m_2\times m_2} + \tau\beta\big(\mathbf{b}\cdot c^{\ast n}\big)K^{m_2\times m_2}\big]\widehat{c}^n
-= L_2(n) - \tau A^{m_2\times m_1} \widehat{v}^n,
+\big[Q_2(c^{\ast n})\big]^{m_2\times m_2}\widehat{c}^n
+= L_2(n,\widehat{v}^n),
 \\[10pt]
 & \hat{r}^n
 =
@@ -193,15 +191,13 @@ With ``\hat{v}^n``, ``\hat{c}^n``, and ``\hat{r}^n`` determined, the remaining u
     ```math
     \begin{align*}
     &
-    Q(n) \widehat{v}^n
+    Q_1(n) \widehat{v}^n
     + \tau\alpha^{n-\frac{1}{2}} G^{m_1}(\widehat{v}^n) 
-    + \tau F^{m_1}(d^{\ast n})
-    + \tau A^{m_1\times m_2} c^{\ast n}
-    - L_1(n) = 0,
+    - L_1(n,d^{\ast n},c^{\ast n}) = 0,
     \\[10pt]
     &
-    \big[2M^{m_2\times m_2} + \tau\beta\big(\mathbf{b}\cdot c^{\ast n}\big)K^{m_2\times m_2}\big]\widehat{c}^n
-    = L_2(n) - \tau A^{m_2\times m_1} \widehat{v}^n,
+    Q_2(c^{\ast n})\widehat{c}^n
+    = L_2(n,\widehat{v}^n),
     \\[10pt]
     & \hat{r}^n
     =
@@ -216,7 +212,7 @@ With ``\hat{v}^n``, ``\hat{c}^n``, and ``\hat{r}^n`` determined, the remaining u
 !!! details "Matrix and vector definitions"
     ```math
     \begin{align*}
-    Q =& 
+    Q_1 =& 
     2M^{m_1\times m_1} 
     + \frac{\tau^2}{2}\alpha^{n-\frac{1}{2}}K^{m_1\times m_1}
     + \frac{\tau^2q_4}{q_5}\alpha^{n-\frac{1}{2}}
@@ -225,8 +221,12 @@ With ``\hat{v}^n``, ``\hat{c}^n``, and ``\hat{r}^n`` determined, the remaining u
     0^{(m_1-m_3)\times m_3} & 0^{(m_1-m_3)\times(m_1-m_3)}
     \end{bmatrix}
     \\[10pt]
+    Q_2 =& 2M^{m_2\times m_2} + \tau\beta\big(\mathbf{b}\cdot c^{\ast n}\big)K^{m_2\times m_2}
+    \\[10pt]
     L_1 =&
-    2M^{m_1\times m_1}v^{n-1}
+    - \tau F^{m_1}(d^{\ast n})
+    - \tau A^{m_1\times m_2} c^{\ast n}
+    + 2M^{m_1\times m_1}v^{n-1}
     - \tau \alpha^{n-\frac{1}{2}}K^{m_1\times m_1} d^{n-1}
     + \tau \mathcal{F}^{m_1}(f_1^{n-\frac{1}{2}})
     \\
@@ -239,8 +239,9 @@ With ``\hat{v}^n``, ``\hat{c}^n``, and ``\hat{r}^n`` determined, the remaining u
       0^{(m_1-m_3)}
     \end{bmatrix}
     \\[20pt]
-    L_2 =& 
-    2M^{m_2\times m_2} c^{n-1} 
+    L_2 =&
+    - \tau A^{m_2\times m_1} \widehat{v}^n
+    + 2M^{m_2\times m_2} c^{n-1} 
     + \tau \mathcal{F}^{m_2}(f_2^{n-\frac{1}{2}})
     \end{align*}
     ```
@@ -249,18 +250,14 @@ With ``\hat{v}^n``, ``\hat{c}^n``, and ``\hat{r}^n`` determined, the remaining u
     Initially, note that:
     ```math
     H_i(X) 
-    = \sum_{\ell=1}^{m_1}Q_{i,\ell}X_\ell
+    = \sum_{\ell=1}^{m_1}[Q_1]_{i,\ell}X_\ell
     + \tau\alpha^{n-\frac{1}{2}} G_i^{m_1}\big(X\big) 
-    + \big[
-      \tau F^{m_1}(d^{\ast n})
-      + \tau A^{m_1\times m_2} c^{\ast n}
-      - L_1
-      \big]_i.
+    - \big[L_1\big]_i.
     ```
     In this way,
     ```math
     JH(X) 
-    = Q + \tau\alpha^{n-\frac{1}{2}}
+    = Q_1 + \tau\alpha^{n-\frac{1}{2}}
       \begin{bmatrix}\displaystyle
       JG^{m_3\times m_3}(X_{1:m_3}) & 0^{m_3\times(m_1-m_3)}
       \\[10pt]
