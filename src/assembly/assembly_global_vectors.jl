@@ -242,3 +242,48 @@ function assembly_nonlinearity_G!(
 
     return nothing
 end
+
+# ==============================================================================
+# assembly_∫basis
+# ==============================================================================
+
+"""
+    assembly_∫basis(b_local, dof_map)
+ 
+Assemble the global integral vector
+```math
+b_i = \\int_{\\Omega} \\varphi_i(x, y) \\, d\\Omega,
+\\quad i = 1, \\ldots, m,
+```
+where ``\\{\\varphi_i\\}`` are the global basis functions associated with the
+free DOFs of `dof_map`.
+ 
+The local vector `b_local` (see [`assembly_local_∫basis`](@ref)) is scattered
+into the global vector via the connectivity array `dof_map.EQoLG`.
+ 
+Returns a `Vector{T}` of length `dof_map.m`.
+ 
+# Arguments
+- `b_local::SVector`: local integral vector, one entry per local DOF.
+- `dof_map::DOFMap`: DOF mapping with `EQoLG` connectivity and `m` free DOFs.
+"""
+function assembly_∫basis(
+        b_local::SVector{Nb2, T},
+        dof_map::DOFMap
+) where {Nb2, T}
+    EQoLG = dof_map.EQoLG
+    m = dof_map.m
+    Ne = length(EQoLG)
+
+    b = zeros(T, m)
+
+    for e in 1:Ne
+        global_indices = EQoLG[e]
+        for a in 1:Nb2
+            ia = global_indices[a]
+            ia <= m && (b[ia] += b_local[a])
+        end
+    end
+
+    return b
+end
