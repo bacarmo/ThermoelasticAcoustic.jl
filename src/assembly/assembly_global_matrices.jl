@@ -286,7 +286,7 @@ function assembly_global_matrix_DF(
     I_rows = Vector{I}(undef, capacity)
     J_cols = Vector{I}(undef, capacity)
     V_vals = Vector{T}(undef, capacity)
-    local_matrix = FixedSizeArray{T}(undef, num_local_dof, num_local_dof)
+    local_matrix = zeros(T, num_local_dof, num_local_dof)
 
     scale_jacobian = scale * (mesh.Δx[1] * mesh.Δx[2] / 4)
 
