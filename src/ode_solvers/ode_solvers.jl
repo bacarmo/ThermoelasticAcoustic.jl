@@ -44,7 +44,7 @@ struct ModifiedCN <: ODESolver end
 # Generic interfaces
 # ========================================
 """
-    build_cache(solver, matrices, dof_map_m₁, dof_map_m₂, dof_map_m₃)
+    build_cache(solver, matrices, dof_map_m₁, dof_map_m₂, dof_map_m₃, τ)
 
 Allocate and return the solver-specific cache for the time integration.
 Dispatches on `solver` to construct the appropriate cache type.
@@ -58,12 +58,15 @@ subsequent calls to `ode_solve` are allocation-free.
 - `dof_map_m₁::DOFMap`: DOF map for the `m₁`-space (wave field).
 - `dof_map_m₂::DOFMap`: DOF map for the `m₂`-space (heat field).
 - `dof_map_m₃::DOFMap`: DOF map for the `m₃`-space (acoustic field).
+- `τ::T`: time-step size; used by solver-specific constructors that require it
+  to pre-fill time-invariant matrix blocks (e.g. [`CrankNicolson`](@ref)).
+ 
 
 # Extended help
 To add support for a new solver `MySolver`, define:
 ```julia
-build_cache(::MySolver, matrices, dof_map_m₁, dof_map_m₂, dof_map_m₃) =
-    MySolverCache(matrices, dof_map_m₁, dof_map_m₂, dof_map_m₃)
+build_cache(::MySolver, matrices, dof_map_m₁, dof_map_m₂, dof_map_m₃, τ) =
+    MySolverCache(matrices, dof_map_m₁, dof_map_m₂, dof_map_m₃, τ)
 ```
 """
 function build_cache end
@@ -97,6 +100,8 @@ function ode_solve end
 # ========================================
 # Implementations
 # ========================================
-include("cache.jl")
+include("cache_cn.jl")
 include("crank_nicolson.jl")
+
+include("cache_mcn.jl")
 include("modified_crank_nicolson.jl")
