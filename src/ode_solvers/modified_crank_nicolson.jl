@@ -246,9 +246,7 @@ function solve_v̂ⁿ!(
     compute_L₁!(cache, state, matrices, dof_map_m₁, dof_map_m₃,
         mesh1D, mesh2D, quad, τ, t_half, α, q₅, input_data)
 
-    copyto!(cache.v̂ⁿ, state.v)   # warm start from vⁿ⁻¹
-
-    newton_solve!(cache, dof_map_m₃, mesh1D, quad, τα, input_data; abstol, maxiter)
+    newton_solve!(cache, state, dof_map_m₃, mesh1D, quad, τα, input_data; abstol, maxiter)
 
     return nothing
 end
@@ -418,7 +416,7 @@ end
 # ==============================================================================
 
 """
-    newton_solve!(cache, dof_map_m₃, mesh1D, quad, τα, input_data; abstol, maxiter)
+    newton_solve!(cache, state, dof_map_m₃, mesh1D, quad, τα, input_data; abstol, maxiter)
 
 Solve the nonlinear system
 ```math
@@ -440,6 +438,7 @@ Assumes the following cache fields have already been populated:
 
 # Arguments
 - `cache::ModifiedCNCache`: pre-allocated workspace; `cache.v̂ⁿ` is updated in-place.
+- `state::FEMState`: solution state at time level ``n-1``; provides ``d^{n-1}``
 - `dof_map_m₃::DOFMap`: DOF map for the ``m_3``-space.
 - `mesh1D::CartesianMesh{1}`: 1D Cartesian mesh (boundary ``\\Gamma_1``).
 - `quad::QuadratureSetup`: precomputed quadrature data.
@@ -452,6 +451,7 @@ Assumes the following cache fields have already been populated:
 """
 function newton_solve!(
         cache::ModifiedCNCache{T},
+        state::FEMState{T},
         dof_map_m₃::DOFMap,
         mesh1D::CartesianMesh{1},
         quad::QuadratureSetup,
@@ -460,6 +460,9 @@ function newton_solve!(
         abstol::T = T(1e-10),
         maxiter::Int = 10
 ) where {T}
+    # Warm start: v̂ⁿ ← vⁿ⁻¹
+    copyto!(cache.v̂ⁿ, state.v)
+
     for _ in 1:maxiter
         # Compute -H(v̂ⁿ)  →  cache.minusH
         compute_minusH!(cache, dof_map_m₃, mesh1D, quad, τα, input_data)
@@ -789,7 +792,7 @@ function solve_r̂ⁿ!(
     cst3 = τ * q₃ / q₅
     cst4 = τ / q₅
 
-    m₃ = length(cache.r̂ⁿ)
+    m₃ = dof_map_m₃.m
 
     # F(f₃(t_half)) → cache.vec_m₃_1
     scale = mesh1D.Δx[1] / 2
@@ -816,7 +819,7 @@ end
 """
     update_state!(state, cache, τ)
 
-Advance `state` from time level ``n-1`` to ``n`` using the midpoint unknowns ]]stored in `cache`:
+Advance `state` from time level ``n-1`` to ``n`` using the midpoint unknowns stored in `cache`:
 ```math
 \\begin{aligned}
 v^n &= 2\\hat{v}^n - v^{n-1}, \\\\
@@ -826,8 +829,7 @@ d^n &= \\tau\\hat{v}^n + d^{n-1}, \\\\
 z^n &= \\tau\\hat{r}^n + z^{n-1}.
 \\end{aligned}
 ```
-The time index `state.n` and current time `state.t` are also incremented by
-``1`` and ``\\tau``, respectively.
+The time index `state.n` and current time `state.t` are also incremented by ``1`` and ``\\tau``, respectively.
 
 Assumes `cache.v̂ⁿ`, `cache.ĉⁿ`, and `cache.r̂ⁿ` have already been populated
 by [`solve_v̂ⁿ!`](@ref), [`solve_ĉⁿ!`](@ref), and [`solve_r̂ⁿ!`](@ref),
