@@ -1,4 +1,4 @@
-function build_cache(::ModifiedCN, matrices, dof_map_m₁, dof_map_m₂, dof_map_m₃)
+function build_cache(::ModifiedCN, matrices, dof_map_m₁, dof_map_m₂, dof_map_m₃, τ)
     ModifiedCNCache(matrices, dof_map_m₁, dof_map_m₂, dof_map_m₃)
 end
 
