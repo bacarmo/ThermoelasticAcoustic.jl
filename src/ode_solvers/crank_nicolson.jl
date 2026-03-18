@@ -308,7 +308,7 @@ end
  
 Solve the joint nonlinear system
 ```math
-H(X) = Q X
+H(X^n) = Q X^n
 + \\begin{bmatrix}
     \\tau\\alpha G^{m_1}(\\hat{v}^n)
     + \\tau F^{m_1}\\bigl(\\tfrac{\\tau}{2}\\hat{v}^n + d^{n-1}\\bigr)
@@ -318,9 +318,9 @@ H(X) = Q X
 - \\begin{bmatrix} L_1 \\\\ L_2 \\end{bmatrix}
 = 0
 ```
-via Newton's method, updating `cache.Xⁿ` (and its aliases `cache.v̂ⁿ`, `cache.ĉⁿ`) in-place.
+for the unknown ``X^n = [\\hat{v}^n;\\,\\hat{c}^n]`` via Newton's method, updating `cache.Xⁿ` (and its aliases `cache.v̂ⁿ`, `cache.ĉⁿ`) in-place. 
  
-Convergence is declared when ``\\max_i |H_i(X)| \\leq \\texttt{abstol}``.
+Convergence is declared when ``\\max_i |H_i(X^n)| \\leq \\texttt{abstol}``.
  
 Assumes `cache.Q`, `cache.L₁`, and `cache.L₂` have already been populated.
 `cache.Xⁿ` is warm-started from ``[v^{n-1};\\,c^{n-1}]`` at the beginning of each call.
