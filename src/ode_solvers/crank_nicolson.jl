@@ -631,7 +631,7 @@ function solve_r̂ⁿ!(
     q₄ = input_data.q₄
 
     cst1 = -(τ * q₄ / q₅)
-    cst2 = 2q₁ / q₅
+    cst2 = 2 * q₁ / q₅
     cst3 = τ * q₃ / q₅
     cst4 = τ / q₅
 
