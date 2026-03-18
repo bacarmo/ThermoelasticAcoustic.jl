@@ -42,7 +42,7 @@ All fields are initialized once before the time loop. Intended to make
 |:-------- |:------------------:|:-----------------------------------------------------------------------|
 | `Xⁿ`     | `m₁+m₂`            | Joint iterate ``[\\hat{v}^n;\\hat{c}^n]``; updated in-place by Newton. |
 | `minusH` | `m₁+m₂`            | Residual ``-H(X^n)``; see [`compute_minusH!`](@ref).                   |
-| `JH`     | `(m₁+m₂)×(m₁+m₂)`  | Jacobian of ``H``; see [`compute_JH!`](@ref).                          |
+| `JH`     | `(m₁+m₂)×(m₁+m₂)`  | Jacobian of ``H``; see [`compute_JH!`](@ref). The two off-diagonal time-invariant blocks (``\\tau A^{m_1\\times m_2}``, ``\\tau A^{m_2\\times m_1}``) are set at construction and never modified; only diagonal blocks are updated each step. |
 
 # RHS vectors
 | Field | Length | Description                                                  |
@@ -100,7 +100,7 @@ global [`SystemMatrices`](@ref), the three DOF maps, and the time-step size `τ`
 - `dof_map_m₁::DOFMap`: DOF map for the `m₁`-space (wave field).
 - `dof_map_m₂::DOFMap`: DOF map for the `m₂`-space (heat field).
 - `dof_map_m₃::DOFMap`: DOF map for the `m₃`-space (acoustic field).
-- `τ::T`: time-step size; used to set the off-diagonal blocks of `Q`.
+- `τ::T`: time-step size; used to set the off-diagonal blocks of `Q` and `JH`.
 """
 function CrankNicolsonCache(
         matrices::SystemMatrices{T, I},
@@ -120,11 +120,14 @@ function CrankNicolsonCache(
     M_m₁xm₁_vs2 = 2 * matrices.M_m₁xm₁
     M_m₂xm₂_vs2 = 2 * matrices.M_m₂xm₂
 
-    Q = [matrices.M_m₁xm₁.data τ*matrices.A_m₁xm₂;
-         τ*matrices.A_m₂xm₁ M_m₂xm₂_vs2.data]
+    τA_m₁xm₂ = τ * matrices.A_m₁xm₂
+    τA_m₂xm₁ = τ * matrices.A_m₂xm₁
 
-    JH = [matrices.M_m₁xm₁.data matrices.A_m₁xm₂;
-          matrices.A_m₂xm₁ ones(T, m₂, m₂)]
+    Q = [matrices.M_m₁xm₁.data τA_m₁xm₂;
+         τA_m₂xm₁ M_m₂xm₂_vs2]
+
+    JH = [matrices.M_m₁xm₁.data τA_m₁xm₂;
+          τA_m₂xm₁ ones(T, m₂, m₂)]
 
     return CrankNicolsonCache(
         # Scratch vectors — m₁

@@ -562,8 +562,8 @@ function compute_JH!(
     JF = assembly_global_matrix_DF(
         τ²_half, input_data.df, cache.d̂ⁿ, mesh2D, dof_map_m₁, quad)
 
-    # JH ← Q
-    cache.JH .= cache.Q
+    # JH[1:m₁, 1:m₁] ← Q[1:m₁, 1:m₁]
+    cache.JH[1:m₁, 1:m₁] .= cache.Q[1:m₁, 1:m₁]
 
     # Embed τα JG + τ²/2 JF into the top-left m₁×m₁ block
     @. cache.JH[1:m₃, 1:m₃] += JG                               # FIXME: allocates
@@ -577,7 +577,7 @@ function compute_JH!(
     @. cache.vec_m₂_1 = τdβ * matrices.b
     @inbounds for j in 1:m₂, i in 1:m₂
         cache.JH[m₁ + i, m₁ + j] = cache.K_m₂xm₂_vs_ĉⁿ[i] * cache.vec_m₂_1[j] +
-                                   τβ * matrices.K_m₂xm₂[i, j]
+                                   τβ * matrices.K_m₂xm₂[i, j] + cache.M_m₂xm₂_vs2[i, j]
     end
 
     return nothing
