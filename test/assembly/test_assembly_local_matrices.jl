@@ -68,6 +68,44 @@ end
     @test Ke ≈ Ke_expected
 end
 
+@testitem "assembly_local_matrix_ϕxc∇ϕ: LagrangeElement{2,1}(), c = (1,1)" begin
+    using ThermoelasticAcoustic: assembly_local_matrix_ϕxc∇ϕ, CartesianMesh,
+                                 LagrangeElement
+    using StaticArrays: SMatrix
+
+    # Setup
+    mesh = CartesianMesh((0.0, 0.0), (1.0, 1.0), (4, 3))
+    family = LagrangeElement{2, 1}()
+    c = (1.0, 1.0)
+
+    # Compute
+    K = assembly_local_matrix_ϕxc∇ϕ(c, mesh, family)
+
+    # Analytical solution
+    # K = c₁ * (Δy/2) * K_x + c₂ * (Δx/2) * K_y
+    # K_x[a,b] = ∫∫ φₐ ∂φᵦ/∂ξ dξ dη over [-1,1]²
+    # K_y[a,b] = ∫∫ φₐ ∂φᵦ/∂η dξ dη over [-1,1]²
+    Δx, Δy = mesh.Δx
+    #! format: off
+    K_x = (1/6) * SMatrix{4,4}(
+       [-2  2 -1  1;
+        -2  2 -1  1;
+        -1  1 -2  2;
+        -1  1 -2  2]
+    )
+    K_y = (1/6) * SMatrix{4,4}(
+       [-2 -1  2  1;
+        -1 -2  1  2;
+        -2 -1  2  1;
+        -1 -2  1  2]
+    )
+    #! format: on
+    K_expected = (c[1] * Δy / 2) * K_x + (c[2] * Δx / 2) * K_y
+
+    # Test
+    @test K ≈ K_expected
+end
+
 @testitem "assembly_local_matrix_DG!: LagrangeElement{1,1}(), LeftRight(), ∂ₛg(x,v) = 1.0" begin
     using ThermoelasticAcoustic: assembly_local_matrix_DG!, assembly_local_matrix_ϕxϕ,
                                  CartesianMesh, LagrangeElement, DOFMap, LeftRight,
