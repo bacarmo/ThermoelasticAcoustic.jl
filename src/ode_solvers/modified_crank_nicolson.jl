@@ -270,8 +270,7 @@ Q_1 = 2M^{m_1 \\times m_1}
     \\end{bmatrix}.
 ```
 
-Operates only on the stored nonzeros; 
-no allocation occurs except for the ``m_3 \\times m_3`` top-left block update (see FIXME in source).
+Operates only on stored nonzeros; allocation-free.
 
 # Arguments
 
@@ -290,13 +289,16 @@ function compute_Q₁!(
         q₄::T,
         q₅::T
 ) where {T}
-    m₃ = size(matrices.M_m₃xm₃, 1)
     cst1 = (τ^2 / 2) * α
     cst2 = (τ^2 * q₄ / q₅) * α
 
     @. cache.Q₁.data.nzval = cache.M_m₁xm₁_vs2.data.nzval +
                              cst1 * matrices.K_m₁xm₁.data.nzval
-    @. cache.Q₁.data[1:m₃, 1:m₃] += cst2 * matrices.M_m₃xm₃.data  # FIXME: allocates
+
+    nnz_m₃ = length(matrices.M_m₃xm₃.data.nzval)
+    @inbounds for i in 1:nnz_m₃
+        cache.Q₁.data.nzval[i] += cst2 * matrices.M_m₃xm₃.data.nzval[i]
+    end
 
     return nothing
 end
