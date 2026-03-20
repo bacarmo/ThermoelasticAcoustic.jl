@@ -103,7 +103,7 @@ function convergence_study_coupled(;
     p = polynomial_degree(fe)
     τ_values = h_values .^ ((p + 1) / 2)
 
-    test_info = "Coupled space-time convergence (τ = h^{($(p)+1)/2}) · $(string(typeof(fe))) · $(string(typeof(solver)))"
+    test_info = "Coupled space-time convergence (τ = h^{($(p)+1)/2}) · t_end = $(t_end) · $(input_data.name) · $(string(typeof(fe))) · $(string(typeof(solver)))"
 
     return run_convergence_study(
         solver, fe, input_data, t_end, Nx_values, h_values, τ_values, test_info)
@@ -146,7 +146,7 @@ function convergence_study_spatial(;
                 for Nx in Nx_values]
     τ_values = fill(τ_fixed, length(Nx_values))
 
-    test_info = "Spatial convergence (τ = $τ_fixed fixed) · $(string(typeof(fe))) · $(string(typeof(solver)))"
+    test_info = "Spatial convergence (τ = $τ_fixed fixed) · t_end = $(t_end) · $(input_data.name) · $(string(typeof(fe))) · $(string(typeof(solver)))"
 
     return run_convergence_study(
         solver, fe, input_data, t_end, Nx_values, h_values, τ_values, test_info)
@@ -193,8 +193,7 @@ function convergence_study_temporal(;
 
     test_info = "Temporal convergence " *
                 "(Nx = $Nx_fixed, h ≈ $(round(h_fixed; sigdigits = 4)) fixed) · " *
-                "$(string(typeof(fe))) · " *
-                "$(string(typeof(solver)))"
+                "t_end = $(t_end) · $(input_data.name) · $(string(typeof(fe))) · $(string(typeof(solver)))"
 
     return run_convergence_study(
         solver, fe, input_data, t_end, Nx_values, h_values, τ_values, test_info)
