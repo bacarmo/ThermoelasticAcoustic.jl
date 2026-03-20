@@ -556,6 +556,7 @@ where ``JG`` is the ``m_3 \\times m_3`` Jacobian of the boundary
 nonlinearity ``G^{m_1}``.
  
 Assumes `cache.Q₁` and `cache.v̂ⁿ` have already been populated.
+Operates only on stored nonzeros; allocation-free except for `assembly_global_matrix_DG`.
  
 # Arguments
 - `cache::ModifiedCNCache`: pre-allocated workspace; `cache.JH` is updated in-place.
@@ -580,9 +581,15 @@ function compute_JH!(
     JG = assembly_global_matrix_DG(
         τα, input_data.∂ₛg, @view(cache.v̂ⁿ[1:m₃]), mesh1D, dof_map_m₃, quad)
 
-    # JH ← Q₁, then embed τα JG into the top-left m₃×m₃ block
-    cache.JH.data.nzval .= cache.Q₁.data.nzval
-    @. cache.JH.data[1:m₃, 1:m₃] += JG.data             # FIXME: allocates
+    # JH ← Q₁ + τα·JG embedded in top-left m₃×m₃ block
+    nnz_m₃ = length(JG.data.nzval)
+    nnz_m₁ = length(cache.JH.data.nzval)
+    @inbounds for i in 1:nnz_m₃
+        cache.JH.data.nzval[i] = cache.Q₁.data.nzval[i] + JG.data.nzval[i]
+    end
+    @inbounds for i in (nnz_m₃ + 1):nnz_m₁
+        cache.JH.data.nzval[i] = cache.Q₁.data.nzval[i]
+    end
 
     return nothing
 end
