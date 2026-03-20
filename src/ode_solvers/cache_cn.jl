@@ -123,10 +123,10 @@ function CrankNicolsonCache(
     τA_m₁xm₂ = τ * matrices.A_m₁xm₂
     τA_m₂xm₁ = τ * matrices.A_m₂xm₁
 
-    Q = [matrices.M_m₁xm₁.data τA_m₁xm₂;
+    Q = [matrices.M_m₁xm₁ τA_m₁xm₂;
          τA_m₂xm₁ M_m₂xm₂_vs2]
 
-    JH = [matrices.M_m₁xm₁.data τA_m₁xm₂;
+    JH = [matrices.M_m₁xm₁ τA_m₁xm₂;
           τA_m₂xm₁ ones(T, m₂, m₂)]
 
     return CrankNicolsonCache(
