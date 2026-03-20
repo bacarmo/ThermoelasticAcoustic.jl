@@ -53,6 +53,8 @@ u(x,y,0) = u_0(x,y), \\quad \\frac{∂u}{∂t}(x,y,0) = v_0(x,y), \\quad
 
 # Fields
 
+## Problem Identification
+- `name::String`: Identifier for the problem instance (e.g., "example1_manufactured(2.4)")
 ## Domain Geometry
 - `pmin::NTuple{2,Float64}`: Bottom-left corner ``(x_{\\min}, y_{\\min})`` of ``Ω``.
 - `pmax::NTuple{2,Float64}`: Top-right corner ``(x_{\\max}, y_{\\max})`` of ``Ω``.
@@ -104,6 +106,8 @@ struct PDEInputData{
     Tz₀, Tr₀,
     Tf₁, Tf₂, Tf₃,
     Tu, Tv, Tθ, Tz, Tr}
+    # Problem Identification
+    name::String
 
     # Domain geometry
     pmin::NTuple{2, Float64}
@@ -316,6 +320,7 @@ function example1_manufactured(p::Float64 = 2.4)
     r₀ = x -> 0.0
 
     return PDEInputData(
+        "example1_manufactured($p)",
         (0.0, 0.0),
         (1.0, 1.0),
         a,
@@ -404,6 +409,7 @@ function example1_zero_source(p::Float64 = 2.4)
     r₀ = x -> 0.0
 
     return PDEInputData(
+        "example1_zero_source($p)",
         (0.0, 0.0),
         (1.0, 1.0),
         a,
@@ -571,6 +577,7 @@ function example2_manufactured(p::Float64 = 2.4)
     r₀ = x -> 0.0
 
     return PDEInputData(
+        "example2_manufactured($p)",
         (0.0, 0.0),
         (1.0, 1.0),
         a,
@@ -659,6 +666,7 @@ function example2_zero_source(p::Float64 = 2.4)
     r₀ = x -> 0.0
 
     return PDEInputData(
+        "example2_zero_source($p)",
         (0.0, 0.0),
         (1.0, 1.0),
         a,
@@ -751,6 +759,7 @@ function example3_manufactured()
     r₀ = x -> -sinpi(x)    # = -∂ᵧu₀(x, 0) = -sinpi(x)
 
     return PDEInputData(
+        "example3_manufactured()",
         (0.0, 0.0),
         (1.0, 1.0),
         a,
@@ -811,6 +820,7 @@ function example3_zero_source()
     r₀ = x -> -sinpi(x)
 
     return PDEInputData(
+        "example3_zero_source()",
         (0.0, 0.0),
         (1.0, 1.0),
         a,
