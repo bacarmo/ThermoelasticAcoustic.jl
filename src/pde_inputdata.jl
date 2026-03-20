@@ -194,7 +194,7 @@ function example1_manufactured(p::Float64 = 2.4)
     p_vs_p_minus_1 = p * p_minus_1
 
     # Physical parameters
-    a = (0.0, 0.0)
+    a = (1.0, 1.0)
     q₁ = q₂ = q₃ = q₄ = 1.0
     ymin = 0.0
 
@@ -352,7 +352,7 @@ function example1_zero_source(p::Float64 = 2.4)
     p_minus_1 = p - 1.0
 
     # Physical parameters
-    a = (0.0, 0.0)
+    a = (1.0, 1.0)
     q₁ = q₂ = q₃ = q₄ = 1.0
 
     # Coefficient functions
@@ -456,7 +456,7 @@ function example2_manufactured(p::Float64 = 2.4)
     p_vs_p_minus_1 = p * p_minus_1
 
     # Physical parameters
-    a = (0.0, 0.0)
+    a = (1.0, 1.0)
     q₁ = q₂ = q₃ = q₄ = 1.0
     ymin = 0.0
 
@@ -609,7 +609,7 @@ function example2_zero_source(p::Float64 = 2.4)
     p_minus_1 = p - 1.0
 
     # Physical parameters
-    a = (0.0, 0.0)
+    a = (1.0, 1.0)
     q₁ = q₂ = q₃ = q₄ = 1.0
 
     # Coefficient functions
