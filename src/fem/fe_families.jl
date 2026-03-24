@@ -111,6 +111,8 @@ function num_local_dof end
 
 num_local_dof(::LagrangeElement{Dim, Deg}) where {Dim, Deg} = (Deg + 1)^Dim
 num_local_dof(::HermiteElement{Dim, 3}) where {Dim} = 4^Dim
+num_local_dof_static(::LagrangeElement{Dim, Deg}) where {Dim, Deg} = Val((Deg + 1)^Dim)
+num_local_dof_static(::HermiteElement{Dim, 3}) where {Dim} = Val(4^Dim)
 
 """
     polynomial_degree(family::FEFamily)

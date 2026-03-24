@@ -62,6 +62,8 @@ Construct a `QuadratureSetup` for given 1D and 2D finite element families.
 - `Δx::NTuple{2,T}`: Element sizes `(Δx, Δy)`
 - `pmin::NTuple{2,T}`: Bottom-left corner of the domain `(xmin, ymin)`
 - `::Val{Npg}`: Number of Gauss–Legendre points per dimension (default: `Val(4)`)
+- `::Val{Nb}`: Number of local DOFs per element in 1D; inferred automatically from `fe1D`. Do not pass explicitly.
+- `::Val{Nb2}`: Number of local DOFs per element in 2D; inferred automatically from `fe2D`. Do not pass explicitly.
 
 ## Examples
 ```jldoctest
@@ -78,14 +80,14 @@ function QuadratureSetup(
         fe2D::DimensionalFEFamily,
         Δx::NTuple{2, T},
         pmin::NTuple{2, T},
-        ::Val{Npg} = Val(4)
-) where {T <: Real, Npg}
+        ::Val{Npg} = Val(4),
+        ::Val{Nb} = num_local_dof_static(fe1D),
+        ::Val{Nb2} = num_local_dof_static(fe2D)
+) where {T <: Real, Npg, Nb, Nb2}
     P_raw, W_raw = legendre(Npg)
     P = SVector{Npg, T}(P_raw)
     W = SVector{Npg, T}(W_raw)
 
-    Nb = num_local_dof(fe1D)
-    Nb2 = num_local_dof(fe2D)
     Nb^2 == Nb2 || throw(ArgumentError(
         "fe2D must be the Cartesian product of fe1D: expected Nb2=$(Nb^2), got $Nb2"
     ))
