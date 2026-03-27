@@ -4,6 +4,7 @@
                                  LeftRightTop, specialize, SystemMatrices
     using LinearAlgebra: Symmetric
     using SparseArrays: SparseMatrixCSC
+    using BlockArrays: BlockMatrix, BlockedOneTo, Block
 
     # Setup
     pmin, pmax = (0.0, 0.0), (1.0, 1.0)
@@ -51,14 +52,27 @@
     @test cache.Q[(m₁ + 1):end, 1:m₁] ≈ Matrix(τ * matrices.A_m₂xm₁)
     @test cache.Q[(m₁ + 1):end, (m₁ + 1):end] ≈ Matrix(cache.M_m₂xm₂_vs2)
 
+    # Test type correctness
+    Q₁₁ = view(cache.Q, Block(1, 1))
+    Q₁₂ = view(cache.Q, Block(1, 2))
+    Q₂₁ = view(cache.Q, Block(2, 1))
+    Q₂₂ = view(cache.Q, Block(2, 2))
+    @test cache.Q isa BlockMatrix{Float64, Matrix{AbstractMatrix{Float64}},
+        Tuple{BlockedOneTo{Int64, Vector{Int64}}, BlockedOneTo{Int64, Vector{Int64}}}}
+    @test Q₁₁ isa Symmetric{Float64, SparseMatrixCSC{Float64, Int64}}
+    @test Q₁₂ isa SparseMatrixCSC{Float64, Int64}
+    @test Q₂₁ isa SparseMatrixCSC{Float64, Int64}
+    @test Q₂₂ isa Symmetric{Float64, SparseMatrixCSC{Float64, Int64}}
+
     # Test matrix dimensions
     @test size(cache.Q) == (m₁ + m₂, m₁ + m₂)
+    @test size(Q₁₁) == (m₁, m₁)
+    @test size(Q₁₂) == (m₁, m₂)
+    @test size(Q₂₁) == (m₂, m₁)
+    @test size(Q₂₂) == (m₂, m₂)
 
-    # Test type correctness
-    @test cache.Q isa SparseMatrixCSC{Float64, Int64}
-
-    # Test allocation behavior (FIXME: sparse block assignments currently allocate)
-    @test (@allocated compute_Q!(cache, matrices, τ, 1.0, q₄, q₅)) > 0
+    # Test allocation behavior
+    @test (@allocated compute_Q!(cache, matrices, τ, 1.0, q₄, q₅)) == 0
 end
 
 @testitem "compute_JH!: CrankNicolson solver, JH matrix assembly" begin
@@ -69,6 +83,7 @@ end
                                  QuadratureSetup, specialize, SystemMatrices
     using LinearAlgebra: dot, Symmetric, mul!
     using SparseArrays: SparseMatrixCSC
+    using BlockArrays: BlockMatrix, BlockedOneTo, Block
 
     # Setup
     pmin, pmax = (0.0, 0.0), (1.0, 1.0)
@@ -144,13 +159,27 @@ end
                     τdβ * (cache.K_m₂xm₂_vs_ĉⁿ * matrices.b')
     @test cache.JH[(m₁ + 1):end, (m₁ + 1):end] ≈ JH_β_expected
 
+    # Test type correctness
+    JH₁₁ = view(cache.JH, Block(1, 1))
+    JH₁₂ = view(cache.JH, Block(1, 2))
+    JH₂₁ = view(cache.JH, Block(2, 1))
+    JH₂₂ = view(cache.JH, Block(2, 2))
+    @test cache.JH isa BlockMatrix{Float64, Matrix{AbstractMatrix{Float64}},
+        Tuple{BlockedOneTo{Int64, Vector{Int64}}, BlockedOneTo{Int64, Vector{Int64}}}}
+    @test JH₁₁ isa Symmetric{Float64, SparseMatrixCSC{Float64, Int64}}
+    @test JH₁₂ isa SparseMatrixCSC{Float64, Int64}
+    @test JH₂₁ isa SparseMatrixCSC{Float64, Int64}
+    @test JH₂₂ isa Matrix{Float64}
+
     # Test matrix dimensions
     @test size(cache.JH) == (m₁ + m₂, m₁ + m₂)
+    @test size(JH₁₁) == (m₁, m₁)
+    @test size(JH₁₂) == (m₁, m₂)
+    @test size(JH₂₁) == (m₂, m₁)
+    @test size(JH₂₂) == (m₂, m₂)
 
-    # Test type correctness
-    @test cache.JH isa SparseMatrixCSC{Float64, Int64}
-
-    # Test allocation behavior (FIXME: JG, JF, and sparse block assignments allocate)
-    @test (@allocated compute_JH!(cache, matrices, dof_map_m₁, dof_map_m₂, dof_map_m₃,
+    # Test allocation behavior (FIXME: JG, JF allocate)
+    @test (@allocated compute_JH!(
+        cache, matrices, dof_map_m₁, dof_map_m₂, dof_map_m₃,
         mesh1D, mesh2D, quad, τ, τ, input_data)) > 0
 end

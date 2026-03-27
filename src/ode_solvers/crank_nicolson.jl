@@ -133,26 +133,32 @@ pre-filled at construction time (see [`CrankNicolsonCache`](@ref)):
 - `q₅::T`: scalar ``q_5 = 2q_1 + \\tau q_2 + (\\tau^2/2)q_3``.
 """
 function compute_Q!(
-        cache::CrankNicolsonCache{T},
+        cache::CrankNicolsonCache{T, I},
         matrices::SystemMatrices,
         τ::T,
         α::T,
         q₄::T,
         q₅::T
-) where {T}
-    m₁ = size(matrices.M_m₁xm₁, 1)
-    m₃ = size(matrices.M_m₃xm₃, 1)
+) where {T, I}
     cst1 = (τ^2 / 2) * α
     cst2 = (τ^2 * q₄ / q₅) * α
 
     # Top-left m₁×m₁ block: 2M_m₁xm₁ + cst1 * K_m₁xm₁
-    @. cache.Q[1:m₁, 1:m₁] = cache.M_m₁xm₁_vs2 +
-                             cst1 * matrices.K_m₁xm₁       # FIXME: allocates
+    Q₁₁ = get_Q₁₁(cache)
+    @. Q₁₁.data.nzval = cache.M_m₁xm₁_vs2.data.nzval +
+                        cst1 * matrices.K_m₁xm₁.data.nzval
 
     # Top-left m₃×m₃ sub-block: += cst2 * M_m₃xm₃
-    @. cache.Q[1:m₃, 1:m₃] += cst2 * matrices.M_m₃xm₃      # FIXME: allocates
+    nnz_m₃ = length(matrices.M_m₃xm₃.data.nzval)
+    @inbounds for i in 1:nnz_m₃
+        Q₁₁.data.nzval[i] += cst2 * matrices.M_m₃xm₃.data.nzval[i]
+    end
 
     return nothing
+end
+
+@inline function get_Q₁₁(cache::CrankNicolsonCache{T, I}) where {T, I}
+    return view(cache.Q, Block(1, 1))::Symmetric{T, SparseMatrixCSC{T, I}}
 end
 
 # ==============================================================================
@@ -362,10 +368,8 @@ function newton_solve!(
         maxiter::Int = 10
 ) where {T}
     # Warm start: Xⁿ ← [vⁿ⁻¹; cⁿ⁻¹]
-    m₁ = dof_map_m₁.m
-    m₂ = dof_map_m₂.m
-    cache.Xⁿ[1:m₁] .= state.v
-    cache.Xⁿ[(m₁ + 1):(m₁ + m₂)] .= state.c
+    cache.v̂ⁿ .= state.v
+    cache.ĉⁿ .= state.c
 
     for _ in 1:maxiter
         # Compute -H(v̂ⁿ)  →  cache.minusH
@@ -537,7 +541,7 @@ Assumes `cache.Q` and `cache.Xⁿ` have already been populated.
   of the interior nonlinearity, and `input_data.dβ` is the derivative of  ``\\beta``.
 """
 function compute_JH!(
-        cache::CrankNicolsonCache{T},
+        cache::CrankNicolsonCache{T, I},
         matrices::SystemMatrices,
         dof_map_m₁::DOFMap,
         dof_map_m₂::DOFMap,
@@ -548,8 +552,7 @@ function compute_JH!(
         τ::T,
         τα::T,
         input_data::PDEInputData
-) where {T}
-    m₁ = dof_map_m₁.m
+) where {T, I}
     m₂ = dof_map_m₂.m
     m₃ = dof_map_m₃.m
     τ²_half = τ^2 / 2
@@ -562,12 +565,17 @@ function compute_JH!(
     JF = assembly_global_matrix_DF(
         τ²_half, input_data.df, cache.d̂ⁿ, mesh2D, dof_map_m₁, quad)
 
-    # JH[1:m₁, 1:m₁] ← Q[1:m₁, 1:m₁]
-    cache.JH[1:m₁, 1:m₁] .= cache.Q[1:m₁, 1:m₁]
-
-    # Embed τα JG + τ²/2 JF into the top-left m₁×m₁ block
-    @. cache.JH[1:m₃, 1:m₃] += JG                               # FIXME: allocates
-    @. cache.JH[1:m₁, 1:m₁] += JF                               # FIXME: allocates
+    # JH[1:m₁, 1:m₁] ← Q[1:m₁, 1:m₁] + τ²/2 JF + (τα·JG embedded in top-left m₃×m₃ block)
+    JH₁₁ = get_JH₁₁(cache)
+    Q₁₁ = get_Q₁₁(cache)
+    nnz_m₃ = length(JG.data.nzval)
+    nnz_m₁ = length(JH₁₁.data.nzval)
+    @inbounds for i in 1:nnz_m₃
+        JH₁₁.data.nzval[i] = Q₁₁.data.nzval[i] + JF.data.nzval[i] + JG.data.nzval[i]
+    end
+    @inbounds for i in (nnz_m₃ + 1):nnz_m₁
+        JH₁₁.data.nzval[i] = Q₁₁.data.nzval[i] + JF.data.nzval[i]
+    end
 
     # Embed Jβ directly into the bottom-right m₂×m₂ block of JH
     # The rank-1 term (K ĉⁿ)(τ dβ b)ᵀ is evaluated entry-by-entry, avoiding materialization of the full dense matrix
@@ -575,12 +583,21 @@ function compute_JH!(
     τβ = τ * input_data.β(b_dot_ĉⁿ)
     τdβ = τ * input_data.dβ(b_dot_ĉⁿ)
     @. cache.vec_m₂_1 = τdβ * matrices.b
+    JH₂₂ = get_JH₂₂(cache)
     @inbounds for j in 1:m₂, i in 1:m₂
-        cache.JH[m₁ + i, m₁ + j] = cache.K_m₂xm₂_vs_ĉⁿ[i] * cache.vec_m₂_1[j] +
-                                   τβ * matrices.K_m₂xm₂[i, j] + cache.M_m₂xm₂_vs2[i, j]
+        JH₂₂[i, j] = cache.K_m₂xm₂_vs_ĉⁿ[i] * cache.vec_m₂_1[j] +
+                     τβ * matrices.K_m₂xm₂[i, j] + cache.M_m₂xm₂_vs2[i, j]
     end
 
     return nothing
+end
+
+@inline function get_JH₁₁(cache::CrankNicolsonCache{T, I}) where {T, I}
+    return view(cache.JH, Block(1, 1))::Symmetric{T, SparseMatrixCSC{T, I}}
+end
+
+@inline function get_JH₂₂(cache::CrankNicolsonCache{T, I}) where {T, I}
+    return view(cache.JH, Block(2, 2))::Matrix{T}
 end
 
 # ==============================================================================
