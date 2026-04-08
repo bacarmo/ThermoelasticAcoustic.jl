@@ -5,6 +5,7 @@ using GaussQuadrature: legendre
 using Printf: @printf
 using SparseArrays: sparse, spzeros, SparseMatrixCSC
 using LinearAlgebra: Symmetric, lmul!, cholesky, ldiv!, mul!, dot
+import LinearSolve as LS
 
 # Exports
 export PDEInputData, example1_manufactured, example1_zero_source, example2_manufactured,
