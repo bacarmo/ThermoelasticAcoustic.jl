@@ -139,7 +139,7 @@ function CrankNicolsonCache(
     JH₂₂_sparse = similar(M_m₂xm₂_vs2)
 
     JH_sparse = [M_m₁xm₁_vs2 τA_m₁xm₂;
-                 τA_m₂xm₁ M_m₂xm₂_vs2]
+                 τA_m₂xm₁ M_m₂xm₂_vs2]::SparseMatrixCSC{T, I}
 
     prob = LS.LinearProblem(JH_sparse, zeros(T, m₁ + m₂))
     linsolve = LS.init(
