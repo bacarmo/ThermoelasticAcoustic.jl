@@ -801,18 +801,41 @@ end
 Copy the values of `cache.JH₁₁` and `cache.JH₂₂_sparse` into the corresponding diagonal blocks of `cache.JH_sparse`. 
 The off-diagonal blocks are time-invariant and remain unchanged.
 """
-function sync_JH_sparse!(cache::CrankNicolsonCache{T, I, TF, TC}) where {T, I, TF, TC}
-    m₁ = length(cache.v̂ⁿ)
-    m₂ = length(cache.ĉⁿ)
+function sync_JH_sparse!(cache::CrankNicolsonCache)
+    map_direct₁₁ = cache.map_direct₁₁
+    map_mirror₁₁ = cache.map_mirror₁₁
+    map_direct₂₂ = cache.map_direct₂₂
+    map_mirror₂₂ = cache.map_mirror₂₂
+    JH_sparse = cache.JH_sparse
+    JH₁₁ = cache.JH₁₁.data
+    JH₂₂_sparse = cache.JH₂₂_sparse.data
 
     # Top-left m₁×m₁ block: JH_sparse ← JH₁₁
-    JH₁₁ = sparse(cache.JH₁₁)
-    cache.JH_sparse[1:m₁, 1:m₁] .= JH₁₁
+    sync!(JH_sparse, JH₁₁, map_direct₁₁, map_mirror₁₁)
 
     # Bottom-right m₂×m₂ block: JH_sparse ← JH₂₂_sparse
-    JH₂₂_sparse = sparse(cache.JH₂₂_sparse)
-    cache.JH_sparse[(m₁ + 1):(m₁ + m₂), (m₁ + 1):(m₁ + m₂)] .= JH₂₂_sparse
+    sync!(JH_sparse, JH₂₂_sparse, map_direct₂₂, map_mirror₂₂)
 
+    return nothing
+end
+
+"""
+    sync!(J, M, map_direct, map_mirror)
+
+Populate the diagonal block of `J.nzval` from `M.nzval` using precomputed index maps.
+Diagonal entries are written once (`map_direct[k] == map_mirror[k]`); off-diagonal
+entries are written to both positions (direct and symmetric).
+
+See [`build_maps_11`](@ref) and [`build_maps_22`](@ref) for map construction.
+"""
+function sync!(J, M, map_direct, map_mirror)
+    @inbounds for kM in eachindex(map_direct)
+        v = M.nzval[kM]
+        kJ = map_direct[kM]
+        kᵀJ = map_mirror[kM]
+        J.nzval[kJ] = v
+        kJ != kᵀJ && (J.nzval[kᵀJ] = v)   # skip diagonal (kJ == kᵀJ)
+    end
     return nothing
 end
 

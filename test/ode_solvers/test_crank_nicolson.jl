@@ -144,7 +144,7 @@ end
     # Test type correctness
     @test cache.JH_sparse isa SparseMatrixCSC{Float64, Int64}
 
-    # Test allocation behavior (FIXME: JG, JF, and sparse block assignments allocate)
+    # Test allocation behavior (FIXME: JG and JF allocate)
     @test (@allocated compute_JH_sparse!(
         cache, matrices, dof_map_m₁, dof_map_m₂, dof_map_m₃,
         mesh1D, mesh2D, quad, τ, τ, input_data)) > 0

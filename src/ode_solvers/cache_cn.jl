@@ -61,6 +61,14 @@ All fields are initialized once before the time loop. Intended to make
 | `M_m₂xm₂_vs2`  | `m₂×m₂`   | ``2M^{m_2\\times m_2}``; used in `Q` and [`compute_L₂!`](@ref). |
 | `M_m₃xm₃_chol` | —         | Cholesky factorization of ``M^{m_3\\times m_3}``; see [`solve_r̂ⁿ!`](@ref).      |
 | `linsolve`     | —         | LinearSolve.jl caching interface. |
+
+# Auxiliary maps for JH_sparse synchronization
+| Field          | Length                  | Description                                                                                   |
+|:-------------- |:-----------------------:|:----------------------------------------------------------------------------------------------|
+| `map_direct₁₁` | `nnz(JH₁₁.data)`        | Maps each entry `k` of `JH₁₁.data.nzval` to its position in `JH_sparse.nzval`; direct write `JH_sparse[i,j] = JH₁₁[i,j]`. |
+| `map_mirror₁₁` | `nnz(JH₁₁.data)`        | Maps each entry `k` of `JH₁₁.data.nzval` to the mirror position in `JH_sparse.nzval`; symmetric write `JH_sparse[j,i] = JH₁₁[i,j]`. |
+| `map_direct₂₂` | `nnz(M_m₂xm₂_vs2.data)` | Analogous to `map_direct₁₁` for the `(2,2)` block.|
+| `map_mirror₂₂` | `nnz(M_m₂xm₂_vs2.data)` | Analogous to `map_mirror₁₁` for the `(2,2)` block. |
 """
 struct CrankNicolsonCache{T <: AbstractFloat, I <: Integer, TF, TC <: LS.LinearCache}
     # --- Scratch vectors — m₁ ---
@@ -98,6 +106,11 @@ struct CrankNicolsonCache{T <: AbstractFloat, I <: Integer, TF, TC <: LS.LinearC
     M_m₂xm₂_vs2::Symmetric{T, SparseMatrixCSC{T, I}}
     M_m₃xm₃_chol::TF
     linsolve::TC
+    # --- Vectors for JH_sparse synchronization ---
+    map_direct₁₁::Vector{I}
+    map_mirror₁₁::Vector{I}
+    map_direct₂₂::Vector{I}
+    map_mirror₂₂::Vector{I}
 end
 
 """
@@ -145,6 +158,9 @@ function CrankNicolsonCache(
     linsolve = LS.init(
         prob, LS.KLUFactorization(; reuse_symbolic = true, check_pattern = false))
 
+    map_direct₁₁, map_mirror₁₁ = build_maps_11(JH_sparse, JH₁₁.data)
+    map_direct₂₂, map_mirror₂₂ = build_maps_22(JH_sparse, JH₂₂_sparse.data, τA_m₁xm₂)
+
     return CrankNicolsonCache(
         # Scratch vectors — m₁
         zeros(T, m₁), zeros(T, m₁), zeros(T, m₁),
@@ -163,6 +179,78 @@ function CrankNicolsonCache(
         τA_m₁xm₂, τA_m₂xm₁,
         M_m₁xm₁_vs2, M_m₂xm₂_vs2,
         cholesky(matrices.M_m₃xm₃),
-        linsolve
+        linsolve,
+        # map synchronization        
+        map_direct₁₁, map_mirror₁₁, map_direct₂₂, map_mirror₂₂
     )
+end
+
+"""
+    build_maps_11(J, M₁₁) -> (map_direct, map_mirror)
+
+Build index maps from `M₁₁.nzval` to `J.nzval` positions for the (1,1) block.
+
+See the test item "Synchronization problem - case study 2" for a step-by-step analysis.
+"""
+function build_maps_11(J, M₁₁)
+    nnz_M₁₁ = nnz(M₁₁)
+    map_direct = Vector{Int}(undef, nnz_M₁₁)
+    map_mirror = Vector{Int}(undef, nnz_M₁₁)
+    for j in 1:size(M₁₁, 2)        # Iterate over columns of M₁₁
+        for kM in nzrange(M₁₁, j)  # Iterate over nonzeros of M₁₁[:,j]
+            i = M₁₁.rowval[kM]
+            for kJ in nzrange(J, j)# Iterate over nonzeros of J[:,j] and find position of J[i,j]
+                if J.rowval[kJ] == i
+                    map_direct[kM] = kJ
+                    break
+                end
+            end
+            for kᵀJ in nzrange(J, i)# Iterate over nonzeros of J[:,i] and find position of J[j,i]
+                if J.rowval[kᵀJ] == j
+                    map_mirror[kM] = kᵀJ
+                    break
+                end
+            end
+        end
+    end
+    return map_direct, map_mirror
+end
+
+"""
+    build_maps_22(J, M₂₂, A₁₂) -> (map_direct, map_mirror)
+
+Build index maps from `M₂₂.nzval` to `J.nzval` positions for the (2,2) block.
+
+See the test item "Synchronization problem - case study 2" for a step-by-step analysis.
+"""
+function build_maps_22(J, M₂₂, A₁₂)
+    m₁ = size(A₁₂, 1)
+
+    # start[j]: index within nzrange(J, j+m₁) where the M̄₂₂ entries begin,
+    # i.e. right after the A₁₂[:,j] entries.
+    start = [length(nzrange(A₁₂, j)) + 1 for j in 1:size(A₁₂, 2)]
+
+    nnz_M₂₂ = nnz(M₂₂)
+    map_direct = Vector{Int}(undef, nnz_M₂₂)
+    map_mirror = Vector{Int}(undef, nnz_M₂₂)
+    for j in 1:size(M₂₂, 2)                         # Iterate over columns of M₂₂
+        jJ = j + m₁
+        for kM in nzrange(M₂₂, j)                   # Iterate over nonzeros of M₂₂[:,j]
+            i = M₂₂.rowval[kM]
+            iJ = i + m₁
+            for kJ in nzrange(J, jJ)[start[j]:end]  # find J[i+m₁, j+m₁]
+                if J.rowval[kJ] == iJ
+                    map_direct[kM] = kJ
+                    break
+                end
+            end
+            for kᵀJ in nzrange(J, iJ)[start[i]:end] # find J[j+m₁, i+m₁]
+                if J.rowval[kᵀJ] == jJ
+                    map_mirror[kM] = kᵀJ
+                    break
+                end
+            end
+        end
+    end
+    return map_direct, map_mirror
 end
