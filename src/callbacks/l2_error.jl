@@ -20,7 +20,7 @@ struct L2ErrorCallback{T} <: AbstractCallback
 end
 
 """
-    L2ErrorCallback(T, nt)
+    L2ErrorCallback(tspan)
 
 Allocate an `L2ErrorCallback` for `nt` time steps with floating-point type `T`.
 """
