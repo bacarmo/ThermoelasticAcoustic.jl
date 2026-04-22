@@ -160,6 +160,320 @@ struct PDEInputData{
 end
 
 # ============================================================================
+# Example 0
+# ============================================================================
+"""
+    example0_manufactured(p::Float64=2.4) -> PDEInputData
+
+Manufactured solution with oscillatory wave–acoustic coupling
+``g(x, s) = (1 + e^{-x^2})(\\sin(s) + 2s)``:
+```math
+\\begin{alignat*}{2}
+& u(x,y,t)   &&= (x^p - x)(y^p - 1)(4 + t^2), \\\\
+& θ(x,y,t)   &&= (x^p - x)(y^p - y)(4 + t^2), \\\\
+& z(x,t)     &&= \\sin(\\pi x) + (1+e^{-x^2})
+                  \\left[\\frac{\\cos\\big(-2t(x^p-x)\\big)-1}{2(x^p-x)}
+                  - 2t^2(x^p-x)\\right],
+\\end{alignat*}
+```
+where the acoustic displacement ``z(x,t)`` is obtained by integrating
+```math
+\\frac{∂z}{∂t}(x,t) = -\\frac{∂u}{∂y}(x,y_{\\min},t) + g\\!\\left(x,\\,\\frac{∂u}{∂t}(x,y_{\\min},t)\\right).
+```
+
+# Arguments
+- `p::Float64=2.4`: Smoothness parameter controlling solution regularity.
+
+# Returns
+`PDEInputData` with analytical solution for convergence study.
+"""
+function example0_manufactured(p::Float64 = 2.4)
+    # Precompute exponent-related constants
+    p_minus_1 = p - 1.0
+    p_minus_2 = p - 2.0
+    p_vs_p_minus_1 = p * p_minus_1
+    cst = 0.25 * (p_minus_1 / (p + 1.0))^2
+
+    # Physical parameters
+    a = (1.0, 1.0)
+    q₁ = q₂ = q₃ = q₄ = 1.0
+    ymin = 0.0
+
+    # Coefficient functions
+    α = t -> 1.0 + exp(-t)
+
+    β = s -> 1.0 + exp(-s * s)
+    dβ = s -> -2.0 * s * exp(-s * s)
+
+    f = function (s)
+        s_abs = abs(s)
+        s_abs3 = s_abs * s_abs * s_abs
+        return s * s_abs3
+    end
+    df = function (s)
+        s_abs = abs(s)
+        s_abs3 = s_abs * s_abs * s_abs
+        return 4.0 * s_abs3
+    end
+
+    g = (x, s) -> (1.0 + exp(-x * x)) * muladd(2.0, s, sin(s))
+    ∂ₛg = (x, s) -> (1.0 + exp(-x * x)) * (2.0 + cos(s))
+
+    # Analytical solutions
+    u = function (x, y, t)
+        xp = x^p
+        yp = y^p
+        return (xp - x) * (yp - 1.0) * (4.0 + t * t)
+    end
+    v = function (x, y, t)
+        xp = x^p
+        yp = y^p
+        return (xp - x) * (yp - 1.0) * (2.0 * t)
+    end
+
+    θ = function (x, y, t)
+        xp = x^p
+        yp = y^p
+        return (xp - x) * (yp - y) * (4.0 + t * t)
+    end
+
+    z = function (x, t)
+        xp = x^p
+        xp_minus_x = xp - x
+        two_t = 2.0 * t
+        exp_term = 1.0 + exp(-x * x)
+        return sinpi(x) +
+               exp_term * ((cos(-xp_minus_x * two_t) - 1.0) /
+                (2.0 * xp_minus_x) - xp_minus_x * (two_t * t))
+    end
+    r = function (x, t)
+        xp = x^p
+        xp_minus_x = xp - x
+        exp_term = 1.0 + exp(-x * x)
+        return exp_term * (sin(-xp_minus_x * (2.0 * t)) - xp_minus_x * (4.0 * t))
+    end
+
+    # Auxiliary functions for manufactured source terms
+    ∂ₜₜu = function (x, y, t)
+        xp = x^p
+        yp = y^p
+        return (xp - x) * (yp - 1.0) * 2.0
+    end
+    Δu = function (x, y, t)
+        xp = x^p
+        yp = y^p
+        xp_minus_2 = x^p_minus_2
+        yp_minus_2 = y^p_minus_2
+        time_term = (4.0 + t * t) * p_vs_p_minus_1
+        return (xp_minus_2 * (yp - 1.0) + (xp - x) * yp_minus_2) * time_term
+    end
+    vₓ = function (x, y, t)
+        yp = y^p
+        xp_minus_1 = x^p_minus_1
+        return (p * xp_minus_1 - 1.0) * (yp - 1.0) * 2.0 * t
+    end
+    vᵧ = function (x, y, t)
+        xp = x^p
+        yp_minus_1 = y^p_minus_1
+        return (xp - x) * (p * yp_minus_1) * 2.0 * t
+    end
+    θₓ = function (x, y, t)
+        xp_minus_1 = x^p_minus_1
+        yp = y^p
+        return (p * xp_minus_1 - 1.0) * (yp - y) * (4.0 + t * t)
+    end
+    θᵧ = function (x, y, t)
+        yp_minus_1 = y^p_minus_1
+        xp = x^p
+        return (xp - x) * (p * yp_minus_1 - 1.0) * (4.0 + t * t)
+    end
+    ∫θ = t -> cst * (4.0 + t * t)
+    ∂ₜθ = function (x, y, t)
+        xp = x^p
+        yp = y^p
+        return (xp - x) * (yp - y) * (2 * t)
+    end
+    Δθ = function (x, y, t)
+        xp = x^p
+        yp = y^p
+        xp_minus_2 = x^p_minus_2
+        yp_minus_2 = y^p_minus_2
+        time_term = (4.0 + t * t) * p_vs_p_minus_1
+        return (xp_minus_2 * (yp - y) + (xp - x) * yp_minus_2) * time_term
+    end
+    ∂ₜₜz = function (x, t)
+        xp = x^p
+        xp_minus_x = xp - x
+        exp_term = 1.0 + exp(-x * x)
+        return -2.0 * exp_term * xp_minus_x * (2.0 + cos(2.0 * t * xp_minus_x))
+    end
+
+    # Manufactured source terms
+    f₁ = (x, y, t) -> ∂ₜₜu(x, y, t) - α(t) * Δu(x, y, t) + f(u(x, y, t)) +
+                      a[1] * θₓ(x, y, t) + a[2] * θᵧ(x, y, t)
+    f₂ = (x, y, t) -> ∂ₜθ(x, y, t) - β(∫θ(t)) * Δθ(x, y, t) +
+                      a[1] * vₓ(x, y, t) + a[2] * vᵧ(x, y, t)
+    f₃ = (x, t) -> q₁ * ∂ₜₜz(x, t) + q₂ * r(x, t) + q₃ * z(x, t) +
+                   q₄ * v(x, ymin, t)
+
+    # Initial conditions
+    u₀ = function (x, y)
+        xp = x^p
+        yp = y^p
+        return (xp - x) * (yp - 1.0) * 4.0
+    end
+    ∂ₓu₀ = function (x, y)
+        yp = y^p
+        xp_minus_1 = x^p_minus_1
+        return (p * xp_minus_1 - 1.0) * (yp - 1.0) * 4.0
+    end
+    ∂ᵧu₀ = function (x, y)
+        xp = x^p
+        yp_minus_1 = y^p_minus_1
+        return (xp - x) * (p * yp_minus_1) * 4.0
+    end
+
+    v₀ = (x, y) -> 0.0
+    ∂ₓv₀ = (x, y) -> 0.0
+    ∂ᵧv₀ = (x, y) -> 0.0
+
+    θ₀ = function (x, y)
+        xp = x^p
+        yp = y^p
+        return (xp - x) * (yp - y) * 4.0
+    end
+    ∂ₓθ₀ = function (x, y)
+        yp = y^p
+        xp_minus_1 = x^p_minus_1
+        return (p * xp_minus_1 - 1.0) * (yp - y) * 4.0
+    end
+    ∂ᵧθ₀ = function (x, y)
+        xp = x^p
+        yp_minus_1 = y^p_minus_1
+        return (xp - x) * (p * yp_minus_1) * 4.0
+    end
+
+    z₀ = x -> sinpi(x)
+    r₀ = x -> 0.0
+
+    return PDEInputData(
+        "example0_manufactured($p)",
+        (0.0, 0.0),
+        (1.0, 1.0),
+        a,
+        q₁, q₂, q₃, q₄,
+        α, β, dβ, f, df, g, ∂ₛg,
+        u₀, ∂ₓu₀, ∂ᵧu₀,
+        v₀, ∂ₓv₀, ∂ᵧv₀,
+        θ₀, ∂ₓθ₀, ∂ᵧθ₀,
+        z₀, r₀,
+        f₁, f₂, f₃,
+        u, v, θ, z, r
+    )
+end
+
+"""
+    example0_zero_source(p::Float64=2.4) -> PDEInputData
+
+Same configuration as `example1_manufactured` but with f₁ = f₂ = f₃ = 0.
+No analytical solution available.
+
+# Arguments
+- `p::Float64=2.4`: Smoothness parameter for initial conditions.
+
+# Returns
+`PDEInputData` with analytical solutions set to `nothing`.
+"""
+function example0_zero_source(p::Float64 = 2.4)
+    # Precompute exponent-related constants
+    p_minus_1 = p - 1.0
+
+    # Physical parameters
+    a = (1.0, 1.0)
+    q₁ = q₂ = q₃ = q₄ = 1.0
+
+    # Coefficient functions
+    α = t -> 1.0 + exp(-t)
+
+    β = s -> 1.0 + exp(-s * s)
+    dβ = s -> -2.0 * s * exp(-s * s)
+
+    f = function (s)
+        s_abs = abs(s)
+        s_abs3 = s_abs * s_abs * s_abs
+        return s * s_abs3
+    end
+    df = function (s)
+        s_abs = abs(s)
+        s_abs3 = s_abs * s_abs * s_abs
+        return 4.0 * s_abs3
+    end
+
+    g = (x, s) -> (1.0 + exp(-x * x)) * muladd(2.0, s, sin(s))
+    ∂ₛg = (x, s) -> (1.0 + exp(-x * x)) * (2.0 + cos(s))
+
+    # Zero source terms
+    f₁ = (x, y, t) -> 0.0
+    f₂ = (x, y, t) -> 0.0
+    f₃ = (x, t) -> 0.0
+
+    # Initial conditions
+    u₀ = function (x, y)
+        xp = x^p
+        yp = y^p
+        return (xp - x) * (yp - 1.0) * 4.0
+    end
+    ∂ₓu₀ = function (x, y)
+        yp = y^p
+        xp_minus_1 = x^p_minus_1
+        return (p * xp_minus_1 - 1.0) * (yp - 1.0) * 4.0
+    end
+    ∂ᵧu₀ = function (x, y)
+        xp = x^p
+        yp_minus_1 = y^p_minus_1
+        return (xp - x) * (p * yp_minus_1) * 4.0
+    end
+
+    v₀ = (x, y) -> 0.0
+    ∂ₓv₀ = (x, y) -> 0.0
+    ∂ᵧv₀ = (x, y) -> 0.0
+
+    θ₀ = function (x, y)
+        xp = x^p
+        yp = y^p
+        return (xp - x) * (yp - y) * 4.0
+    end
+    ∂ₓθ₀ = function (x, y)
+        yp = y^p
+        xp_minus_1 = x^p_minus_1
+        return (p * xp_minus_1 - 1.0) * (yp - y) * 4.0
+    end
+    ∂ᵧθ₀ = function (x, y)
+        xp = x^p
+        yp_minus_1 = y^p_minus_1
+        return (xp - x) * (p * yp_minus_1) * 4.0
+    end
+
+    z₀ = x -> sinpi(x)
+    r₀ = x -> 0.0
+
+    return PDEInputData(
+        "example0_zero_source($p)",
+        (0.0, 0.0),
+        (1.0, 1.0),
+        a,
+        q₁, q₂, q₃, q₄,
+        α, β, dβ, f, df, g, ∂ₛg,
+        u₀, ∂ₓu₀, ∂ᵧu₀,
+        v₀, ∂ₓv₀, ∂ᵧv₀,
+        θ₀, ∂ₓθ₀, ∂ᵧθ₀,
+        z₀, r₀,
+        f₁, f₂, f₃,
+        nothing, nothing, nothing, nothing, nothing
+    )
+end
+
+# ============================================================================
 # Example 1
 # ============================================================================
 """
