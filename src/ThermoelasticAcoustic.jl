@@ -9,8 +9,9 @@ import LinearSolve as LS
 
 # Exports
 export PDEInputData, example1_manufactured, example1_zero_source, example2_manufactured,
-       example2_zero_source, example3_manufactured, example3_zero_source
-export FEMState, L2ErrorCallback
+       example2_zero_source, example3_manufactured, example3_zero_source,
+       example0_manufactured, example0_zero_source
+export FEMState, L2ErrorCallback, SolutionCallback
 export Lagrange, Hermite
 export CrankNicolson, ModifiedCN
 export pde_solve
