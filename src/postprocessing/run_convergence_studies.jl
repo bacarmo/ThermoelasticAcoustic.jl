@@ -62,17 +62,31 @@ using ThermoelasticAcoustic
 # Cases to run
 #! format: off
 const CASES = (
-    (input_data = example1_manufactured(1.76), solver = ModifiedCN(),    fe = Lagrange{1}(), Nx_exp_range = 3:6, τ_fixed = 2.0^(-15)),
-    (input_data = example1_manufactured(2.4 ), solver = ModifiedCN(),    fe = Lagrange{1}(), Nx_exp_range = 3:6, τ_fixed = 2.0^(-15)),
-    (input_data = example1_manufactured(1.76), solver = CrankNicolson(), fe = Lagrange{1}(), Nx_exp_range = 3:6, τ_fixed = 2.0^(-15)),
-    (input_data = example1_manufactured(2.4 ), solver = CrankNicolson(), fe = Lagrange{1}(), Nx_exp_range = 3:6, τ_fixed = 2.0^(-15)),
+    (input_data = example0_manufactured(1.76), solver = CrankNicolson(), fe = Lagrange{1}()),
+    (input_data = example0_manufactured(2.4 ), solver = CrankNicolson(), fe = Lagrange{1}()),
+    (input_data = example0_manufactured(2.58), solver = CrankNicolson(), fe = Lagrange{2}()),
+    (input_data = example0_manufactured(3.4 ), solver = CrankNicolson(), fe = Lagrange{2}()),
+    (input_data = example0_manufactured(3.51), solver = CrankNicolson(), fe = Lagrange{3}()),
+    (input_data = example0_manufactured(4.4 ), solver = CrankNicolson(), fe = Lagrange{3}()),
+    (input_data = example0_manufactured(1.76), solver = ModifiedCN(),    fe = Lagrange{1}()),
+    (input_data = example0_manufactured(2.4 ), solver = ModifiedCN(),    fe = Lagrange{1}()),
+    (input_data = example0_manufactured(2.58), solver = ModifiedCN(),    fe = Lagrange{2}()),
+    (input_data = example0_manufactured(3.4 ), solver = ModifiedCN(),    fe = Lagrange{2}()),
+    (input_data = example0_manufactured(3.51), solver = ModifiedCN(),    fe = Lagrange{3}()),
+    (input_data = example0_manufactured(4.4 ), solver = ModifiedCN(),    fe = Lagrange{3}()),
 )
-#! format: on
 
-# Studies to run - set any entry to false to skip it
-const RUN_COUPLED = true
-const RUN_SPATIAL = true
-
+# Studies to run 
+# Set `run = false` to skip a study.
+# Adjust `cases` to run a subset; see CASES above for indices.
+#
+# Note: the temporal study fixes the spatial discretization to isolate convergence in time. 
+# One case per solver suffices; Lagrange{1} is the cheapest.
+const STUDIES = (
+    coupled =  (run = false, cases = CASES, Nx_exp_range = 2:5),
+    spatial =  (run = true, cases = CASES, Nx_exp_range = 2:5, τ_fixed = 2.0^(-15)),
+    temporal = (run = true, cases = CASES[[2,8]], τ_exp_range = 2:5, Nx_fixed = 2^9),
+)
 # Output file - timestamp prevents overwriting previous runs
 const OUTPUT_FILE = "convergence_results_$(Dates.format(now(), "yyyy-mm-dd__HH-MM-SS")).txt"
 
@@ -91,8 +105,7 @@ function run_study!(io, label, cases, warmup_fn, study_fn)
             print_convergence_table(results)
             @printf("  Elapsed: %.2f s\n", elapsed)
         catch e
-            println("\n[ERROR] $(case.input_data.name) · $(typeof(case.solver)) · " *
-                    "$(typeof(case.fe)):\n  $e\n")
+            println("\n[ERROR] $(case.input_data.name) · $(typeof(case.solver)) · $(typeof(case.fe)):\n  $e\n")
         end
         flush(io)
     end
@@ -104,46 +117,57 @@ end
 
 # Coupled study — refines Nx and τ simultaneously
 function warmup_coupled(case)
-    #! format: off
     convergence_study_coupled(
         input_data   = case.input_data,
         solver       = case.solver,
         fe           = case.fe,
         Nx_exp_range = 2:2)
-    #! format: on
 end
 
 function study_coupled(case)
-    #! format: off
     convergence_study_coupled(
         input_data   = case.input_data,
         solver       = case.solver,
         fe           = case.fe,
-        Nx_exp_range = case.Nx_exp_range)
-    #! format: on
+        Nx_exp_range = STUDIES.coupled.Nx_exp_range)
 end
 
 # Spatial study — refines Nx with τ fixed
 function warmup_spatial(case)
-    #! format: off
     convergence_study_spatial(
         input_data   = case.input_data,
         solver       = case.solver,
         fe           = case.fe,
         Nx_exp_range = 2:2,
         τ_fixed      = 2.0^(-3))
-    #! format: on
 end
 
 function study_spatial(case)
-    #! format: off
     convergence_study_spatial(
         input_data   = case.input_data,
         solver       = case.solver,
         fe           = case.fe,
-        Nx_exp_range = case.Nx_exp_range,
-        τ_fixed      = case.τ_fixed)
-    #! format: on
+        Nx_exp_range = STUDIES.spatial.Nx_exp_range,
+        τ_fixed      = STUDIES.spatial.τ_fixed)
+end
+
+# Temporal study — refines τ with Nx fixed
+function warmup_temporal(case)
+    convergence_study_temporal(
+        input_data   = case.input_data,
+        solver       = case.solver,
+        fe           = case.fe,
+        τ_exp_range  = 2:2,
+        Nx_fixed     = 4)
+end
+
+function study_temporal(case)
+    convergence_study_temporal(
+        input_data   = case.input_data,
+        solver       = case.solver,
+        fe           = case.fe,
+        τ_exp_range  = STUDIES.temporal.τ_exp_range,
+        Nx_fixed     = STUDIES.temporal.Nx_fixed)
 end
 
 # ── Main ───────────────────────────────────────────────────────────────────────
@@ -152,7 +176,9 @@ end
 open(OUTPUT_FILE, "w") do io
     # redirect_stdout: redirects print/println/@printf to `io` instead of the terminal
     redirect_stdout(io) do
-        RUN_COUPLED && run_study!(io, "Coupled", CASES, warmup_coupled, study_coupled)
-        RUN_SPATIAL && run_study!(io, "Spatial", CASES, warmup_spatial, study_spatial)
+        STUDIES.coupled.run  && run_study!(io, "Coupled",  STUDIES.coupled.cases,  warmup_coupled,  study_coupled)
+        STUDIES.spatial.run  && run_study!(io, "Spatial",  STUDIES.spatial.cases,  warmup_spatial,  study_spatial)
+        STUDIES.temporal.run && run_study!(io, "Temporal", STUDIES.temporal.cases, warmup_temporal, study_temporal)
     end
 end
+#! format: on
