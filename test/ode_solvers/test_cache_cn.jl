@@ -197,20 +197,31 @@ end
     using LinearAlgebra: UpperTriangular
     using SparseArrays: sparse, nnz, nzrange
 
-    # --- Setup ---
-    pmin, pmax = (0.0, 0.0), (1.0, 1.0)
-    mesh1D = CartesianMesh((pmin[1],), (pmax[1],), (4,))
-    mesh2D = CartesianMesh(pmin, pmax, (4, 4))
-    fe1D = specialize(Lagrange{1}(), Val(1))
-    fe2D = specialize(Lagrange{1}(), Val(2))
+    function setup(fe)
+        pmin, pmax = (0.0, 0.0), (1.0, 1.0)
+        mesh1D = CartesianMesh((pmin[1],), (pmax[1],), (4,))
+        mesh2D = CartesianMesh(pmin, pmax, (4, 4))
+        fe1D = specialize(fe, Val(1))
+        fe2D = specialize(fe, Val(2))
 
-    dof_map_m₁ = DOFMap(mesh2D, fe2D, LeftRightTop())
-    dof_map_m₂ = DOFMap(mesh2D, fe2D, LeftRightBottomTop())
-    dof_map_m₃ = DOFMap(mesh1D, fe1D, LeftRight())
+        dof_map_m₁ = DOFMap(mesh2D, fe2D, LeftRightTop())
+        dof_map_m₂ = DOFMap(mesh2D, fe2D, LeftRightBottomTop())
+        dof_map_m₃ = DOFMap(mesh1D, fe1D, LeftRight())
 
-    matrices = SystemMatrices(
-        (1.0, 1.0), mesh1D, mesh2D, fe1D, fe2D,
-        dof_map_m₁, dof_map_m₂, dof_map_m₃)
+        matrices = SystemMatrices(
+            (1.0, 1.0), mesh1D, mesh2D, fe1D, fe2D,
+            dof_map_m₁, dof_map_m₂, dof_map_m₃)
+
+        M̄₁₁ = sparse(matrices.M_m₁xm₁)
+        M̄₂₂ = sparse(matrices.M_m₂xm₂)
+        M₁₁ = sparse(UpperTriangular(M̄₁₁))
+        M₂₂ = sparse(UpperTriangular(M̄₂₂))
+        A₁₂ = matrices.A_m₁xm₂
+        A₂₁ = matrices.A_m₂xm₁
+        J = [similar(M̄₁₁) A₁₂; A₂₁ similar(M̄₂₂)]
+
+        return J, M̄₁₁, M̄₂₂, M₁₁, M₂₂, A₁₂, A₂₁, dof_map_m₁.m
+    end
 
     # ==========================================================================
     # Problem statement
@@ -232,13 +243,6 @@ end
     # The solution extends the precomputed-maps strategy from case study 1:
     # build index maps from M₁₁ → J and M₂₂ → J during preprocessing, then populate J.nzval.
     # ==========================================================================
-    M̄₁₁ = sparse(matrices.M_m₁xm₁)
-    M̄₂₂ = sparse(matrices.M_m₂xm₂)
-    M₁₁ = sparse(UpperTriangular(M̄₁₁))
-    M₂₂ = sparse(UpperTriangular(M̄₂₂))
-    A₁₂ = matrices.A_m₁xm₂
-    A₂₁ = matrices.A_m₂xm₁
-    J = [similar(M̄₁₁) A₁₂; A₂₁ similar(M̄₂₂)]
 
     # Maps M₁₁.nzval positions → J.nzval positions for the (1,1) block.
     # Identical to case study 1: column indices in M₁₁ and J coincide.
@@ -319,16 +323,19 @@ end
     # ==========================================================================
     # Validation
     # ==========================================================================
-    map_direct₁₁, map_mirror₁₁ = build_maps_11(J, M₁₁)
-    map_direct₂₂, map_mirror₂₂ = build_maps_22(J, M₂₂, A₁₂)
+    @testset "$fe" for fe in (Lagrange{1}(), Lagrange{2}(), Lagrange{3}())
+        J, M̄₁₁, M̄₂₂, M₁₁, M₂₂, A₁₂, A₂₁, m₁ = setup(fe)
 
-    alloc1 = @allocated sync!(J, M₁₁, map_direct₁₁, map_mirror₁₁)
-    alloc2 = @allocated sync!(J, M₂₂, map_direct₂₂, map_mirror₂₂)
+        map_direct₁₁, map_mirror₁₁ = build_maps_11(J, M₁₁)
+        map_direct₂₂, map_mirror₂₂ = build_maps_22(J, M₂₂, A₁₂)
 
-    m₁ = dof_map_m₁.m
-    @test J[1:m₁, 1:m₁] == M̄₁₁
-    @test J[(m₁ + 1):end, (m₁ + 1):end] == M̄₂₂
-    @test J == [M̄₁₁ A₁₂; A₂₁ M̄₂₂]
-    @test alloc1 == 0
-    @test alloc2 == 0
+        alloc1 = @allocated sync!(J, M₁₁, map_direct₁₁, map_mirror₁₁)
+        alloc2 = @allocated sync!(J, M₂₂, map_direct₂₂, map_mirror₂₂)
+
+        @test J[1:m₁, 1:m₁] == M̄₁₁
+        @test J[(m₁ + 1):end, (m₁ + 1):end] == M̄₂₂
+        @test J == [M̄₁₁ A₁₂; A₂₁ M̄₂₂]
+        @test alloc1 == 0
+        @test alloc2 == 0
+    end
 end
