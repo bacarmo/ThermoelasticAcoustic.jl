@@ -216,7 +216,7 @@ By introducing the auxiliary variables ``v(t)=u^\prime(t)`` and ``r(t)=z^\prime(
 \\
 & \big(\psi,\theta^{\prime}(t)\big)
 + \beta\Big(\int_\Omega\theta(t)dx\Big)\big(\nabla\psi,\nabla\theta(t)\big)
-+ \big(\psi,(\mathbf{a}\cdot\nabla)u^\prime(t)\big)
++ \big(\psi,(\mathbf{a}\cdot\nabla)v(t)\big)
 = \big(\psi,f_2(t)\big),
 \quad\forall\psi\in H_0^1(\Omega),
 \\[5pt]
