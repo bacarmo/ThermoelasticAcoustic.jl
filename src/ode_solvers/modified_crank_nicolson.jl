@@ -60,21 +60,6 @@ strategy specific to the Modified Crank–Nicolson scheme:
 On entry, `state` holds the initial condition ``(v^0, d^0, c^0, r^0, z^0)``.
 On exit, `state` holds the solution at ``t_1``, and `cache.dⁿ⁻²`, `cache.cⁿ⁻²`
 hold ``d^0``, ``c^0`` for use in subsequent two-step extrapolations (``n \\geq 2``).
-
-# Arguments
-- `::ModifiedCN`: dispatch token for the Modified Crank–Nicolson scheme.
-- `cache::ModifiedCNCache`: pre-allocated workspace.
-- `state::FEMState`: solution state at time level ``0``.
-- `matrices::SystemMatrices`: global FEM matrices.
-- `dof_map_m₁::DOFMap`: DOF map for the ``m_1``-space.
-- `dof_map_m₂::DOFMap`: DOF map for the ``m_2``-space.
-- `dof_map_m₃::DOFMap`: DOF map for the ``m_3``-space.
-- `mesh1D::CartesianMesh{1}`: 1D Cartesian mesh (boundary ``\\Gamma_1``).
-- `mesh2D::CartesianMesh{2}`: 2D Cartesian mesh (domain ``\\Omega``).
-- `quad::QuadratureSetup`: precomputed quadrature data.
-- `τ::T`: time-step size.
-- `q₅::T`: scalar ``q_5 = 2q_1 + \\tau q_2 + (\\tau^2/2)q_3``.
-- `input_data::PDEInputData`: problem parameters.
 """
 function perform_first_step!(
         ::ModifiedCN,
@@ -134,22 +119,6 @@ On entry, `state` holds ``(v^{n-1}, d^{n-1}, c^{n-1}, r^{n-1}, z^{n-1})`` and
 `cache.dⁿ⁻²`, `cache.cⁿ⁻²` hold ``d^{n-2}``, ``c^{n-2}``.
 On exit, `state` holds the solution at ``t_n``, and `cache.dⁿ⁻²`, `cache.cⁿ⁻²`
 are updated to ``d^{n-1}``, ``c^{n-1}``.
-
-# Arguments
-- `::ModifiedCN`: dispatch token for the Modified Crank–Nicolson scheme.
-- `cache::ModifiedCNCache`: pre-allocated workspace.
-- `state::FEMState`: solution state at time level ``n-1``.
-- `matrices::SystemMatrices`: global FEM matrices.
-- `dof_map_m₁::DOFMap`: DOF map for the ``m_1``-space.
-- `dof_map_m₂::DOFMap`: DOF map for the ``m_2``-space.
-- `dof_map_m₃::DOFMap`: DOF map for the ``m_3``-space.
-- `mesh1D::CartesianMesh{1}`: 1D Cartesian mesh (boundary ``\\Gamma_1``).
-- `mesh2D::CartesianMesh{2}`: 2D Cartesian mesh (domain ``\\Omega``).
-- `quad::QuadratureSetup`: precomputed quadrature data.
-- `n::Int`: current time index (``n \\geq 2``).
-- `τ::T`: time-step size.
-- `q₅::T`: scalar ``q_5 = 2q_1 + \\tau q_2 + (\\tau^2/2)q_3``.
-- `input_data::PDEInputData`: problem parameters.
 """
 function perform_step!(
         ::ModifiedCN,
@@ -205,20 +174,6 @@ Sequentially:
 
 Assumes `cache.d_star`, `cache.c_star` have already been populated.
 
-# Arguments
-- `cache::ModifiedCNCache`: pre-allocated workspace.
-- `state::FEMState`: solution state at time level ``n-1``.
-- `matrices::SystemMatrices`: global FEM matrices.
-- `dof_map_m₁::DOFMap`: DOF map for the ``m_1``-space.
-- `dof_map_m₃::DOFMap`: DOF map for the ``m_3``-space.
-- `mesh1D::CartesianMesh{1}`: 1D Cartesian mesh (boundary ``\\Gamma_1``).
-- `mesh2D::CartesianMesh{2}`: 2D Cartesian mesh (domain ``\\Omega``).
-- `quad::QuadratureSetup`: precomputed quadrature data.
-- `τ::T`: time-step size.
-- `t_half::T`: midpoint time ``t_{n-1/2}``.
-- `q₅::T`: scalar ``q_5 = 2q_1 + \\tau q_2 + (\\tau^2/2)q_3``.
-- `input_data::PDEInputData`: problem parameters and forcing data.
-
 # Keyword Arguments
 - `abstol::T`: absolute tolerance passed to [`newton_solve!`](@ref) (default: `T(1e-10)`).
 - `maxiter::Int`: maximum Newton iterations (default: `10`).
@@ -271,15 +226,6 @@ Q_1 = 2M^{m_1 \\times m_1}
 ```
 
 Operates only on stored nonzeros; allocation-free.
-
-# Arguments
-
-- `cache::ModifiedCNCache`: pre-allocated workspace; `cache.Q₁` is updated in-place.
-- `matrices::SystemMatrices`: global FEM matrices.
-- `τ::T`: time-step size.
-- `α::T`: value of ``\\alpha(t_{n-1/2})``.
-- `q₄::T`: problem parameter ``q_4``.
-- `q₅::T`: scalar ``q_5 = 2q_1 + \\tau q_2 + (\\tau^2/2)q_3``.
 """
 function compute_Q₁!(
         cache::ModifiedCNCache{T},
@@ -328,22 +274,6 @@ L_1 =
 \\end{bmatrix}.
 ```
 Assumes `cache.d_star` and `cache.c_star` have already been populated.
-
-# Arguments
-
-- `cache::ModifiedCNCache`: pre-allocated workspace; `cache.L₁` is updated in-place.
-- `state::FEMState`: solution state at time level ``n-1``.
-- `matrices::SystemMatrices`: global FEM matrices.
-- `dof_map_m₁::DOFMap`: DOF map for the ``m_1``-space.
-- `dof_map_m₃::DOFMap`: DOF map for the ``m_3``-space.
-- `mesh1D::CartesianMesh{1}`: 1D Cartesian mesh (boundary ``\\Gamma_1``).
-- `mesh2D::CartesianMesh{2}`: 2D Cartesian mesh (domain ``\\Omega``).
-- `quad::QuadratureSetup`: precomputed quadrature data.
-- `τ::T`: time-step size.
-- `t_half::T`: midpoint time ``t_{n-1/2}``.
-- `α::T`: value of ``\\alpha(t_{n-1/2})``.
-- `q₅::T`: scalar ``q_5 = 2q_1 + \\tau q_2 + (\\tau^2/2)q_3``.
-- `input_data::PDEInputData`: problem parameters.
 """
 function compute_L₁!(
         cache::ModifiedCNCache{T},
@@ -438,15 +368,6 @@ Assumes the following cache fields have already been populated:
 - `cache.Q₁`: via [`compute_Q₁!`](@ref).
 - `cache.L₁`: via [`compute_L₁!`](@ref).
 
-# Arguments
-- `cache::ModifiedCNCache`: pre-allocated workspace; `cache.v̂ⁿ` is updated in-place.
-- `state::FEMState`: solution state at time level ``n-1``; provides ``d^{n-1}``
-- `dof_map_m₃::DOFMap`: DOF map for the ``m_3``-space.
-- `mesh1D::CartesianMesh{1}`: 1D Cartesian mesh (boundary ``\\Gamma_1``).
-- `quad::QuadratureSetup`: precomputed quadrature data.
-- `τα::T`: product ``\\tau\\alpha(t_{n-1/2})``.
-- `input_data::PDEInputData`: problem parameters.
-
 # Keyword Arguments
 - `abstol::T`: absolute tolerance on ``\\max_i |H_i|`` (default: `T(1e-10)`).
 - `maxiter::Int`: maximum number of Newton iterations (default: `10`).
@@ -498,15 +419,6 @@ Compute ``-H(\\hat{v}^n)`` and store the result in `cache.minusH`:
 ```
 Assumes `cache.Q₁` holds ``Q_1`` (via [`compute_Q₁!`](@ref)) and
 `cache.L₁` holds ``L_1`` (via [`compute_L₁!`](@ref)).
-
-# Arguments
-
-- `cache::ModifiedCNCache`: pre-allocated workspace; `cache.minusH` is updated in-place.
-- `dof_map_m₃::DOFMap`: DOF map for the ``m_3``-space.
-- `mesh1D::CartesianMesh{1}`: 1D Cartesian mesh (boundary ``\\Gamma_1``).
-- `quad::QuadratureSetup`: precomputed quadrature data.
-- `τα::T`: product ``\\tau\\alpha(t_{n-1/2})``.
-- `input_data::PDEInputData`: problem parameters.
 """
 function compute_minusH!(
         cache::ModifiedCNCache{T},
@@ -557,15 +469,6 @@ nonlinearity ``G^{m_1}``.
  
 Assumes `cache.Q₁` and `cache.v̂ⁿ` have already been populated.
 Operates only on stored nonzeros; allocation-free except for `assembly_global_matrix_DG`.
- 
-# Arguments
-- `cache::ModifiedCNCache`: pre-allocated workspace; `cache.JH` is updated in-place.
-- `dof_map_m₃::DOFMap`: DOF map for the ``m_3``-space.
-- `mesh1D::CartesianMesh{1}`: 1D Cartesian mesh (boundary ``\\Gamma_1``).
-- `quad::QuadratureSetup`: precomputed quadrature data.
-- `τα::T`: product ``\\tau\\alpha(t_{n-1/2})``.
-- `input_data::PDEInputData`: problem parameters; `input_data.∂ₛg` is the
-  derivative of the boundary nonlinearity.
 """
 function compute_JH!(
         cache::ModifiedCNCache{T},
@@ -617,18 +520,6 @@ L_2 = - \\tau A^{m_2 \\times m_1}\\hat{v}^n
 ```
 
 Assumes `cache.c_star` and `cache.v̂ⁿ` have already been populated.
-
-# Arguments
-
-- `cache::ModifiedCNCache`: pre-allocated workspace; `cache.ĉⁿ` is updated in-place.
-- `state::FEMState`: solution state at time level ``n-1``.
-- `matrices::SystemMatrices`: global FEM matrices.
-- `dof_map_m₂::DOFMap`: DOF map for the ``m_2``-space.
-- `mesh2D::CartesianMesh{2}`: 2D Cartesian mesh (domain ``\\Omega``).
-- `quad::QuadratureSetup`: precomputed quadrature data.
-- `τ::T`: time-step size.
-- `t_half::T`: midpoint time ``t_{n-1/2}``.
-- `input_data::PDEInputData`: problem parameters and forcing data.
 """
 function solve_ĉⁿ!(
         cache::ModifiedCNCache{T},
@@ -709,18 +600,6 @@ L_2 = - \\tau A^{m_2 \\times m_1}\\hat{v}^n
 ```
 
 Assumes `cache.v̂ⁿ` has already been populated.
-
-# Arguments
-
-- `cache::ModifiedCNCache`: pre-allocated workspace; `cache.L₂` is updated in-place.
-- `state::FEMState`: solution state at time level ``n-1``.
-- `matrices::SystemMatrices`: global FEM matrices.
-- `dof_map_m₂::DOFMap`: DOF map for the ``m_2``-space.
-- `mesh2D::CartesianMesh{2}`: 2D Cartesian mesh (domain ``\\Omega``).
-- `quad::QuadratureSetup`: precomputed quadrature data.
-- `τ::T`: time-step size.
-- `t_half::T`: midpoint time ``t_{n-1/2}``.
-- `input_data::PDEInputData`: problem parameters and forcing data.
 """
 function compute_L₂!(
         cache::ModifiedCNCache{T},
@@ -769,17 +648,6 @@ storing the result in `cache.r̂ⁿ`. The solve against ``M^{m_3 \\times m_3}``
 uses the pre-computed Cholesky factorization `cache.M_m₃xm₃_chol`.
 
 Assumes `cache.v̂ⁿ` have already been populated.
-
-# Arguments
-- `cache::ModifiedCNCache`: pre-allocated workspace; `cache.r̂ⁿ` is updated in-place.
-- `state::FEMState`: solution state at time level ``n-1``.
-- `mesh1D::CartesianMesh{1}`: 1D Cartesian mesh (boundary ``\\Gamma_1``).
-- `dof_map_m₃::DOFMap`: DOF map for the ``m_3``-space.
-- `quad::QuadratureSetup`: precomputed quadrature data.
-- `τ::T`: time-step size.
-- `t_half::T`: midpoint time ``t_{n-1/2}``.
-- `q₅::T`: scalar ``q_5 = 2q_1 + \\tau q_2 + (\\tau^2/2)q_3``.
-- `input_data::PDEInputData`: problem parameters.
 """
 function solve_r̂ⁿ!(
         cache::ModifiedCNCache{T},
@@ -843,11 +711,6 @@ The time index `state.n` and current time `state.t` are also incremented by ``1`
 Assumes `cache.v̂ⁿ`, `cache.ĉⁿ`, and `cache.r̂ⁿ` have already been populated
 by [`solve_v̂ⁿ!`](@ref), [`solve_ĉⁿ!`](@ref), and [`solve_r̂ⁿ!`](@ref),
 respectively.
-
-# Arguments
-- `state::FEMState`: solution state at time level ``n-1``; updated in-place to level ``n``.
-- `cache::ModifiedCNCache`: pre-allocated workspace.
-- `τ::T`: time-step size.
 """
 function update_state!(
         state::FEMState{T, V},

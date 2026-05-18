@@ -6,55 +6,20 @@ end
     ModifiedCNCache{T, I, F}
 
 Pre-allocated workspace for the Modified Crank–Nicolson time integrator.
-All fields are initialized once before the time loop. Intended to make
-`ode_solve`, `perform_first_step!`, and `perform_step!` allocation-free,
-but known allocations remain (see `FIXME` annotations in the solver source).
 
-# Type parameters
-- `T <: AbstractFloat`: floating-point precision (e.g. `Float64`).
-- `I <: Integer`: integer type used by the sparse matrices (e.g. `Int64`).
-- `F`: concrete type of the Cholesky factorization of `M_m₃×m₃`
-  (inferred automatically by the constructor).
-
-# Scratch vectors
-| Field         | Length | Purpose                                    |
-|:------------- |:------:|:-------------------------------------------|
-| `vec_m₁_1–5`  | `m₁`   | General-purpose workspace for `m₁`-space.  |
-| `vec_m₂_1–2`  | `m₂`   | General-purpose workspace for `m₂`-space.  |
-| `vec_m₃_1–2`  | `m₃`   | General-purpose workspace for `m₃`-space.  |
-
-# Extrapolated and midpoint values
-| Field      | Length | Description                                                     |
-|:---------- |:------:|:----------------------------------------------------------------|
-| `d_star` | `m₁`   | Extrapolated wave displacement ``d^{\\ast n}``.                   |
-| `c_star` | `m₂`   | Extrapolated temperature ``c^{\\ast n}``.                         |
-| `v̂ⁿ`     | `m₁`   | Midpoint wave velocity ``\\hat{v}^n``; see [`solve_v̂ⁿ!`](@ref).   |
-| `ĉⁿ`     | `m₂`   | Midpoint temperature ``\\hat{c}^n``; see [`solve_ĉⁿ!`](@ref).     |
-| `r̂ⁿ`     | `m₃`   | Midpoint acoustic unknown ``\\hat{r}^n``; see [`solve_r̂ⁿ!`](@ref).|
-| `dⁿ⁻²`   | `m₁`   | Wave displacement two steps back (for ``n \\geq 2``).             |
-| `cⁿ⁻²`   | `m₂`   | Temperature two steps back (for ``n \\geq 2``).                   |
-
-# RHS vectors
-| Field | Length | Description                                                  |
-|:----- |:------:|:-------------------------------------------------------------|
-| `L₁`  | `m₁`   | RHS of the ``\\hat{v}^n`` system; see [`compute_L₁!`](@ref). |
-| `L₂`  | `m₂`   | RHS of the ``\\hat{c}^n`` system; see [`compute_L₂!`](@ref). |
-
-# Matrices and factorizations
-| Field          | Size    | Description                                                                                                                                                                     |
-|:---------------|:-------:|:----------------------------------------------------------------------------------|
-| `Q₁`           | `m₁×m₁` | LHS matrix for the ``\\hat{v}^n`` system; see [`compute_Q₁!`](@ref).              |
-| `Q₂`           | `m₂×m₂` | LHS matrix for the ``\\hat{c}^n`` system; see [`compute_Q₂!`](@ref).              |
-| `M_m₁xm₁_vs2`  | `m₁×m₁` | ``2M^{m_1 \\times m_1}``; used in [`compute_Q₁!`](@ref) and [`compute_L₁!`](@ref).|
-| `M_m₂xm₂_vs2`  | `m₂×m₂` | ``2M^{m_2 \\times m_2}``; used in [`compute_L₂!`](@ref).                          |
-| `M_m₃xm₃_chol` | —       | Cholesky factorization of ``M^{m_3 \\times m_3}``; used in [`solve_r̂ⁿ!`](@ref).   |
-
-# Newton system
-| Field      | Size    | Description                                                             |
-|:---------- |:-------:|:------------------------------------------------------------------------|
-| `minusH` | `m₁`    | Residual ``-H(\\hat{v}^n)``; see [`compute_minusH!`](@ref).               |
-| `JH`     | `m₁×m₁` | Jacobian of ``H``; assembled each Newton step; see [`compute_JH!`](@ref). |
-
+# Fields
+- `vec_m₁_1`–`vec_m₁_5`: scratch vectors of length `m₁`.
+- `vec_m₂_1`, `vec_m₂_2`: scratch vectors of length `m₂`.
+- `vec_m₃_1`, `vec_m₃_2`: scratch vectors of length `m₃`.
+- `d_star`, `c_star`: extrapolated displacement ``d^{\\ast n}`` and temperature ``c^{\\ast n}``, lengths `m₁` and `m₂`.
+- `v̂ⁿ`, `ĉⁿ`, `r̂ⁿ`: midpoint wave velocity, temperature, and acoustic unknown, lengths `m₁`, `m₂`, `m₃`.
+- `dⁿ⁻²`, `cⁿ⁻²`: displacement and temperature two steps back (used for ``n \\geq 2`` extrapolation), lengths `m₁` and `m₂`.
+- `L₁`, `L₂`: right-hand sides of the ``\\hat{v}^n`` and ``\\hat{c}^n`` systems, lengths `m₁` and `m₂`.
+- `Q₁`, `Q₂`: LHS matrices for the ``\\hat{v}^n`` and ``\\hat{c}^n`` systems, sizes `m₁×m₁` and `m₂×m₂`; updated each time step.
+- `M_m₁xm₁_vs2`, `M_m₂xm₂_vs2`: scaled mass matrices ``2M^{m_1\\times m_1}`` and ``2M^{m_2\\times m_2}``.
+- `M_m₃xm₃_chol`: Cholesky factorization of ``M^{m_3\\times m_3}``.
+- `minusH`: residual ``-H(\\hat{v}^n)``, length `m₁`.
+- `JH`: Jacobian of ``H``, size `m₁×m₁`; assembled each Newton step.
 """
 struct ModifiedCNCache{T <: AbstractFloat, I <: Integer, F}
     # --- Scratch vectors — m₁ ---

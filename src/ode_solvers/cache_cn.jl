@@ -5,70 +5,31 @@ end
 """
     CrankNicolsonCache{T, I, TF, TC}
 
-Pre-allocated workspace for the Crank–Nicolson time integrator (Strategy 2:
-joint Newton iteration in ``[\\hat{v}^n;\\,\\hat{c}^n]``).
-All fields are initialized once before the time loop. Intended to make
-`ode_solve` and `perform_step!` allocation-free, but known allocations remain
-(see `FIXME` annotations in the solver source).
+Pre-allocated workspace for the Crank-Nicolson Strategy 2 solver (joint Newton iteration in ``[\\hat{v}^n;\\,\\hat{c}^n]``).
 
-# Type parameters
-- `T <: AbstractFloat`: floating-point precision (e.g. `Float64`).
-- `I <: Integer`: integer type used by the sparse matrices (e.g. `Int64`).
-- `TF`: concrete type of the Cholesky factorization of ``M^{m_3\\times m_3}``
-  (inferred automatically by the constructor).
-- `TC`: concrete type of linear solve cache.
-
-# Scratch vectors
-| Field         | Length | Purpose                                   |
-|:------------- |:------:|:------------------------------------------|
-| `vec_m₁_1–3`  | `m₁`   | General-purpose workspace for `m₁`-space. |
-| `vec_m₂_1-2`  | `m₂`   | General-purpose workspace for `m₂`-space. |
-| `vec_m₃_1–2`  | `m₃`   | General-purpose workspace for `m₃`-space. |
-
-# RHS vectors
-| Field | Length | Description                                                  |
-|:----- |:------:|:-------------------------------------------------------------|
-| `L₁`  | `m₁`   | RHS of the ``\\hat{v}^n`` system; see [`compute_L₁!`](@ref). |
-| `L₂`  | `m₂`   | RHS of the ``\\hat{c}^n`` system; see [`compute_L₂!`](@ref). |
-
-# Midpoint unknowns and auxiliary quantities
-| Field           | Length | Description                                                                                                                                                  |
-|:--------------- |:------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `Xⁿ`            | `m₁+m₂`| Joint iterate ``[\\hat{v}^n;\\hat{c}^n]``.                                                                                                                   |
-| `v̂ⁿ`            | `m₁`   | View into `Xⁿ[1:m₁]`; midpoint wave velocity ``\\hat{v}^n``.                                                                                                 |
-| `ĉⁿ`            | `m₂`   | View into `Xⁿ[(m₁+1):end]`; midpoint temperature ``\\hat{c}^n``.                                                                                             |
-| `r̂ⁿ`            | `m₃`   | Midpoint acoustic unknown ``\\hat{r}^n``; see [`solve_r̂ⁿ!`](@ref).                                                                                           |
-| `d̂ⁿ`            | `m₁`   | Midpoint wave displacement ``\\hat{d}^n = \\tfrac{\\tau}{2}\\hat{v}^n + d^{n-1}``; computed in [`compute_minusH!`](@ref) and reused in [`compute_JH!`](@ref).|
-| `K_m₂xm₂_vs_ĉⁿ` | `m₂`   | Product ``K^{m_2\\times m_2}\\hat{c}^n``; computed in [`compute_minusH!`](@ref) and reused in [`compute_JH!`](@ref).  |
-| `QXⁿ`           | `m₁+m₂`| Product ``Q Xⁿ``; computed in [`compute_QXⁿ!`](@ref).|
-
-# Newton system 
-| Field        | Size             | Description                                            |
-|:------------ |:----------------:|:-------------------------------------------------------|
-| `minusH`     | `m₁+m₂`          | Residual ``-H(X^n)``; see [`compute_minusH!`](@ref).   |
-| `JH₁₁`       | `m₁×m₁`          | First diagonal block of the Jacobian of ``H``.         |
-| `JH₂₂_sparse`| `m₂×m₂`          | Second diagonal block of the Jacobian of ``H``, excluding the rank-1 matrix.|
-| `JH_sparse`  | `(m₁+m₂)×(m₁+m₂)`| Global sparse Jacobian without the rank-1 matrix; see [`sync_JH_sparse!`](@ref). The off-diagonal blocks (``\\tau A^{m_1\\times m_2}``, ``\\tau A^{m_2\\times m_1}``) are time-invariant and set at construction; diagonal blocks are synced each Newton iteration via the pre-computed index maps. |
-| `ΔXⁿ`        | `m₁+m₂`          | Newton linear system solution.|
-
-# Matrices and factorizations
-| Field          | Size      | Description                                                                       |
-|:-------------- |:---------:|:----------------------------------------------------------------------------------|
-| `Q₁₁`          | `m₁×m₁`   | Top-left block of ``Q``; updated each time step by [`compute_Q₁₁!`](@ref). The remaining three blocks of ``Q`` (``\\tau A^{m_1\\times m_2}``, ``\\tau A^{m_2\\times m_1}``, ``2M^{m_2\\times m_2}``) are time-invariant and available as separate cache fields.|
-| `τA_m₁xm₂`     | `m₁×m₂`   | ``\\tau A^{m_1\\times m_2}`` |
-| `τA_m₂xm₁`     | `m₂×m₁`   | ``\\tau A^{m_2\\times m_1}`` |
-| `M_m₁xm₁_vs2`  | `m₁×m₁`   | ``2M^{m_1\\times m_1}``; used in [`compute_Q₁₁!`](@ref) and [`compute_L₁!`](@ref). |
-| `M_m₂xm₂_vs2`  | `m₂×m₂`   | ``2M^{m_2\\times m_2}``; used in `Q` and [`compute_L₂!`](@ref). |
-| `M_m₃xm₃_chol` | —         | Cholesky factorization of ``M^{m_3\\times m_3}``; see [`solve_r̂ⁿ!`](@ref).      |
-| `linsolve`     | —         | LinearSolve.jl caching interface. |
-
-# Auxiliary maps for JH_sparse synchronization
-| Field          | Length                  | Description                                                                                   |
-|:-------------- |:-----------------------:|:----------------------------------------------------------------------------------------------|
-| `map_direct₁₁` | `nnz(JH₁₁.data)`        | Maps each entry `k` of `JH₁₁.data.nzval` to its position in `JH_sparse.nzval`; direct write `JH_sparse[i,j] = JH₁₁[i,j]`. |
-| `map_mirror₁₁` | `nnz(JH₁₁.data)`        | Maps each entry `k` of `JH₁₁.data.nzval` to the mirror position in `JH_sparse.nzval`; symmetric write `JH_sparse[j,i] = JH₁₁[i,j]`. |
-| `map_direct₂₂` | `nnz(M_m₂xm₂_vs2.data)` | Analogous to `map_direct₁₁` for the `(2,2)` block.|
-| `map_mirror₂₂` | `nnz(M_m₂xm₂_vs2.data)` | Analogous to `map_mirror₁₁` for the `(2,2)` block. |
+# Fields
+- `vec_m₁_1`, `vec_m₁_2`, `vec_m₁_3`: scratch vectors of length `m₁`.
+- `vec_m₂_1`, `vec_m₂_2`: scratch vectors of length `m₂`.
+- `vec_m₃_1`, `vec_m₃_2`: scratch vectors of length `m₃`.
+- `L₁`, `L₂`: right-hand sides of the ``\\hat{v}^n`` and ``\\hat{c}^n`` systems, lengths `m₁` and `m₂`.
+- `Xⁿ`: joint Newton iterate ``[\\hat{v}^n;\\,\\hat{c}^n]``, length `m₁+m₂`.
+- `v̂ⁿ`, `ĉⁿ`: views into `Xⁿ[1:m₁]` and `Xⁿ[m₁+1:end]`.
+- `r̂ⁿ`: midpoint acoustic unknown ``\\hat{r}^n``, length `m₃`.
+- `d̂ⁿ`: midpoint wave displacement ``\\hat{d}^n = \\tfrac{d^n + d^{n-1}}{2} = \\tfrac{\\tau}{2}\\hat{v}^n + d^{n-1}``, length `m₁`.
+- `K_m₂xm₂_vs_ĉⁿ`: product ``K^{m_2\\times m_2}\\hat{c}^n``, length `m₂`.
+- `QXⁿ`: product ``Q X^n``, length `m₁+m₂`.
+- `minusH`: residual ``-H(X^n)``, length `m₁+m₂`.
+- `JH₁₁`: (1,1) block of the Jacobian ``JH``, size `m₁×m₁`.
+- `JH₂₂_sparse`: (2,2) block of ``JH`` excluding its rank-1 matrix, size `m₂×m₂`.
+- `JH_sparse`: global sparse Jacobian (without rank-1 matrix), size `(m₁+m₂)×(m₁+m₂)`; off-diagonal blocks are time-invariant and set at construction.
+- `ΔXⁿ`: Newton update, length `m₁+m₂`.
+- `Q₁₁`: (1,1) block of ``Q``, updated each time step; size `m₁×m₁`.
+- `τA_m₁xm₂`, `τA_m₂xm₁`: time-invariant off-diagonal blocks ``\\tau A^{m_1\\times m_2}`` and ``\\tau A^{m_2\\times m_1}``.
+- `M_m₁xm₁_vs2`, `M_m₂xm₂_vs2`: scaled mass matrices ``2M^{m_1\\times m_1}`` and ``2M^{m_2\\times m_2}``.
+- `M_m₃xm₃_chol`: Cholesky factorization of ``M^{m_3\\times m_3}``.
+- `linsolve`: cached linear solver handle for ``JH\\,\\Delta X^n = -H``.
+- `map_direct₁₁`, `map_mirror₁₁`: index maps from `JH₁₁.data.nzval` into `JH_sparse.nzval`.
+- `map_direct₂₂`, `map_mirror₂₂`: index maps from `JH₂₂_sparse.data.nzval` into `JH_sparse.nzval`.
 """
 struct CrankNicolsonCache{T <: AbstractFloat, I <: Integer, TF, TC <: LS.LinearCache}
     # --- Scratch vectors — m₁ ---
