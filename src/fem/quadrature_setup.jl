@@ -61,7 +61,7 @@ Construct a `QuadratureSetup` for given 1D and 2D finite element families.
 - `fe2D::DimensionalFEFamily`: 2D element family (e.g. `LagrangeElement{2,1}()`)
 - `Δx::NTuple{2,T}`: Element sizes `(Δx, Δy)`
 - `pmin::NTuple{2,T}`: Bottom-left corner of the domain `(xmin, ymin)`
-- `::Val{Npg}`: Number of Gauss–Legendre points per dimension (default: `Val(4)`)
+- `::Val{Npg}`: Number of Gauss–Legendre points per dimension (default: `Val(8)`)
 - `::Val{Nb}`: Number of local DOFs per element in 1D; inferred automatically from `fe1D`. Do not pass explicitly.
 - `::Val{Nb2}`: Number of local DOFs per element in 2D; inferred automatically from `fe2D`. Do not pass explicitly.
 
@@ -72,7 +72,7 @@ julia> using ThermoelasticAcoustic: QuadratureSetup, LagrangeElement
 julia> quad = QuadratureSetup(LagrangeElement{1,1}(), LagrangeElement{2,1}(), (0.1, 0.2), (0.0, 0.0));
 
 julia> length(quad.xP)
-4
+8
 ```
 """
 function QuadratureSetup(
@@ -80,7 +80,7 @@ function QuadratureSetup(
         fe2D::DimensionalFEFamily,
         Δx::NTuple{2, T},
         pmin::NTuple{2, T},
-        ::Val{Npg} = Val(4),
+        ::Val{Npg} = Val(8),
         ::Val{Nb} = num_local_dof_static(fe1D),
         ::Val{Nb2} = num_local_dof_static(fe2D)
 ) where {T <: Real, Npg, Nb, Nb2}
