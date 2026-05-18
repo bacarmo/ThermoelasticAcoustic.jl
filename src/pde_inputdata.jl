@@ -7,49 +7,31 @@
                  Tf₁, Tf₂, Tf₃,
                  Tu, Tv, Tθ, Tz, Tr}
 
-Input data container for a coupled wave–thermal–acoustic PDE system posed on a
-rectangular domain ``Ω ⊂ ℝ²``, with acoustic interaction prescribed on the lower
-boundary ``Γ₁``.
+Input data container for a coupled wave-thermal-acoustic PDE system posed on a
+rectangular domain ``\\Omega = ]x_{\\min}, x_{\\max}[ \\times ]y_{\\min}, y_{\\max}[``,
+with acoustic interaction prescribed on the lower boundary ``\\Gamma_1 = ]x_{\\min}, x_{\\max}[ \\times \\{y_{\\min}\\}``,
+where ``\\Gamma = \\partial\\Omega`` and ``\\Gamma_0 = \\Gamma \\setminus \\Gamma_1``.
 
 # Mathematical Model
 
-Wave equation in Ω:
 ```math
-\\frac{∂²u}{∂t²}(x,y,t) - α(t)\\,Δu(x,y,t) + f(u(x,y,t)) + (\\mathbf{a} \\cdot \\nabla)θ(x,y,t) = f₁(x,y,t)
+\\begin{align*}
+&\\frac{∂²u}{∂t²}(x,y,t) - α(t)\\,Δu(x,y,t) + f(u(x,y,t)) + (\\mathbf{a} \\cdot \\nabla)θ(x,y,t) = f₁(x,y,t),
+\\\\[10pt]
+&\\frac{∂θ}{∂t}(x,y,t) - β\\!\\left(\\int_Ω θ(t)\\,\\mathrm{d}\\Omega\\right) Δθ(x,y,t) + (\\mathbf{a} \\cdot \\nabla)\\frac{∂u}{∂t}(x,y,t) = f₂(x,y,t),
+\\\\[10pt]
+&q_1\\,\\frac{∂²z}{∂t²}(x,t) + q_2\\,\\frac{∂z}{∂t}(x,t) + q_3\\,z(x,t) + q_4\\,\\frac{∂u}{∂t}(x,y_{\\min},t) = f₃(x,t),
+\\\\[10pt]
+&-\\frac{∂u}{∂y}(x,y_{\\min},t) = \\frac{∂z}{∂t}(x,t) - g\\left(x,\\,\\frac{∂u}{∂t}(x,y_{\\min},t)\\right),
+\\\\[10pt]
+&u = 0 \\text{ on } Γ_0, \\qquad θ = 0 \\text{ on } Γ,
+\\end{align*}
 ```
-
-Thermal equation in Ω:
-```math
-\\frac{∂θ}{∂t}(x,y,t) - β\\!\\left(\\int_Ω θ(x,y,t)\\,\\mathrm{d}x\\,\\mathrm{d}y\\right) Δθ(x,y,t)
-+ (\\mathbf{a} \\cdot \\nabla)\\frac{∂u}{∂t}(x,y,t) = f₂(x,y,t)
-```
-
-Acoustic boundary equation on Γ₁:
-```math
-q_1\\,\\frac{∂²z}{∂t²}(x,t) + q_2\\,\\frac{∂z}{∂t}(x,t) + q_3\\,z(x,t)
-+ q_4\\,\\frac{∂u}{∂t}(x,y_{\\min},t) = f₃(x,t)
-```
-
-Nonlinear wave–acoustic coupling on Γ₁:
-```math
--\\frac{∂u}{∂y}(x,y_{\\min},t) = \\frac{∂z}{∂t}(x,t) - g\\left(x,\\,\\frac{∂u}{∂t}(x,y_{\\min},t)\\right)
-```
-
-Boundary conditions:
-```math
-u = 0 \\text{ on } Γ_0, \\qquad θ = 0 \\text{ on } Γ
-```
-
-Initial conditions:
+with initial conditions
 ```math
 u(x,y,0) = u_0(x,y), \\quad \\frac{∂u}{∂t}(x,y,0) = v_0(x,y), \\quad
-θ(x,y,0) = θ_0(x,y), \\quad z(x,0) = z_0(x), \\quad \\frac{∂z}{∂t}(x,0) = r_0(x)
+θ(x,y,0) = θ_0(x,y), \\quad z(x,0) = z_0(x), \\quad \\frac{∂z}{∂t}(x,0) = r_0(x) = -\\frac{\\partial u_0}{\\partial y}(x,y_{\\min}) + g\\big(x,v_0(x,y_{\\min})\\big).
 ```
-
-## Notes
-- The rectangular domain is ``Ω = ]x_{\\min}, x_{\\max}[ × ]y_{\\min}, y_{\\max}[``.
-- The lower boundary is ``Γ_1 = \\{(x, y_{\\min}) : x \\in ]x_{\\min}, x_{\\max}[\\}``.
-- ``Γ`` denotes the full boundary of ``Ω`` and ``Γ_0 = Γ \\setminus Γ_1``.
 
 # Fields
 
@@ -92,11 +74,11 @@ u(x,y,0) = u_0(x,y), \\quad \\frac{∂u}{∂t}(x,y,0) = v_0(x,y), \\quad
 - `f₃::Tf₃`: Acoustic source f₃(x, t) on Γ₁.
 
 ## Analytical Solutions
-Optional fields for manufactured-solution convergence studies. Set to `nothing`
-for physical simulations without known closed-form solutions.
+For manufactured solution cases, provide analytical solutions for convergence studies:
 - `u::Tu`, `v::Tv`: Analytical wave displacement u(x, y, t) and velocity v(x, y, t).
 - `θ::Tθ`: Analytical thermal solution θ(x, y, t).
 - `z::Tz`, `r::Tr`: Analytical acoustic displacement z(x, t) and velocity r(x, t).
+For physical simulations without known solutions, these fields are `nothing`.
 """
 struct PDEInputData{
     Tα, Tβ, Tdβ, Tf, Tdf, Tg, T∂ₛg,
@@ -165,8 +147,8 @@ end
 """
     example0_manufactured(p::Float64=2.4) -> PDEInputData
 
-Manufactured solution with oscillatory wave–acoustic coupling
-``g(x, s) = (1 + e^{-x^2})(\\sin(s) + 2s)``:
+Manufactured solution with
+``g(x, s) = (1 + e^{-x^2})(\\sin(s) + 2s)``, ``f(s) = s|s|^3``, ``\\beta(s) = 1 + \\exp(-s^2)``:
 ```math
 \\begin{alignat*}{2}
 & u(x,y,t)   &&= (x^p - x)(y^p - 1)(4 + t^2), \\\\
@@ -375,7 +357,7 @@ end
 """
     example0_zero_source(p::Float64=2.4) -> PDEInputData
 
-Same configuration as `example1_manufactured` but with f₁ = f₂ = f₃ = 0.
+Same configuration as `example0_manufactured` but with f₁ = f₂ = f₃ = 0.
 No analytical solution available.
 
 # Arguments
@@ -479,8 +461,8 @@ end
 """
     example1_manufactured(p::Float64=2.4) -> PDEInputData
 
-Manufactured solution with oscillatory wave–acoustic coupling
-``g(x, s) = (1 + e^{-x^2})(\\sin(s) + 2s)``:
+Manufactured solution with
+``g(x, s) = (1 + e^{-x^2})(\\sin(s) + 2s)``, ``f(s) = s|s|^3``, ``\\beta(s) = 1 + \\exp(-s^2)``:
 ```math
 \\begin{alignat*}{2}
 & u(x,y,t)   &&= (x^p - x)(y^p - 1)(4 + t^2), \\\\
@@ -744,7 +726,7 @@ end
 """
     example2_manufactured(p::Float64=2.4) -> PDEInputData
 
-Manufactured solution with linear coupling ``g(x,s) = (1+e^{-x^2})s``:
+Manufactured solution with ``g(x,s) = (1+e^{-x^2})s``, ``f(s) = s|s|^3``, ``\\beta(s) = 1 + \\exp(-s^2)``:
 ```math
 \\begin{alignat*}{2}
 & u(x,y,t)   &&= (x^p - x)(y^p - 1)(4 + t^2), \\\\
