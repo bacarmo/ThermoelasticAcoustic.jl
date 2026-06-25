@@ -84,7 +84,7 @@ const CASES = (
 # One case per solver suffices; Lagrange{1} is the cheapest.
 const STUDIES = (
     coupled =  (run = false, cases = CASES, Nx_exp_range = 2:5),
-    spatial =  (run = true, cases = CASES, Nx_exp_range = 2:5, τ_fixed = 2.0^(-15)),
+    spatial =  (run = true, cases = CASES, Nx_exp_range = 2:5, τ_fixed = 2.0^(-13)),
     temporal = (run = true, cases = CASES[[2,8]], τ_exp_range = 2:5, Nx_fixed = 2^9),
 )
 # Output file - timestamp prevents overwriting previous runs
