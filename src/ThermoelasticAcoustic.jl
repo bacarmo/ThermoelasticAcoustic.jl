@@ -2,7 +2,7 @@ module ThermoelasticAcoustic
 
 using StaticArrays: SVector, SMatrix
 using GaussQuadrature: legendre
-using Printf: @printf
+using Printf: @printf, @sprintf
 using SparseArrays: sparse, spzeros, SparseMatrixCSC, nnz, nzrange
 using LinearAlgebra: Symmetric, lmul!, cholesky, ldiv!, mul!, dot
 import LinearSolve as LS
