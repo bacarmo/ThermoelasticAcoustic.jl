@@ -369,7 +369,7 @@ Assumes the following cache fields have already been populated:
 - `cache.L₁`: via [`compute_L₁!`](@ref).
 
 # Keyword Arguments
-- `abstol::T`: absolute tolerance on ``\\max_i |H_i|`` (default: `T(1e-10)`).
+- `abstol::T`: absolute tolerance on ``\\max_i |H_i|`` (default: `T(1e-13)`).
 - `maxiter::Int`: maximum number of Newton iterations (default: `10`).
 """
 function newton_solve!(
@@ -380,17 +380,20 @@ function newton_solve!(
         quad::QuadratureSetup,
         τα::T,
         input_data::PDEInputData;
-        abstol::T = T(1e-10),
+        abstol::T = T(1e-14),
         maxiter::Int = 10
 ) where {T}
     # Warm start: v̂ⁿ ← vⁿ⁻¹
     copyto!(cache.v̂ⁿ, state.v)
 
+    normH = zero(T)
+
     for _ in 1:maxiter
         # Compute -H(v̂ⁿ)  →  cache.minusH
         compute_minusH!(cache, dof_map_m₃, mesh1D, quad, τα, input_data)
 
-        maximum(abs, cache.minusH) ≤ abstol && return nothing
+        normH = maximum(abs, cache.minusH)
+        normH ≤ abstol && return nothing                      # criterion 1
 
         # Assemble JH = Q₁ + τα [JG 0; 0 0] → cache.JH
         compute_JH!(cache, dof_map_m₃, mesh1D, quad, τα, input_data)

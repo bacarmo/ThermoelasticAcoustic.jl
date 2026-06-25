@@ -290,7 +290,7 @@ Assumes `cache.Q₁₁`, `cache.L₁`, and `cache.L₂` have already been popula
 `cache.Xⁿ` is warm-started from ``[v^{n-1};\\,c^{n-1}]`` at the beginning of each call.
  
 # Keyword Arguments
-- `abstol::T`: absolute tolerance on ``\\max_i|H_i|`` (default: `T(1e-10)`).
+- `abstol::T`: absolute tolerance on ``\\max_i|H_i|`` (default: `T(1e-14)`).
 - `maxiter::Int`: maximum number of Newton iterations (default: `10`).
 """
 function newton_solve!(
@@ -306,19 +306,25 @@ function newton_solve!(
         τ::T,
         τα::T,
         input_data::PDEInputData;
-        abstol::T = T(1e-10),
+        abstol::T = T(1e-14),
+        reltol::T = T(1e-9),
         maxiter::Int = 10
 ) where {T}
     # Warm start: Xⁿ ← [vⁿ⁻¹; cⁿ⁻¹]
     cache.v̂ⁿ .= state.v
     cache.ĉⁿ .= state.c
 
+    normH = zero(T)
+    normΔX = zero(T)
+    normX = zero(T)
+
     for _ in 1:maxiter
         # Compute -H(v̂ⁿ)  →  cache.minusH
         compute_minusH!(cache, state, matrices, dof_map_m₁, dof_map_m₂, dof_map_m₃,
             mesh1D, mesh2D, quad, τ, τα, input_data)
 
-        maximum(abs, cache.minusH) ≤ abstol && return nothing
+        normH = maximum(abs, cache.minusH)
+        normH ≤ abstol && return nothing    # criterion 1
 
         # Assemble JH
         compute_JH_sparse!(cache, matrices, dof_map_m₁, dof_map_m₂, dof_map_m₃,
@@ -328,11 +334,19 @@ function newton_solve!(
         solve_newton_linear_system!(cache, matrices, τ, input_data)
 
         # Newton step: Xⁿ ← Xⁿ + JH⁻¹ (-H)
+        normΔX = maximum(abs, cache.ΔXⁿ)
+        normX = maximum(abs, cache.Xⁿ)
         cache.Xⁿ .+= cache.ΔXⁿ
+
+        normΔX ≤ abstol + reltol * normX && return nothing     # criterion 2
     end
 
-    @warn "newton_solve! did not converge within $maxiter iterations " *
-          "(max|H| = $(maximum(abs, cache.minusH)), abstol = $abstol)"
+    @warn "solve_nonlinear_system! did not converge in $maxiter iterations " *
+          "(‖H(Xᵏ⁻¹)‖ = $(@sprintf("%.1e", normH)), " *
+          "‖Xᵏ-Xᵏ⁻¹‖ = $(@sprintf("%.1e", normΔX)), " *
+          "abstol+reltol*‖Xᵏ⁻¹‖ = $(@sprintf("%.1e", abstol + reltol * normX)), " *
+          "‖Xᵏ⁻¹‖ = $(@sprintf("%.1e", normX)), " *
+          "abstol = $(@sprintf("%.1e", abstol)), reltol = $(@sprintf("%.1e", reltol)))"
     return nothing
 end
 
