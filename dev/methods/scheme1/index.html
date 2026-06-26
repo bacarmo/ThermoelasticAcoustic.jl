@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Scheme 1 · ThermoelasticAcoustic.jl</title><meta name="title" content="Scheme 1 · ThermoelasticAcoustic.jl"/><meta property="og:title" content="Scheme 1 · ThermoelasticAcoustic.jl"/><meta property="twitter:title" content="Scheme 1 · ThermoelasticAcoustic.jl"/><meta name="description" content="Documentation for ThermoelasticAcoustic.jl."/><meta property="og:description" content="Documentation for ThermoelasticAcoustic.jl."/><meta property="twitter:description" content="Documentation for ThermoelasticAcoustic.jl."/><meta property="og:url" content="https://bacarmo.github.io/ThermoelasticAcoustic.jl/methods/scheme1/"/><meta property="twitter:url" content="https://bacarmo.github.io/ThermoelasticAcoustic.jl/methods/scheme1/"/><link rel="canonical" href="https://bacarmo.github.io/ThermoelasticAcoustic.jl/methods/scheme1/"/><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">ThermoelasticAcoustic.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><a class="tocitem" href="../../model/">Model</a></li><li><span class="tocitem">Approximation Problem</span><ul><li class="is-active"><a class="tocitem" href>Scheme 1</a><ul class="internal"><li><a class="tocitem" href="#Matrix-Formulation"><span>Matrix Formulation</span></a></li><li><a class="tocitem" href="#Solving-the-Nonlinear-Algebraic-System"><span>Solving the Nonlinear Algebraic System</span></a></li></ul></li><li><a class="tocitem" href="../scheme2/">Scheme 2</a></li></ul></li><li><a class="tocitem" href="../../api/">API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Approximation Problem</a></li><li class="is-active"><a href>Scheme 1</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Scheme 1</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/bacarmo/ThermoelasticAcoustic.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/bacarmo/ThermoelasticAcoustic.jl/blob/main/docs/src/methods/scheme1.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Scheme-1"><a class="docs-heading-anchor" href="#Scheme-1">Scheme 1</a><a id="Scheme-1-1"></a><a class="docs-heading-anchor-permalink" href="#Scheme-1" title="Permalink"></a></h1><p>The numerical scheme present is based on the Crank-Nicolson Galerkin method, which consists of finding <span>$U^n, V^n \in \mathcal{V}_{m_1}$</span>, <span>$\Theta^n\in \mathcal{V}_{m_2}$</span>, and <span>$Z^n, R^n \in \mathcal{V}_{m_3}$</span> such that</p><p class="math-container">\[\begin{align*}
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Scheme 1 · ThermoelasticAcoustic.jl</title><meta name="title" content="Scheme 1 · ThermoelasticAcoustic.jl"/><meta property="og:title" content="Scheme 1 · ThermoelasticAcoustic.jl"/><meta property="twitter:title" content="Scheme 1 · ThermoelasticAcoustic.jl"/><meta name="description" content="Documentation for ThermoelasticAcoustic.jl."/><meta property="og:description" content="Documentation for ThermoelasticAcoustic.jl."/><meta property="twitter:description" content="Documentation for ThermoelasticAcoustic.jl."/><meta property="og:url" content="https://bacarmo.github.io/ThermoelasticAcoustic.jl/methods/scheme1/"/><meta property="twitter:url" content="https://bacarmo.github.io/ThermoelasticAcoustic.jl/methods/scheme1/"/><link rel="canonical" href="https://bacarmo.github.io/ThermoelasticAcoustic.jl/methods/scheme1/"/><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">ThermoelasticAcoustic.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><a class="tocitem" href="../../model/">Model</a></li><li><span class="tocitem">Approximation Problem</span><ul><li class="is-active"><a class="tocitem" href>Scheme 1</a><ul class="internal"><li><a class="tocitem" href="#Matrix-Formulation"><span>Matrix Formulation</span></a></li><li><a class="tocitem" href="#Solving-the-Nonlinear-Algebraic-System"><span>Solving the Nonlinear Algebraic System</span></a></li></ul></li><li><a class="tocitem" href="../scheme2/">Scheme 2</a></li></ul></li><li><span class="tocitem">Examples</span><ul><li><a class="tocitem" href="../../examples/example1/">Example 1</a></li><li><a class="tocitem" href="../../examples/example2/">Example 2</a></li></ul></li><li><a class="tocitem" href="../../api/">API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Approximation Problem</a></li><li class="is-active"><a href>Scheme 1</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Scheme 1</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/bacarmo/ThermoelasticAcoustic.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/bacarmo/ThermoelasticAcoustic.jl/blob/main/docs/src/methods/scheme1.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Scheme-1"><a class="docs-heading-anchor" href="#Scheme-1">Scheme 1</a><a id="Scheme-1-1"></a><a class="docs-heading-anchor-permalink" href="#Scheme-1" title="Permalink"></a></h1><p>The numerical scheme present is based on the Crank-Nicolson Galerkin method, which consists of finding <span>$U^n, V^n \in \mathcal{V}_{m_1}$</span>, <span>$\Theta^n\in \mathcal{V}_{m_2}$</span>, and <span>$Z^n, R^n \in \mathcal{V}_{m_3}$</span> such that</p><p class="math-container">\[\begin{align*}
 &amp; \big(\varphi,\bar{\partial}V^n\big)
 + \alpha^{n-\frac{1}{2}}\Big[
     \big(\nabla\varphi,\nabla\widehat{U}^n\big)
@@ -124,191 +124,7 @@ F_i^{m_1}(\widehat{d}^n)
       \quad\text{and}\quad
       M^{m_3\times m_1} = \begin{bmatrix} M^{m_3\times m_3} &amp; 0^{m_3\times(m_1-m_3)} \end{bmatrix}.\]</p>Furthermore, the nonlinear term <span>$G^{m_1}(\widehat{v}^n)$</span> can be rewritten as<p class="math-container">\[G^{m_1}(\widehat{v}^n) 
 = \begin{bmatrix} G^{m_3}(\widehat{v}_{1:m_3}^n)\\ 0^{(m_1-m_3)} \end{bmatrix},\]</p>with<p class="math-container">\[G^{m_3}_i(\widehat{v}_{1:m_3}^n) 
-=\int_{\Gamma_1}\phi_i(x)g\Big(x,\sum_{\ell=1}^{m_3}\widehat{v}_\ell^n\phi_\ell(x)\Big)d\Gamma.\]</p></li></ul></div></div></div></details><h2 id="Solving-the-Nonlinear-Algebraic-System"><a class="docs-heading-anchor" href="#Solving-the-Nonlinear-Algebraic-System">Solving the Nonlinear Algebraic System</a><a id="Solving-the-Nonlinear-Algebraic-System-1"></a><a class="docs-heading-anchor-permalink" href="#Solving-the-Nonlinear-Algebraic-System" title="Permalink"></a></h2><p>In what follows, we show that the matrix formulation is equivalent to finding <span>$X \in \mathbb{R}^{m_1+m_2}$</span> such that <span>$H(X) = 0$</span>,  which we solve via Newton&#39;s method. Starting from the initial guess  <span>$X_0 = [v^{n-1}; c^{n-1}]$</span>,  the method generates the sequence  <span>$X_{\kappa+1} = X_\kappa + S_\kappa$</span>,  where <span>$S_\kappa$</span> is obtained by solving the linear system</p><p class="math-container">\[JH(X_\kappa)\, S_\kappa = -H(X_\kappa),\]</p><p>with <span>$JH(X_\kappa)$</span> denoting the Jacobian of <span>$H$</span> evaluated at <span>$X_\kappa$</span>.</p><p>We consider two strategies to formulate <span>$H(X) = 0$</span>, differing in the choice of primary unknowns.</p><h3 id="Strategy-1:-Formulation-in-Term-of-X\\begin{bmatrix}vn\\\\cn\\end{bmatrix}"><a class="docs-heading-anchor" href="#Strategy-1:-Formulation-in-Term-of-X\\begin{bmatrix}vn\\\\cn\\end{bmatrix}">Strategy 1: Formulation in Term of <span>$X=\begin{bmatrix}v^n\\c^n\end{bmatrix}$</span></a><a id="Strategy-1:-Formulation-in-Term-of-X\\begin{bmatrix}vn\\\\cn\\end{bmatrix}-1"></a><a class="docs-heading-anchor-permalink" href="#Strategy-1:-Formulation-in-Term-of-X\\begin{bmatrix}vn\\\\cn\\end{bmatrix}" title="Permalink"></a></h3><p class="math-container">\[Q(n)
-\begin{bmatrix}
- v^n \\[10pt]
- c^n 
-\end{bmatrix}
-+ 
-\begin{bmatrix}
- \tau\alpha^{n-\frac{1}{2}}
- G^{m_1}\big(\frac{v^n+v^{n-1}}{2}\big) 
- + \tau F^{m_1}\big(\frac{\tau}{4}v^{n}+\frac{\tau}{4}v^{n-1}+d^{n-1}\big) \\[10pt]
- \frac{\tau}{2}\beta\big(\frac{\mathbf{b}}{2}\cdot(c^n+c^{n-1})\big)K^{m_2\times m_2}\big(c^n+c^{n-1}\big)
-\end{bmatrix}
--
-\begin{bmatrix}
-L_1(n)\\[10pt]
-L_2(n)
-\end{bmatrix}
-= 0.\]</p><p>Once <span>$v^n$</span> and <span>$c^n$</span> have been determined, we compute <span>$\hat{r}^n$</span> via</p><p class="math-container">\[\hat{r}^n
-=
-- \frac{\tau q_4}{q_5}\hat{v}_{1:m_3}^n
-+ \frac{2q_1}{q_5} r^{n-1}
-- \frac{\tau q_3}{q_5} z^{n-1}
-+ \frac{\tau}{q_5} \Big(M^{m_3\times m_3}\Big)^{-1}
-  \mathcal{F}^{m_3}(f_3^{n-\frac{1}{2}}).\]</p><p>The remaining quantities <span>$d^n$</span>, <span>$z^n$</span>, and <span>$r^n$</span> are then recovered by</p><p class="math-container">\[\begin{align*}
-&amp;     r^n = 2\hat{r}^n - r^{n-1},
-\quad d^n = \tau\hat{v}^n + d^{n-1},
-\quad z^n = \tau\hat{r}^n + z^{n-1}.
-\end{align*}\]</p><details class="admonition is-details" id="Details-c0f57c2850d543d6"><summary class="admonition-header">Details<a class="admonition-anchor" href="#Details-c0f57c2850d543d6" title="Permalink"></a></summary><div class="admonition-body"><p>Starting from the matrix formulation, we rewrite the third equation in terms of <span>$\hat{r}^n$</span> and substitute it into the first:</p><p class="math-container">\[\begin{align*}
-&amp; M^{m_1\times m_1}\bar{\partial}v^n
-+ \alpha^{n-\frac{1}{2}}\Big[  
-    K^{m_1\times m_1}\widehat{d}^n
-  + G^{m_1}(\widehat{v}^n)\Big]
-+ F^{m_1}(\widehat{d}^n)
-+ A^{m_1\times m_2}\widehat{c}^n
-\\[5pt]
-&amp;\qquad
-+ \frac{\alpha^{n-\frac{1}{2}}}{q_5}
-\begin{bmatrix}
-  \tau q_4M^{m_3\times m_3} \widehat{v}_{1:m_3}^n
-  - M^{m_3\times m_3}\big( 2q_1r^{n-1} - \tau q_3z^{n-1} \big)
-  - \tau \mathcal{F}^{m_3}(f_3^{n-\frac{1}{2}})
-  \\[5pt]
-  0^{(m_1-m_3)}
-\end{bmatrix}
-= \mathcal{F}^{m_1}(f_1^{n-\frac{1}{2}}),
-\\
-&amp; M^{m_2\times m_2}\bar{\partial}c^n
-+ \beta(\mathbf{b}\cdot\widehat{c}^n)K^{m_2\times m_2}\widehat{c}^n
-+ A^{m_2\times m_1}\widehat{v}^n
-= \mathcal{F}^{m_2}(f_2^{n-\frac{1}{2}}),
-\\[5pt]
-&amp; \bar{\partial}d^n = \widehat{v}^n.
-\end{align*}\]</p><p>Then, isolating <span>$v^n$</span> and <span>$c^n$</span>: </p><p class="math-container">\[\begin{align*}
-&amp;
-\Big(
-    M^{m_1\times m_1}
-    + \frac{\tau^2}{4}\alpha^{n-\frac{1}{2}} K^{m_1\times m_1}
-    + \frac{\tau^2q_4}{2q_5}\alpha^{n-\frac{1}{2}}
-      \begin{bmatrix}
-      M^{m_3\times m_3}       &amp; 0^{m_3\times(m_1-m_3)}\\[5pt]
-      0^{(m_1-m_3)\times m_3} &amp; 0^{(m_1-m_3)\times(m_1-m_3)}
-      \end{bmatrix}
-\Big) v^n
-+ \frac{\tau}{2} A^{m_1\times m_2} c^n
-\\[10pt]
-&amp;\qquad
-+ \tau\alpha^{n-\frac{1}{2}} G^{m_1}(\frac{v^n+v^{n-1}}{2}) 
-+ \tau F^{m_1}(\frac{\tau}{4}v^n+\frac{\tau}{4}v^{n-1} + d^{n-1})
-- L_1(n) = 0,
-\\[10pt]
-&amp;
-\frac{\tau}{2} A^{m_2\times m_1} v^n
-+ M^{m_2\times m_2} c^n
-+ \frac{\tau}{2}\beta(\frac{\mathbf{b}}{2}\cdot(c^n+c^{n-1}))K^{m_2\times m_2}(c^n+c^{n-1})
-- L_2(n) = 0.
-\end{align*}\]</p></div></details><details class="admonition is-details" id="Matrix-and-vector-definitions-5e50d89695c860ff"><summary class="admonition-header">Matrix and vector definitions<a class="admonition-anchor" href="#Matrix-and-vector-definitions-5e50d89695c860ff" title="Permalink"></a></summary><div class="admonition-body"><p class="math-container">\[\begin{align*}
-Q =&amp; 
-\begin{bmatrix}
-M^{m_1\times m_1} 
-+ \frac{\tau^2}{4}\alpha^{n-\frac{1}{2}}K^{m_1\times m_1}
-+ \frac{\tau^2q_4}{2q_5}\alpha^{n-\frac{1}{2}}
-\begin{bmatrix}
-M^{m_3\times m_3}       &amp; 0^{m_3\times(m_1-m_3)}\\[5pt]
-0^{(m_1-m_3)\times m_3} &amp; 0^{(m_1-m_3)\times(m_1-m_3)}
-\end{bmatrix}
-&amp; 
-\frac{\tau}{2} A^{m_1\times m_2} 
-\\[30pt]
-\frac{\tau}{2} A^{m_2\times m_1} 
-&amp;
-M^{m_2\times m_2} 
-\end{bmatrix}
-\\[30pt]
-L_1 =&amp;
-M^{m_1\times m_1}v^{n-1}
-- \tau \alpha^{n-\frac{1}{2}}K^{m_1\times m_1} (\frac{\tau}{4}v^{n-1}+d^{n-1})
-- \frac{\tau}{2} A^{m_1\times m_2} c^{n-1}
-+ \tau \mathcal{F}^{m_1}(f_1^{n-\frac{1}{2}})
-\\[10pt]
-&amp;
-+ \frac{\tau}{q_5}\alpha^{n-\frac{1}{2}}
-\begin{bmatrix}
-  M^{m_3\times m_3}\big(-\frac{\tau}{2}q_4v_{1:m_3}^{n-1} + 2q_1r^{n-1} - \tau q_3z^{n-1} \big)
-  + \tau \mathcal{F}^{m_3}(f_3^{n-\frac{1}{2}})
-  \\[5pt]
-  0^{(m_1-m_3)}
-\end{bmatrix} 
-\\[20pt]
-L_2 =&amp; 
-M^{m_2\times m_2} c^{n-1} 
-- \frac{\tau}{2} A^{m_2\times m_1} v^{n-1}
-+ \tau \mathcal{F}^{m_2}(f_2^{n-\frac{1}{2}})
-\end{align*}\]</p><p>where <span>$q_5 = 2q_1+\tau q_2+\frac{\tau^2}{2}q_3$</span>.</p></div></details><details class="admonition is-details" id="Jacobian-matrix-calculation-2766400c049b64a1"><summary class="admonition-header"> Jacobian matrix calculation<a class="admonition-anchor" href="#Jacobian-matrix-calculation-2766400c049b64a1" title="Permalink"></a></summary><div class="admonition-body"><p>Initially, note that:</p><p class="math-container">\[H_i(X) = \sum_{\ell=1}^{m_1+m_2}Q_{i,\ell}X_\ell
-+ 
-\begin{cases}\displaystyle
-\tau\alpha^{n-\frac{1}{2}}
-G_i^{m_1}\big(\frac{X_{1:m_1}+v^{n-1}}{2}\big) 
-+ \tau F_i^{m_1}\big(\frac{\tau}{4}X_{1:m_1}+\frac{\tau}{4}v^{n-1}+d^{n-1}\big)
-- [L_1]_i
-&amp; \text{if } i\in\{1, \ldots, m_1\}
-\\[10pt]\displaystyle
-\frac{\tau}{2}\beta\Big(\frac{\mathbf{b}}{2}\cdot(X_{(m_1+1):(m_1+m_2)}+c^{n-1})\Big)
-\sum_{\ell=1}^{m_2}K_{(i-m_1),\ell}^{m_2\times m_2}\big(X_{m_1+\ell}+c_{\ell}^{n-1}\big)
--[L_2]_{(i-m_1)}
-&amp; \text{if } i\in\{m_1+1, \ldots, m_1+m_2\}
-\end{cases}\]</p><p>In this way,</p><p class="math-container">\[\frac{\partial H_i}{\partial X_j}(X) 
-= Q_{i,j} 
-+
-\begin{cases}\displaystyle
-\tau\alpha^{n-\frac{1}{2}}
-\frac{\partial}{\partial X_j}G_i^{m_1}\big(\frac{X_{1:m_1}+v^{n-1}}{2}\big) 
-+ \tau \frac{\partial}{\partial X_j}F_i^{m_1}\big(\frac{\tau}{4}X_{1:m_1}+\frac{\tau}{4}v^{n-1}+d^{n-1}\big)
-&amp; \text{if } i,j\in\{1, \ldots, m_1\}
-\\[10pt]
-0
-&amp; \text{if } i\in\{1, \ldots, m_1\},\; j\in\{m_1+1, \ldots, m_1+m_2\}
-\\[10pt]
-0
-&amp; \text{if } i\in\{m_1+1, \ldots, m_1+m_2\},\; j\in\{1, \ldots, m_1\}
-\\[10pt]\displaystyle
-\frac{\tau}{2}\beta^\prime\Big(\frac{\mathbf{b}}{2}\cdot(X_{(m_1+1):(m_1+m_2)}+c^{n-1})\Big)\frac{\mathbf{b}_{j-m_1}}{2}
-\sum_{\ell=1}^{m_2}K_{(i-m_1),\ell}^{m_2\times m_2}\big(X_{m_1+\ell}+c_{\ell}^{n-1}\big)
-+ \frac{\tau}{2}\beta\Big(\frac{\mathbf{b}}{2}\cdot(X_{(m_1+1):(m_1+m_2)}+c^{n-1})\Big)K_{(i-m_1),(j-m_1)}^{m_2\times m_2}
-&amp; \text{if } i,j\in\{m_1+1, \ldots, m_1+m_2\}
-\end{cases}\]</p><p>where</p><p class="math-container">\[G_i^{m_1}(v) 
-= \int_{\Gamma_1}\varphi_i(x)g\big(x,\sum_{\ell=1}^{m_1}v_\ell\varphi_\ell(x)\big)d\Gamma
-\;
-\Rightarrow
-\;
-\frac{\partial}{\partial X_j} G_i^{m_1}\big(\frac{X_{1:m_1}+v^{n-1}}{2}\big)
-= \frac{1}{2}\int_{\Gamma_1}\varphi_i(x)\varphi_j(x)\frac{\partial g}{\partial s}\big(x,\sum_{\ell=1}^{m_1}\frac{X_\ell+v_{\ell}^{n-1}}{2}\varphi_\ell(x)\big)d\Gamma
-= \frac{1}{2} JG\big(\frac{X_{1:m_1}+v^{n-1}}{2}\big)\]</p><p>and</p><p class="math-container">\[F_i^{m_1}(d) 
-= 
-\int_{\Omega}\varphi_i(x)f\Big(\sum_{\ell=1}^{m_1}d_\ell\varphi_\ell(x)\Big)dx
-\;
-\Rightarrow
-\;
-\frac{\partial}{\partial X_j}F_i^{m_1}\big(\frac{\tau}{4}X_{1:m_1}+\frac{\tau}{4}v^{n-1}+d^{n-1}\big)
-= 
-\frac{\tau}{4}\int_{\Omega}\varphi_i(x)\varphi_j(x)f^\prime\Big(\sum_{\ell=1}^{m_1}
-\big[\frac{\tau}{4}X_\ell+\frac{\tau}{4}v_\ell^{n-1}+d_\ell^{n-1}\big]
-\varphi_\ell(x)\Big)dx
-= \frac{\tau}{4} JF\big(\frac{\tau}{4}X_{1:m_1}+\frac{\tau}{4}v^{n-1}+d^{n-1}\big).\]</p><p>Consequently, the Jacobian matrix can be expressed as:</p><p class="math-container">\[JH(X) 
-= Q
-+ 
-\begin{bmatrix}
-\Big[
-  \frac{\tau}{2}\alpha^{n-\frac{1}{2}} JG\big(\frac{X_{1:m_1}+v^{n-1}}{2}\big)
-+ \frac{\tau^2}{4} JF\big(\frac{\tau}{4}X_{1:m_1}+\frac{\tau}{4}v^{n-1}+d^{n-1}\big)
-\Big]^{m_1\times m_1}
-&amp; 0^{m_1\times m_2}
-\\[10pt]
-0^{m_2\times m_1} &amp;
-\frac{\tau}{2}\beta^\prime\Big(\frac{\mathbf{b}}{2}\cdot(X_{(m_1+1):(m_1+m_2)}+c^{n-1})\Big)
-\Big[
-\big[K^{m_2\times m_2}(X_{(m_1+1):(m_1+m_2)}+c^{n-1})\big]^{m_2\times 1}
-\times \big[\frac{\mathbf{b}^T}{2}\big]^{1\times m_2}
-\Big]^{m_2\times m_2}
-+ \frac{\tau}{2}\beta\Big(\frac{\mathbf{b}}{2}\cdot(X_{(m_1+1):(m_1+m_2)}+c^{n-1})\Big)K^{m_2\times m_2}
-\end{bmatrix}\]</p><div class="admonition is-info" id="Beware!-536bfe115f49738a"><header class="admonition-header">Beware!<a class="admonition-anchor" href="#Beware!-536bfe115f49738a" title="Permalink"></a></header><div class="admonition-body"><p class="math-container">\[JG^{m_1\times m_1}(v) =
-\begin{bmatrix}\displaystyle
-JG^{m_3\times m_3}(v_{1:m_3}) &amp; 0^{m_3\times(m_1-m_3)}
-\\[10pt]
-0^{(m_1-m_3)\times m_3}       &amp; 0^{(m_1-m_3)\times(m_1-m_3)}
-\end{bmatrix}\]</p></div></div></div></details><h3 id="Strategy-2:-Formulation-in-Term-of-X\\begin{bmatrix}\\hat{v}n\\\\-\\hat{c}n\\end{bmatrix}"><a class="docs-heading-anchor" href="#Strategy-2:-Formulation-in-Term-of-X\\begin{bmatrix}\\hat{v}n\\\\-\\hat{c}n\\end{bmatrix}">Strategy 2: Formulation in Term of <span>$X=\begin{bmatrix}\hat{v}^n\\ \hat{c}^n\end{bmatrix}$</span></a><a id="Strategy-2:-Formulation-in-Term-of-X\\begin{bmatrix}\\hat{v}n\\\\-\\hat{c}n\\end{bmatrix}-1"></a><a class="docs-heading-anchor-permalink" href="#Strategy-2:-Formulation-in-Term-of-X\\begin{bmatrix}\\hat{v}n\\\\-\\hat{c}n\\end{bmatrix}" title="Permalink"></a></h3><p class="math-container">\[Q(n)
+=\int_{\Gamma_1}\phi_i(x)g\Big(x,\sum_{\ell=1}^{m_3}\widehat{v}_\ell^n\phi_\ell(x)\Big)d\Gamma.\]</p></li></ul></div></div></div></details><h2 id="Solving-the-Nonlinear-Algebraic-System"><a class="docs-heading-anchor" href="#Solving-the-Nonlinear-Algebraic-System">Solving the Nonlinear Algebraic System</a><a id="Solving-the-Nonlinear-Algebraic-System-1"></a><a class="docs-heading-anchor-permalink" href="#Solving-the-Nonlinear-Algebraic-System" title="Permalink"></a></h2><p>In what follows, we show that the matrix formulation is equivalent to finding <span>$X \in \mathbb{R}^{m_1+m_2}$</span> such that <span>$H(X) = 0$</span>,  which we solve via Newton&#39;s method. Starting from the initial guess  <span>$X_0 = [v^{n-1}; c^{n-1}]$</span>,  the method generates the sequence  <span>$X_{\kappa+1} = X_\kappa + S_\kappa$</span>,  where <span>$S_\kappa$</span> is obtained by solving the linear system</p><p class="math-container">\[JH(X_\kappa)\, S_\kappa = -H(X_\kappa),\]</p><p>with <span>$JH(X_\kappa)$</span> denoting the Jacobian of <span>$H$</span> evaluated at <span>$X_\kappa$</span>.</p><h3 id="Formulation-in-Term-of-X\\begin{bmatrix}\\hat{v}n\\\\-\\hat{c}n\\end{bmatrix}"><a class="docs-heading-anchor" href="#Formulation-in-Term-of-X\\begin{bmatrix}\\hat{v}n\\\\-\\hat{c}n\\end{bmatrix}">Formulation in Term of <span>$X=\begin{bmatrix}\hat{v}^n\\ \hat{c}^n\end{bmatrix}$</span></a><a id="Formulation-in-Term-of-X\\begin{bmatrix}\\hat{v}n\\\\-\\hat{c}n\\end{bmatrix}-1"></a><a class="docs-heading-anchor-permalink" href="#Formulation-in-Term-of-X\\begin{bmatrix}\\hat{v}n\\\\-\\hat{c}n\\end{bmatrix}" title="Permalink"></a></h3><p class="math-container">\[Q(n)
 \begin{bmatrix}
 \hat{v}^n
 \\[10pt] 
@@ -471,7 +287,7 @@ L_1 =&amp;
 L_2 =&amp; 
 2M^{m_2\times m_2} c^{n-1} 
 + \tau \mathcal{F}^{m_2}(f_2^{n-\frac{1}{2}})
-\end{align*}\]</p><p>where <span>$q_5 = 2q_1+\tau q_2+\frac{\tau^2}{2}q_3$</span>.</p></div></details><details class="admonition is-details" id="Jacobian-matrix-calculation-4b62287204603306"><summary class="admonition-header"> Jacobian matrix calculation<a class="admonition-anchor" href="#Jacobian-matrix-calculation-4b62287204603306" title="Permalink"></a></summary><div class="admonition-body"><p>Initially, note that:</p><p class="math-container">\[H_i(X) = \sum_{\ell=1}^{m_1+m_2}Q_{i,\ell}X_\ell
+\end{align*}\]</p><p>where <span>$q_5 = 2q_1+\tau q_2+\frac{\tau^2}{2}q_3$</span>.</p></div></details><details class="admonition is-details" id="Jacobian-matrix-calculation-3a5614a2f1ea863d"><summary class="admonition-header"> Jacobian matrix calculation<a class="admonition-anchor" href="#Jacobian-matrix-calculation-3a5614a2f1ea863d" title="Permalink"></a></summary><div class="admonition-body"><p>Initially, note that:</p><p class="math-container">\[H_i(X) = \sum_{\ell=1}^{m_1+m_2}Q_{i,\ell}X_\ell
 + 
 \begin{cases}\displaystyle
 \tau\alpha^{n-\frac{1}{2}}
@@ -539,9 +355,26 @@ K_{(i-m_1),(j-m_1)}^{m_2\times m_2}
 \times \big[\mathbf{b}^T\big]^{1\times m_2}
 \Big]^{m_2\times m_2}
 + \tau\beta\big(\mathbf{b}\cdot X_{(m_1+1):(m_1+m_2)}\big)K^{m_2\times m_2}
+\end{bmatrix}\]</p><p>Given that <span>$\hat{v}^n=X_{1:m_1}$</span> and <span>$\hat{c}^n=X_{(m_1+1):(m_1+m_2)}$</span>, we have</p><p class="math-container">\[JH(X) 
+= Q
++ 
+\begin{bmatrix}
+\Big[
+  \tau\alpha^{n-\frac{1}{2}} JG\big(\hat{v}^n\big)
++ \frac{\tau^2}{2} JF\big(\frac{\tau}{2}\hat{v}^n+d^{n-1}\big)
+\Big]^{m_1\times m_1}
+&amp; 0^{m_1\times m_2}
+\\[10pt]
+0^{m_2\times m_1} &amp;
+\tau\beta^\prime\big(\mathbf{b}\cdot \hat{c}^n\big)
+\Big[
+\big[K^{m_2\times m_2}\hat{c}^n\big]^{m_2\times 1}
+\times \big[\mathbf{b}^T\big]^{1\times m_2}
+\Big]^{m_2\times m_2}
++ \tau\beta\big(\mathbf{b}\cdot \hat{c}^n\big)K^{m_2\times m_2}
 \end{bmatrix}\]</p><div class="admonition is-info" id="Beware!-536bfe115f49738a"><header class="admonition-header">Beware!<a class="admonition-anchor" href="#Beware!-536bfe115f49738a" title="Permalink"></a></header><div class="admonition-body"><p class="math-container">\[JG^{m_1\times m_1}(v) =
 \begin{bmatrix}\displaystyle
 JG^{m_3\times m_3}(v_{1:m_3}) &amp; 0^{m_3\times(m_1-m_3)}
 \\[10pt]
 0^{(m_1-m_3)\times m_3}       &amp; 0^{(m_1-m_3)\times(m_1-m_3)}
-\end{bmatrix}\]</p></div></div></div></details></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../model/">« Model</a><a class="docs-footer-nextpage" href="../scheme2/">Scheme 2 »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Thursday 25 June 2026 22:10">Thursday 25 June 2026</span>. Using Julia version 1.12.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+\end{bmatrix}\]</p></div></div></div></details></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../model/">« Model</a><a class="docs-footer-nextpage" href="../scheme2/">Scheme 2 »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Friday 26 June 2026 13:49">Friday 26 June 2026</span>. Using Julia version 1.12.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
