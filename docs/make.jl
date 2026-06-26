@@ -22,6 +22,10 @@ makedocs(;
             "methods/scheme1.md",
             "methods/scheme2.md"
         ],
+        "Examples" => [
+            "examples/example1.md",
+            "examples/example2.md"
+        ],
         "API" => "api.md"
     ]
 )

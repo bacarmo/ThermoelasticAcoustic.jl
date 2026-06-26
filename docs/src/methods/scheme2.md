@@ -81,7 +81,7 @@ These approximations are defined in the same manner as in Scheme 1.
 \end{align*}
 ```
 ## Solving the Algebraic Systems
-Proceeding analogously to Strategy 2 of Scheme 1, the matrix formulation can be rewritten as:
+The matrix formulation can be rewritten as:
 ```math
 \begin{align*}
 &

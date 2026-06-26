@@ -202,247 +202,7 @@ JH(X_\kappa)\, S_\kappa = -H(X_\kappa),
 ```
 with ``JH(X_\kappa)`` denoting the Jacobian of ``H`` evaluated at ``X_\kappa``.
 
-We consider two strategies to formulate ``H(X) = 0``, differing in the choice of
-primary unknowns.
-
-### Strategy 1: Formulation in Term of ``X=\begin{bmatrix}v^n\\c^n\end{bmatrix}``
-```math
-Q(n)
-\begin{bmatrix}
- v^n \\[10pt]
- c^n 
-\end{bmatrix}
-+ 
-\begin{bmatrix}
- \tau\alpha^{n-\frac{1}{2}}
- G^{m_1}\big(\frac{v^n+v^{n-1}}{2}\big) 
- + \tau F^{m_1}\big(\frac{\tau}{4}v^{n}+\frac{\tau}{4}v^{n-1}+d^{n-1}\big) \\[10pt]
- \frac{\tau}{2}\beta\big(\frac{\mathbf{b}}{2}\cdot(c^n+c^{n-1})\big)K^{m_2\times m_2}\big(c^n+c^{n-1}\big)
-\end{bmatrix}
--
-\begin{bmatrix}
-L_1(n)\\[10pt]
-L_2(n)
-\end{bmatrix}
-= 0.
-```
-Once ``v^n`` and ``c^n`` have been determined, we compute ``\hat{r}^n`` via
-```math
-\hat{r}^n
-=
-- \frac{\tau q_4}{q_5}\hat{v}_{1:m_3}^n
-+ \frac{2q_1}{q_5} r^{n-1}
-- \frac{\tau q_3}{q_5} z^{n-1}
-+ \frac{\tau}{q_5} \Big(M^{m_3\times m_3}\Big)^{-1}
-  \mathcal{F}^{m_3}(f_3^{n-\frac{1}{2}}).
-```
-The remaining quantities ``d^n``, ``z^n``, and ``r^n`` are then recovered by
-```math
-\begin{align*}
-&     r^n = 2\hat{r}^n - r^{n-1},
-\quad d^n = \tau\hat{v}^n + d^{n-1},
-\quad z^n = \tau\hat{r}^n + z^{n-1}.
-\end{align*}
-```
-!!! details "Details"
-    Starting from the matrix formulation, we rewrite the third equation in terms of ``\hat{r}^n`` and substitute it into the first:
-    ```math
-    \begin{align*}
-    & M^{m_1\times m_1}\bar{\partial}v^n
-    + \alpha^{n-\frac{1}{2}}\Big[  
-        K^{m_1\times m_1}\widehat{d}^n
-      + G^{m_1}(\widehat{v}^n)\Big]
-    + F^{m_1}(\widehat{d}^n)
-    + A^{m_1\times m_2}\widehat{c}^n
-    \\[5pt]
-    &\qquad
-    + \frac{\alpha^{n-\frac{1}{2}}}{q_5}
-    \begin{bmatrix}
-      \tau q_4M^{m_3\times m_3} \widehat{v}_{1:m_3}^n
-      - M^{m_3\times m_3}\big( 2q_1r^{n-1} - \tau q_3z^{n-1} \big)
-      - \tau \mathcal{F}^{m_3}(f_3^{n-\frac{1}{2}})
-      \\[5pt]
-      0^{(m_1-m_3)}
-    \end{bmatrix}
-    = \mathcal{F}^{m_1}(f_1^{n-\frac{1}{2}}),
-    \\
-    & M^{m_2\times m_2}\bar{\partial}c^n
-    + \beta(\mathbf{b}\cdot\widehat{c}^n)K^{m_2\times m_2}\widehat{c}^n
-    + A^{m_2\times m_1}\widehat{v}^n
-    = \mathcal{F}^{m_2}(f_2^{n-\frac{1}{2}}),
-    \\[5pt]
-    & \bar{\partial}d^n = \widehat{v}^n.
-    \end{align*}
-    ```
-    Then, isolating ``v^n`` and ``c^n``: 
-    ```math
-    \begin{align*}
-    &
-    \Big(
-        M^{m_1\times m_1}
-        + \frac{\tau^2}{4}\alpha^{n-\frac{1}{2}} K^{m_1\times m_1}
-        + \frac{\tau^2q_4}{2q_5}\alpha^{n-\frac{1}{2}}
-          \begin{bmatrix}
-          M^{m_3\times m_3}       & 0^{m_3\times(m_1-m_3)}\\[5pt]
-          0^{(m_1-m_3)\times m_3} & 0^{(m_1-m_3)\times(m_1-m_3)}
-          \end{bmatrix}
-    \Big) v^n
-    + \frac{\tau}{2} A^{m_1\times m_2} c^n
-    \\[10pt]
-    &\qquad
-    + \tau\alpha^{n-\frac{1}{2}} G^{m_1}(\frac{v^n+v^{n-1}}{2}) 
-    + \tau F^{m_1}(\frac{\tau}{4}v^n+\frac{\tau}{4}v^{n-1} + d^{n-1})
-    - L_1(n) = 0,
-    \\[10pt]
-    &
-    \frac{\tau}{2} A^{m_2\times m_1} v^n
-    + M^{m_2\times m_2} c^n
-    + \frac{\tau}{2}\beta(\frac{\mathbf{b}}{2}\cdot(c^n+c^{n-1}))K^{m_2\times m_2}(c^n+c^{n-1})
-    - L_2(n) = 0.
-    \end{align*}
-    ```
-!!! details "Matrix and vector definitions"
-    ```math
-    \begin{align*}
-    Q =& 
-    \begin{bmatrix}
-    M^{m_1\times m_1} 
-    + \frac{\tau^2}{4}\alpha^{n-\frac{1}{2}}K^{m_1\times m_1}
-    + \frac{\tau^2q_4}{2q_5}\alpha^{n-\frac{1}{2}}
-    \begin{bmatrix}
-    M^{m_3\times m_3}       & 0^{m_3\times(m_1-m_3)}\\[5pt]
-    0^{(m_1-m_3)\times m_3} & 0^{(m_1-m_3)\times(m_1-m_3)}
-    \end{bmatrix}
-    & 
-    \frac{\tau}{2} A^{m_1\times m_2} 
-    \\[30pt]
-    \frac{\tau}{2} A^{m_2\times m_1} 
-    &
-    M^{m_2\times m_2} 
-    \end{bmatrix}
-    \\[30pt]
-    L_1 =&
-    M^{m_1\times m_1}v^{n-1}
-    - \tau \alpha^{n-\frac{1}{2}}K^{m_1\times m_1} (\frac{\tau}{4}v^{n-1}+d^{n-1})
-    - \frac{\tau}{2} A^{m_1\times m_2} c^{n-1}
-    + \tau \mathcal{F}^{m_1}(f_1^{n-\frac{1}{2}})
-    \\[10pt]
-    &
-    + \frac{\tau}{q_5}\alpha^{n-\frac{1}{2}}
-    \begin{bmatrix}
-      M^{m_3\times m_3}\big(-\frac{\tau}{2}q_4v_{1:m_3}^{n-1} + 2q_1r^{n-1} - \tau q_3z^{n-1} \big)
-      + \tau \mathcal{F}^{m_3}(f_3^{n-\frac{1}{2}})
-      \\[5pt]
-      0^{(m_1-m_3)}
-    \end{bmatrix} 
-    \\[20pt]
-    L_2 =& 
-    M^{m_2\times m_2} c^{n-1} 
-    - \frac{\tau}{2} A^{m_2\times m_1} v^{n-1}
-    + \tau \mathcal{F}^{m_2}(f_2^{n-\frac{1}{2}})
-    \end{align*}
-    ```
-    where ``q_5 = 2q_1+\tau q_2+\frac{\tau^2}{2}q_3``.
-
-!!! details " Jacobian matrix calculation"
-    Initially, note that:
-    ```math
-    H_i(X) = \sum_{\ell=1}^{m_1+m_2}Q_{i,\ell}X_\ell
-    + 
-    \begin{cases}\displaystyle
-    \tau\alpha^{n-\frac{1}{2}}
-    G_i^{m_1}\big(\frac{X_{1:m_1}+v^{n-1}}{2}\big) 
-    + \tau F_i^{m_1}\big(\frac{\tau}{4}X_{1:m_1}+\frac{\tau}{4}v^{n-1}+d^{n-1}\big)
-    - [L_1]_i
-    & \text{if } i\in\{1, \ldots, m_1\}
-    \\[10pt]\displaystyle
-    \frac{\tau}{2}\beta\Big(\frac{\mathbf{b}}{2}\cdot(X_{(m_1+1):(m_1+m_2)}+c^{n-1})\Big)
-    \sum_{\ell=1}^{m_2}K_{(i-m_1),\ell}^{m_2\times m_2}\big(X_{m_1+\ell}+c_{\ell}^{n-1}\big)
-    -[L_2]_{(i-m_1)}
-    & \text{if } i\in\{m_1+1, \ldots, m_1+m_2\}
-    \end{cases}
-    ```
-    In this way,
-    ```math
-    \frac{\partial H_i}{\partial X_j}(X) 
-    = Q_{i,j} 
-    +
-    \begin{cases}\displaystyle
-    \tau\alpha^{n-\frac{1}{2}}
-    \frac{\partial}{\partial X_j}G_i^{m_1}\big(\frac{X_{1:m_1}+v^{n-1}}{2}\big) 
-    + \tau \frac{\partial}{\partial X_j}F_i^{m_1}\big(\frac{\tau}{4}X_{1:m_1}+\frac{\tau}{4}v^{n-1}+d^{n-1}\big)
-    & \text{if } i,j\in\{1, \ldots, m_1\}
-    \\[10pt]
-    0
-    & \text{if } i\in\{1, \ldots, m_1\},\; j\in\{m_1+1, \ldots, m_1+m_2\}
-    \\[10pt]
-    0
-    & \text{if } i\in\{m_1+1, \ldots, m_1+m_2\},\; j\in\{1, \ldots, m_1\}
-    \\[10pt]\displaystyle
-    \frac{\tau}{2}\beta^\prime\Big(\frac{\mathbf{b}}{2}\cdot(X_{(m_1+1):(m_1+m_2)}+c^{n-1})\Big)\frac{\mathbf{b}_{j-m_1}}{2}
-    \sum_{\ell=1}^{m_2}K_{(i-m_1),\ell}^{m_2\times m_2}\big(X_{m_1+\ell}+c_{\ell}^{n-1}\big)
-    + \frac{\tau}{2}\beta\Big(\frac{\mathbf{b}}{2}\cdot(X_{(m_1+1):(m_1+m_2)}+c^{n-1})\Big)K_{(i-m_1),(j-m_1)}^{m_2\times m_2}
-    & \text{if } i,j\in\{m_1+1, \ldots, m_1+m_2\}
-    \end{cases}
-    ```
-    where
-    ```math
-    G_i^{m_1}(v) 
-    = \int_{\Gamma_1}\varphi_i(x)g\big(x,\sum_{\ell=1}^{m_1}v_\ell\varphi_\ell(x)\big)d\Gamma
-    \;
-    \Rightarrow
-    \;
-    \frac{\partial}{\partial X_j} G_i^{m_1}\big(\frac{X_{1:m_1}+v^{n-1}}{2}\big)
-    = \frac{1}{2}\int_{\Gamma_1}\varphi_i(x)\varphi_j(x)\frac{\partial g}{\partial s}\big(x,\sum_{\ell=1}^{m_1}\frac{X_\ell+v_{\ell}^{n-1}}{2}\varphi_\ell(x)\big)d\Gamma
-    = \frac{1}{2} JG\big(\frac{X_{1:m_1}+v^{n-1}}{2}\big)
-    ```
-    and
-    ```math
-    F_i^{m_1}(d) 
-    = 
-    \int_{\Omega}\varphi_i(x)f\Big(\sum_{\ell=1}^{m_1}d_\ell\varphi_\ell(x)\Big)dx
-    \;
-    \Rightarrow
-    \;
-    \frac{\partial}{\partial X_j}F_i^{m_1}\big(\frac{\tau}{4}X_{1:m_1}+\frac{\tau}{4}v^{n-1}+d^{n-1}\big)
-    = 
-    \frac{\tau}{4}\int_{\Omega}\varphi_i(x)\varphi_j(x)f^\prime\Big(\sum_{\ell=1}^{m_1}
-    \big[\frac{\tau}{4}X_\ell+\frac{\tau}{4}v_\ell^{n-1}+d_\ell^{n-1}\big]
-    \varphi_\ell(x)\Big)dx
-    = \frac{\tau}{4} JF\big(\frac{\tau}{4}X_{1:m_1}+\frac{\tau}{4}v^{n-1}+d^{n-1}\big).
-    ```
-    Consequently, the Jacobian matrix can be expressed as:
-    ```math
-    JH(X) 
-    = Q
-    + 
-    \begin{bmatrix}
-    \Big[
-      \frac{\tau}{2}\alpha^{n-\frac{1}{2}} JG\big(\frac{X_{1:m_1}+v^{n-1}}{2}\big)
-    + \frac{\tau^2}{4} JF\big(\frac{\tau}{4}X_{1:m_1}+\frac{\tau}{4}v^{n-1}+d^{n-1}\big)
-    \Big]^{m_1\times m_1}
-    & 0^{m_1\times m_2}
-    \\[10pt]
-    0^{m_2\times m_1} &
-    \frac{\tau}{2}\beta^\prime\Big(\frac{\mathbf{b}}{2}\cdot(X_{(m_1+1):(m_1+m_2)}+c^{n-1})\Big)
-    \Big[
-    \big[K^{m_2\times m_2}(X_{(m_1+1):(m_1+m_2)}+c^{n-1})\big]^{m_2\times 1}
-    \times \big[\frac{\mathbf{b}^T}{2}\big]^{1\times m_2}
-    \Big]^{m_2\times m_2}
-    + \frac{\tau}{2}\beta\Big(\frac{\mathbf{b}}{2}\cdot(X_{(m_1+1):(m_1+m_2)}+c^{n-1})\Big)K^{m_2\times m_2}
-    \end{bmatrix}
-    ```
-    !!! note "Beware!"
-        ```math
-        JG^{m_1\times m_1}(v) =
-        \begin{bmatrix}\displaystyle
-        JG^{m_3\times m_3}(v_{1:m_3}) & 0^{m_3\times(m_1-m_3)}
-        \\[10pt]
-        0^{(m_1-m_3)\times m_3}       & 0^{(m_1-m_3)\times(m_1-m_3)}
-        \end{bmatrix}
-        ```
-
-### Strategy 2: Formulation in Term of ``X=\begin{bmatrix}\hat{v}^n\\ \hat{c}^n\end{bmatrix}``
+### Formulation in Term of ``X=\begin{bmatrix}\hat{v}^n\\ \hat{c}^n\end{bmatrix}``
 ```math
 Q(n)
 \begin{bmatrix}
@@ -739,6 +499,27 @@ The remaining quantities ``d^n``, ``v^n``, ``c^n``, ``z^n``, and ``r^n`` are the
     \times \big[\mathbf{b}^T\big]^{1\times m_2}
     \Big]^{m_2\times m_2}
     + \tau\beta\big(\mathbf{b}\cdot X_{(m_1+1):(m_1+m_2)}\big)K^{m_2\times m_2}
+    \end{bmatrix}
+    ```
+    Given that ``\hat{v}^n=X_{1:m_1}`` and ``\hat{c}^n=X_{(m_1+1):(m_1+m_2)}``, we have
+    ```math
+    JH(X) 
+    = Q
+    + 
+    \begin{bmatrix}
+    \Big[
+      \tau\alpha^{n-\frac{1}{2}} JG\big(\hat{v}^n\big)
+    + \frac{\tau^2}{2} JF\big(\frac{\tau}{2}\hat{v}^n+d^{n-1}\big)
+    \Big]^{m_1\times m_1}
+    & 0^{m_1\times m_2}
+    \\[10pt]
+    0^{m_2\times m_1} &
+    \tau\beta^\prime\big(\mathbf{b}\cdot \hat{c}^n\big)
+    \Big[
+    \big[K^{m_2\times m_2}\hat{c}^n\big]^{m_2\times 1}
+    \times \big[\mathbf{b}^T\big]^{1\times m_2}
+    \Big]^{m_2\times m_2}
+    + \tau\beta\big(\mathbf{b}\cdot \hat{c}^n\big)K^{m_2\times m_2}
     \end{bmatrix}
     ```
     !!! note "Beware!"
