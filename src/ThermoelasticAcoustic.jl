@@ -1,31 +1,34 @@
 module ThermoelasticAcoustic
 
+using FEM: AbstractFEBasis, Lagrange, LeftRightTop, AllSides, DOFMap,
+           assembly_local_matrix_ϕxϕ, assembly_local_matrix_∇ϕx∇ϕ,
+           assembly_local_matrix_ϕxc∇ϕ, assembly_global_matrix, assembly_∫basis,
+           basis_functions, basis_functions_derivatives, projection_H01!, projection_L2!,
+           error_L2, assembly_rhs_1d!, assembly_rhs_2d!, assembly_nonlinearity_G!,
+           assembly_nonlinearity_F!, assembly_global_matrix_DG, assembly_global_matrix_DF,
+           scatter_symmetric!, build_upper_to_full_maps11, build_upper_to_full_maps22
+using SparseArrays: SparseMatrixCSC, sparse, nnz, nzrange
+using LinearAlgebra: Symmetric, cholesky, mul!, dot, ldiv!
 using StaticArrays: SVector, SMatrix
 using GaussQuadrature: legendre
-using Printf: @printf, @sprintf
-using SparseArrays: sparse, spzeros, SparseMatrixCSC, nnz, nzrange
-using LinearAlgebra: Symmetric, lmul!, cholesky, ldiv!, mul!, dot
 import LinearSolve as LS
+using Printf: @sprintf
+using Dates
+using InteractiveUtils
 
 # Exports
-export PDEInputData, example1_manufactured, example1_zero_source, example2_manufactured,
-       example2_zero_source, example3_manufactured, example3_zero_source,
-       example0_manufactured, example0_zero_source
-export FEMState, L2ErrorCallback, SolutionCallback
-export Lagrange, Hermite
-export CrankNicolson, ModifiedCN
-export pde_solve
-export convergence_study_coupled, convergence_study_spatial, convergence_study_temporal
-export print_convergence_table
+export PDEInputData, example1_manufactured, example1_zero_source
+export AbstractFEBasis, Lagrange
+export L2ErrorCallback, SolutionCallback
+export Scheme1, Scheme2
+export solve_pde
+export run_convergence_study, run_cases
 
 # Includes
 include("pde_inputdata.jl")
-include("mesh/mesh.jl")
-include("fem/fem.jl")
-include("callbacks/callbacks.jl")
-include("assembly/assembly.jl")
-include("initial_solution.jl")
-include("ode_solvers/ode_solvers.jl")
-include("pde_solve.jl")
-include("postprocessing/postprocessing.jl")
+include("utilities.jl")
+include("callbacks.jl")
+include("solve_ode/solve_ode.jl")
+include("solve_pde.jl")
+include("run_convergence_studies.jl")
 end
