@@ -65,7 +65,7 @@ find  ``U^0,\, V^0 \in \mathcal{V}_{m_1}``, ``\Theta^0 \in \mathcal{V}_{m_2}``, 
     ```math
         \phi_j = \varphi_j|_{\Gamma_1}, \quad j = 1, \dots, m_3.
     ```
-    - For an arbitrary time-dependent function ``w``, ``\tau`` the time step, and
+    - For a sufficiently regular time-dependent function ``w``, ``\tau`` the time step, and
       ``t_n = n\tau``:
       ```math
           w^n := w(t_n), \qquad

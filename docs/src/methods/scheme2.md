@@ -268,6 +268,6 @@ With ``\hat{v}^n``, ``\hat{c}^n``, and ``\hat{r}^n`` determined, the remaining u
     ```math
     \big[JG^{m_3\times m_3}(X_{1:m_3})\big]_{i,j}
     =
-    \int_{\Gamma_1} \psi_i(x)\psi_j(x)
-    \frac{\partial g}{\partial s}\Big(x,\sum_{\ell=1}^{m_3}X_\ell\psi_\ell(x)\Big)d\Gamma.
+    \int_{\Gamma_1} \phi_i(x)\phi_j(x)
+    \frac{\partial g}{\partial s}\Big(x,\sum_{\ell=1}^{m_3}X_\ell\phi_\ell(x)\Big)d\Gamma.
     ```
