@@ -66,7 +66,7 @@ function solve_pde(
     # ========================================
     # Compute state for n ≥ 1
     # ========================================
-    cache = build_cache(solver, matrices, dof_map_m₃.m)
+    cache = build_cache(solver, matrices)
     solve_ode(
         cache, tspan, state0, matrices, nel_per_dim, element_side_lengths,
         dof_map_m₁, dof_map_m₂, dof_map_m₃, quad, input_data, callback)

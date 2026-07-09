@@ -1,5 +1,5 @@
-function build_cache(::Scheme2, matrices::SystemMatrices{T, I}, m₃::I) where {T, I}
-    Scheme2Cache(matrices, m₃)
+function build_cache(::Scheme2, matrices::SystemMatrices{T, I}) where {T, I}
+    Scheme2Cache(matrices)
 end
 
 struct Scheme2Cache{T, I, S1, S2, S3}
@@ -43,9 +43,10 @@ struct Scheme2Cache{T, I, S1, S2, S3}
     linsolve_m₃::S3
 end
 
-function Scheme2Cache(matrices::SystemMatrices{T, I}, m₃::I) where {T, I}
+function Scheme2Cache(matrices::SystemMatrices{T, I}) where {T, I}
     m₁ = size(matrices.K_m₁xm₁, 1)
     m₂ = size(matrices.K_m₂xm₂, 1)
+    m₃ = size(matrices.M_m₃xm₃, 1)
 
     L₁ = zeros(T, m₁)
     L₂ = zeros(T, m₂)
