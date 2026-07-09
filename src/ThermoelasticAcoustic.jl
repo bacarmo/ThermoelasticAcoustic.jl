@@ -22,7 +22,7 @@ export AbstractFEBasis, Lagrange
 export L2ErrorCallback, SolutionCallback
 export Scheme1, Scheme2
 export solve_pde
-export run_convergence_study, run_cases
+export run_convergence_study, run_cases, ConvergenceResults
 
 # Includes
 include("input_data.jl")
