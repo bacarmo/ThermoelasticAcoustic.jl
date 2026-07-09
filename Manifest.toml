@@ -227,7 +227,7 @@ version = "0.1.10"
 [[deps.FEM]]
 deps = ["GaussQuadrature", "LinearAlgebra", "SparseArrays", "StaticArrays"]
 git-tree-sha1 = "33c68b9fb47f3694cd6b51b295b9717287b35dec"
-repo-rev = "main"
+repo-rev = "v0.1.0"
 repo-url = "https://github.com/bacarmo/FEM.jl"
 uuid = "a6aaf273-c702-4f9b-ac0e-4c7ed6782468"
 version = "0.1.0"
