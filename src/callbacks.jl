@@ -127,7 +127,11 @@ Callback that stores the full FE coefficient history at every time step.
 """
 struct SolutionCallback{T} <: AbstractCallback
     tspan::StepRangeLen{T}
+    v::Vector{Vector{T}}
+    d::Vector{Vector{T}}
     c::Vector{Vector{T}}
+    r::Vector{Vector{T}}
+    z::Vector{Vector{T}}
 end
 
 """
