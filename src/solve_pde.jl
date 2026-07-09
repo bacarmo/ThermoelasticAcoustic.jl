@@ -4,7 +4,7 @@
 Solve the coupled thermo-wave-acoustic PDE system, populating `callback` in-place.
 
 # Arguments
-- `fe::Type{FE}`: finite element basis parametrised by polynomial degree only (e.g. `Lagrange{1}`); `fe` must be a subtype of `AbstractFEBasis{Deg}` with `Dim` unspecified
+- `fe::Type{FE}`: finite element basis parametrised by polynomial degree only (e.g. `Lagrange{1}`)
 - `nel_per_dim::NTuple{2, Int}`: number of elements per spatial direction (e.g. `(4, 4)`)
 - `tspan::StepRangeLen{Float64}`: uniform time grid (e.g. `0:0.1:1`)
 - `input_data::PDEInputData`: input data container for the PDE system (e.g. `example1_manufactured(2.4)`) 
@@ -30,8 +30,8 @@ function solve_pde(
     # ========================================
     # Specialize FEBasis
     # ========================================
-    fe1D = fe{1}()
-    fe2D = fe{2}()
+    fe1D = fe{1}()::Lagrange{Deg, 1}
+    fe2D = fe{2}()::Lagrange{Deg, 2}
 
     # ========================================
     # Local-to-global mapping
