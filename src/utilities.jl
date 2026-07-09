@@ -132,6 +132,9 @@ struct QuadratureSetup{T <: AbstractFloat, Npg, Npg², nb, nb², nb⁴}
     yP::SVector{Npg, T}
 end
 
+# Return the number of local degrees of freedom for the finite element `fe`.
+num_local_dof(::Lagrange{Deg, Dim}) where {Dim, Deg} = Val((Deg + 1)^Dim)
+
 """
     QuadratureSetup(fe1D, fe2D, element_side_lengths, pmin)
 
@@ -141,7 +144,10 @@ function QuadratureSetup(
         fe1D::AbstractFEBasis{Deg, 1},
         fe2D::AbstractFEBasis{Deg, 2},
         element_side_lengths::NTuple{2, T},
-        pmin::NTuple{2, T}) where {Deg, T}
+        pmin::NTuple{2, T},
+        ::Val{nb} = num_local_dof(fe1D),
+        ::Val{nb²} = num_local_dof(fe2D)
+) where {Deg, T, nb, nb²}
     Δx, Δy = element_side_lengths
     Npg = Deg + 3
     P_raw, W_raw = legendre(T, Npg)
@@ -149,14 +155,12 @@ function QuadratureSetup(
     W = SVector{Npg, T}(W_raw)
 
     ϕP = SVector{Npg}([basis_functions(fe1D, P[i]) for i in 1:Npg])
-    nb = length(ϕP[1])
     W_ϕP = SVector{Npg}([W[i] * ϕP[i] for i in 1:Npg])
     W_ϕPϕP = SVector{Npg}([SMatrix{nb, nb, T}(W[j] * ϕP[j][a] * ϕP[j][b]
                            for a in 1:nb, b in 1:nb)
                            for j in 1:Npg])
 
     φP = SMatrix{Npg, Npg}([basis_functions(fe2D, P[i], P[j]) for i in 1:Npg, j in 1:Npg])
-    nb² = length(φP[1, 1])
     W_φP = SMatrix{Npg, Npg}([W[i] * W[j] * φP[i, j] for i in 1:Npg, j in 1:Npg])
     W_φPφP = SMatrix{Npg, Npg}([SMatrix{nb², nb², T}(
                                     W[i] * W[j] * φP[i, j][a] * φP[i, j][b]
