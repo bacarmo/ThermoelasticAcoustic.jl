@@ -25,7 +25,7 @@ export solve_pde
 export run_convergence_study, run_cases
 
 # Includes
-include("pde_inputdata.jl")
+include("input_data.jl")
 include("utilities.jl")
 include("callbacks.jl")
 include("solve_ode/solve_ode.jl")
