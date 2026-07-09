@@ -32,7 +32,7 @@ struct Scheme2 <: AbstractODESolver end
 # Generic interfaces
 # ========================================
 """
-    build_cache(solver, matrices, m₃)
+    build_cache(solver, matrices)
 
 Allocate and return the solver-specific cache for the time integration.
 Dispatches on `solver` to construct the appropriate cache type.
@@ -40,12 +40,11 @@ Dispatches on `solver` to construct the appropriate cache type.
 # Arguments
 - `solver::AbstractODESolver`: time integration scheme (e.g. `Scheme1()`)
 - `matrices::SystemMatrices{T, I}`: global FEM matrices
-- `m₃::I`: free DOFs of the m₃-space
 
 # Extended help
 To add support for a new solver `MySolver`, define:
 ```julia
-build_cache(::MySolver, matrices, m₃) = MySolverCache(matrices)
+build_cache(::MySolver, matrices) = MySolverCache(matrices)
 ```
 """
 function build_cache end
