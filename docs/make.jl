@@ -19,12 +19,12 @@ makedocs(;
         "Home" => "index.md",
         "Model" => "model.md",
         "Approximation Problem" => [
-            "methods/scheme1.md",
-            "methods/scheme2.md"
+            "schemes/scheme1.md",
+            "schemes/scheme2.md"
         ],
-        "Examples" => [
-            "examples/example1.md",
-            "examples/example2.md"
+        "Numerical Results" => [
+            "numerical_results/scheme1.md",
+            "numerical_results/scheme2.md"
         ],
         "API" => "api.md"
     ]
