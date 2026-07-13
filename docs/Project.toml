@@ -2,3 +2,7 @@
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 LiveServer = "16fef848-5104-11e9-1b77-fb7a48bbb589"
 ThermoelasticAcoustic = "bc13a611-4105-49a1-97a9-04cd0a26510a"
+
+[compat]
+Documenter = "1.17.0"
+LiveServer = "1.5.0"
