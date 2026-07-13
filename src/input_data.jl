@@ -355,3 +355,203 @@ function example1_zero_source(p::Float64 = 2.4)
         nothing, nothing, nothing, nothing, nothing
     )
 end
+
+# ============================================================================
+# Example 2
+# ============================================================================
+"""
+    example2_manufactured(p::Float64=2.4) -> PDEInputData
+
+Manufactured solution with
+``g(x, s) = (1 + e^{-x^2})s``, ``f(s) = s|s|^3``, ``β(s) = 1 + \\exp(-s^2)``:
+```math
+\\begin{alignat*}{2}
+& u(x,y,t)   &&= (x^p - x)(y^p - 1)(4 + t^2), \\\\
+& θ(x,y,t)   &&= (x^p - x)(y^p - y)(4 + t^2), \\\\
+& z(x,t)     &&= \\sin(\\pi x) - (1+e^{-x^2})(x^p-x)t^2,
+\\end{alignat*}
+```
+where the acoustic displacement ``z(x,t)`` is obtained by integrating
+```math
+\\frac{∂z}{∂t}(x,t) = -\\frac{∂u}{∂y}(x,y_{\\min},t) + g(x,\\frac{∂u}{∂t}(x,y_{\\min},t)).
+```
+
+# Arguments
+- `p::Float64=2.4`: Smoothness parameter controlling solution regularity.
+
+# Returns
+`PDEInputData` with analytical solution for convergence study.
+"""
+function example2_manufactured(p::Float64 = 2.4)
+    # Precompute exponent-related constants
+    p1 = p - 1.0
+    p2 = p - 2.0
+    p_p1 = p * p1
+    cst = 0.25 * (p1 / (p + 1.0))^2
+
+    # Physical parameters
+    a = (1.0, 1.0)
+    q₁ = q₂ = q₃ = q₄ = 1.0
+    ymin = 0.0
+
+    # Coefficient functions
+    α = t -> 1.0 + exp(-t)
+
+    β = s -> 1.0 + exp(-s * s)
+    dβ = s -> -2.0 * s * exp(-s * s)
+
+    f = function (s)
+        s_abs = abs(s)
+        s_abs3 = s_abs * s_abs * s_abs
+        return s * s_abs3
+    end
+    df = function (s)
+        s_abs = abs(s)
+        s_abs3 = s_abs * s_abs * s_abs
+        return 4.0 * s_abs3
+    end
+
+    g = (x, s) -> (1.0 + exp(-x * x)) * s
+    ∂ₛg = (x, s) -> (1.0 + exp(-x * x))
+
+    # Analytical solutions
+    u = (x, y, t) -> (x^p - x) * (y^p - 1.0) * (4.0 + t * t)
+    v = (x, y, t) -> (x^p - x) * (y^p - 1.0) * (2.0 * t)
+    θ = (x, y, t) -> (x^p - x) * (y^p - y) * (4.0 + t * t)
+
+    z = (x, t) -> sinpi(x) - (1.0 + exp(-x * x)) * (x^p - x) * t * t
+    r = (x, t) -> -(1.0 + exp(-x * x)) * (x^p - x) * 2.0 * t
+
+    # Auxiliary functions for manufactured source terms
+    ∂ₜₜu = (x, y, t) -> (x^p - x) * (y^p - 1.0) * 2.0
+    Δu = (x, y, t) -> (x^p2 * (y^p - 1.0) + (x^p - x) * y^p2) * (4.0 + t * t) * p_p1
+    vₓ = (x, y, t) -> (p * x^p1 - 1.0) * (y^p - 1.0) * 2.0 * t
+    vᵧ = (x, y, t) -> (x^p - x) * (p * y^p1) * 2.0 * t
+    θₓ = (x, y, t) -> (p * x^p1 - 1.0) * (y^p - y) * (4.0 + t * t)
+    θᵧ = (x, y, t) -> (x^p - x) * (p * y^p1 - 1.0) * (4.0 + t * t)
+    ∫θ = t -> cst * (4.0 + t * t)
+    ∂ₜθ = (x, y, t) -> (x^p - x) * (y^p - y) * (2 * t)
+    Δθ = (x, y, t) -> (x^p2 * (y^p - y) + (x^p - x) * y^p2) * (4.0 + t * t) * p_p1
+
+    ∂ₜₜz = (x, t) -> -2.0 * (1.0 + exp(-x * x)) * (x^p - x)
+
+    # Manufactured source terms
+    f₁ = (x,
+        y,
+        t) -> ∂ₜₜu(x, y, t) - α(t) * Δu(x, y, t) + f(u(x, y, t)) +
+              a[1] * θₓ(x, y, t) + a[2] * θᵧ(x, y, t)
+    f₂ = (x,
+        y,
+        t) -> ∂ₜθ(x, y, t) - β(∫θ(t)) * Δθ(x, y, t) +
+              a[1] * vₓ(x, y, t) + a[2] * vᵧ(x, y, t)
+    f₃ = (x, t) -> q₁ * ∂ₜₜz(x, t) + q₂ * r(x, t) + q₃ * z(x, t) +
+                   q₄ * v(x, ymin, t)
+
+    # Initial conditions
+    u₀ = (x, y) -> (x^p - x) * (y^p - 1.0) * 4.0
+    ∂ₓu₀ = (x, y) -> (p * x^p1 - 1.0) * (y^p - 1.0) * 4.0
+    ∂ᵧu₀ = (x, y) -> (x^p - x) * (p * y^p1) * 4.0
+
+    v₀ = (x, y) -> 0.0
+    ∂ₓv₀ = (x, y) -> 0.0
+    ∂ᵧv₀ = (x, y) -> 0.0
+
+    θ₀ = (x, y) -> (x^p - x) * (y^p - y) * 4.0
+    ∂ₓθ₀ = (x, y) -> (p * x^p1 - 1.0) * (y^p - y) * 4.0
+    ∂ᵧθ₀ = (x, y) -> (x^p - x) * (p * y^p1) * 4.0
+
+    z₀ = x -> sinpi(x)
+    r₀ = x -> 0.0
+
+    return PDEInputData(
+        "example2_manufactured($p)",
+        (0.0, 0.0),
+        (1.0, 1.0),
+        a,
+        q₁, q₂, q₃, q₄,
+        α, β, dβ, f, df, g, ∂ₛg,
+        u₀, ∂ₓu₀, ∂ᵧu₀,
+        v₀, ∂ₓv₀, ∂ᵧv₀,
+        θ₀, ∂ₓθ₀, ∂ᵧθ₀,
+        z₀, r₀,
+        f₁, f₂, f₃,
+        u, v, θ, z, r
+    )
+end
+
+"""
+    example2_zero_source(p::Float64=2.4) -> PDEInputData
+
+Same configuration as `example2_manufactured` but with f₁ = f₂ = f₃ = 0.
+No analytical solution available.
+
+# Arguments
+- `p::Float64=2.4`: Smoothness parameter for initial conditions.
+
+# Returns
+`PDEInputData` with analytical solutions set to `nothing`.
+"""
+function example2_zero_source(p::Float64 = 2.4)
+    # Precompute exponent-related constants
+    p1 = p - 1.0
+
+    # Physical parameters
+    a = (1.0, 1.0)
+    q₁ = q₂ = q₃ = q₄ = 1.0
+
+    # Coefficient functions
+    α = t -> 1.0 + exp(-t)
+
+    β = s -> 1.0 + exp(-s * s)
+    dβ = s -> -2.0 * s * exp(-s * s)
+
+    f = function (s)
+        s_abs = abs(s)
+        s_abs3 = s_abs * s_abs * s_abs
+        return s * s_abs3
+    end
+    df = function (s)
+        s_abs = abs(s)
+        s_abs3 = s_abs * s_abs * s_abs
+        return 4.0 * s_abs3
+    end
+
+    g = (x, s) -> (1.0 + exp(-x * x)) * s
+    ∂ₛg = (x, s) -> (1.0 + exp(-x * x))
+
+    # Zero source terms
+    f₁ = (x, y, t) -> 0.0
+    f₂ = (x, y, t) -> 0.0
+    f₃ = (x, t) -> 0.0
+
+    # Initial conditions
+    u₀ = (x, y) -> (x^p - x) * (y^p - 1.0) * 4.0
+    ∂ₓu₀ = (x, y) -> (p * x^p1 - 1.0) * (yp - 1.0) * 4.0
+    ∂ᵧu₀ = (x, y) -> (x^p - x) * (p * y^p1) * 4.0
+
+    v₀ = (x, y) -> 0.0
+    ∂ₓv₀ = (x, y) -> 0.0
+    ∂ᵧv₀ = (x, y) -> 0.0
+
+    θ₀ = (x, y) -> (x^p - x) * (y^p - y) * 4.0
+    ∂ₓθ₀ = (x, y) -> (p * x^p1 - 1.0) * (y^p - y) * 4.0
+    ∂ᵧθ₀ = (x, y) -> (x^p - x) * (p * y^p1) * 4.0
+
+    z₀ = x -> sinpi(x)
+    r₀ = x -> 0.0
+
+    return PDEInputData(
+        "example2_zero_source($p)",
+        (0.0, 0.0),
+        (1.0, 1.0),
+        a,
+        q₁, q₂, q₃, q₄,
+        α, β, dβ, f, df, g, ∂ₛg,
+        u₀, ∂ₓu₀, ∂ᵧu₀,
+        v₀, ∂ₓv₀, ∂ᵧv₀,
+        θ₀, ∂ₓθ₀, ∂ᵧθ₀,
+        z₀, r₀,
+        f₁, f₂, f₃,
+        nothing, nothing, nothing, nothing, nothing
+    )
+end

@@ -17,7 +17,8 @@ using Dates
 using InteractiveUtils
 
 # Exports
-export PDEInputData, example1_manufactured, example1_zero_source
+export PDEInputData, example1_manufactured, example1_zero_source, example2_manufactured,
+       example2_zero_source
 export AbstractFEBasis, Lagrange
 export L2ErrorCallback, SolutionCallback
 export Scheme1, Scheme2
