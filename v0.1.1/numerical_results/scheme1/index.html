@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Scheme 1 · ThermoelasticAcoustic.jl</title><meta name="title" content="Scheme 1 · ThermoelasticAcoustic.jl"/><meta property="og:title" content="Scheme 1 · ThermoelasticAcoustic.jl"/><meta property="twitter:title" content="Scheme 1 · ThermoelasticAcoustic.jl"/><meta name="description" content="Documentation for ThermoelasticAcoustic.jl."/><meta property="og:description" content="Documentation for ThermoelasticAcoustic.jl."/><meta property="twitter:description" content="Documentation for ThermoelasticAcoustic.jl."/><meta property="og:url" content="https://bacarmo.github.io/ThermoelasticAcoustic.jl/numerical_results/scheme1/"/><meta property="twitter:url" content="https://bacarmo.github.io/ThermoelasticAcoustic.jl/numerical_results/scheme1/"/><link rel="canonical" href="https://bacarmo.github.io/ThermoelasticAcoustic.jl/numerical_results/scheme1/"/><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">ThermoelasticAcoustic.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><a class="tocitem" href="../../model/">Model</a></li><li><span class="tocitem">Approximation Problem</span><ul><li><a class="tocitem" href="../../schemes/scheme1/">Scheme 1</a></li><li><a class="tocitem" href="../../schemes/scheme2/">Scheme 2</a></li></ul></li><li><span class="tocitem">Numerical Results</span><ul><li class="is-active"><a class="tocitem" href>Scheme 1</a></li><li><a class="tocitem" href="../scheme2/">Scheme 2</a></li></ul></li><li><a class="tocitem" href="../../api/">API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Numerical Results</a></li><li class="is-active"><a href>Scheme 1</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Scheme 1</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/bacarmo/ThermoelasticAcoustic.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/bacarmo/ThermoelasticAcoustic.jl/blob/main/docs/src/numerical_results/scheme1.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Scheme-1"><a class="docs-heading-anchor" href="#Scheme-1">Scheme 1</a><a id="Scheme-1-1"></a><a class="docs-heading-anchor-permalink" href="#Scheme-1" title="Permalink"></a></h1><pre><code class="language-julia-repl hljs">julia&gt; using ThermoelasticAcoustic
+
+julia&gt; cases1 = (
+    (fe = Lagrange{1}, id = example1_manufactured(1.76), Nx = [2^i for i in 2:6], τ = 2.0^-14),
+    (fe = Lagrange{1}, id = example1_manufactured(2.4 ), Nx = [2^i for i in 2:6], τ = 2.0^-14),
+    (fe = Lagrange{2}, id = example1_manufactured(2.58), Nx = [2^i for i in 2:6], τ = 2.0^-14),
+    (fe = Lagrange{2}, id = example1_manufactured(3.4 ), Nx = [2^i for i in 2:6], τ = 2.0^-14),
+    (fe = Lagrange{3}, id = example1_manufactured(3.51), Nx = [2^i for i in 2:6], τ = 2.0^-14),
+    (fe = Lagrange{3}, id = example1_manufactured(4.4 ), Nx = [2^i for i in 2:6], τ = 2.0^-14)
+    );
+
+julia&gt; results1 = run_cases(Scheme1(), cases1)
+6-element Vector{ConvergenceResults}:
+ConvergenceResults: t_end=1.0, example1_manufactured(1.76), Lagrange{1}, Scheme1(), elapsed=1455.32 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
+   4   -1.50  -14.00    1.07e-02  0.000    3.08e-02  0.000    9.00e-03  0.000    6.68e-02  0.000    4.64e-02  0.000
+   8   -2.50  -14.00    2.75e-03  1.965    7.90e-03  1.963    2.30e-03  1.968    1.51e-02  2.142    1.07e-02  2.123
+  16   -3.50  -14.00    7.08e-04  1.956    2.04e-03  1.953    5.87e-04  1.970    3.56e-03  2.089    2.56e-03  2.057
+  32   -4.50  -14.00    1.89e-04  1.905    5.38e-04  1.924    1.50e-04  1.969    8.56e-04  2.055    6.28e-04  2.028
+  64   -5.50  -14.00    6.23e-05  1.600    1.50e-04  1.846    3.87e-05  1.955    2.12e-04  2.014    1.57e-04  1.997
+
+ConvergenceResults: t_end=1.0, example1_manufactured(2.4), Lagrange{1}, Scheme1(), elapsed=1844.07 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
+   4   -1.50  -14.00    1.92e-02  0.000    4.51e-02  0.000    1.86e-02  0.000    6.68e-02  0.000    4.95e-02  0.000
+   8   -2.50  -14.00    4.95e-03  1.958    1.11e-02  2.020    4.62e-03  2.013    1.50e-02  2.153    1.15e-02  2.113
+  16   -3.50  -14.00    1.25e-03  1.986    2.77e-03  2.005    1.15e-03  2.004    3.61e-03  2.057    2.79e-03  2.036
+  32   -4.50  -14.00    3.13e-04  1.995    6.92e-04  2.002    2.88e-04  2.001    8.88e-04  2.022    6.92e-04  2.012
+  64   -5.50  -14.00    7.85e-05  1.998    1.73e-04  2.001    7.19e-05  2.000    2.21e-04  2.009    1.73e-04  2.004
+
+ConvergenceResults: t_end=1.0, example1_manufactured(2.58), Lagrange{2}, Scheme1(), elapsed=9555.21 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
+   4   -1.50  -14.00    5.92e-04  0.000    1.45e-03  0.000    6.13e-04  0.000    4.14e-03  0.000    3.75e-03  0.000
+   8   -2.50  -14.00    8.37e-05  2.821    1.93e-04  2.911    8.14e-05  2.913    6.15e-04  2.751    5.23e-04  2.843
+  16   -3.50  -14.00    1.06e-05  2.982    2.53e-05  2.929    1.07e-05  2.930    8.37e-05  2.877    6.84e-05  2.934
+  32   -4.50  -14.00    1.41e-06  2.907    3.30e-06  2.940    1.39e-06  2.943    1.10e-05  2.928    8.77e-06  2.964
+  64   -5.50  -14.00    1.96e-07  2.849    4.31e-07  2.936    1.79e-07  2.952    1.42e-06  2.948    1.12e-06  2.974
+
+ConvergenceResults: t_end=1.0, example1_manufactured(3.4), Lagrange{2}, Scheme1(), elapsed=9976.50 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
+   4   -1.50  -14.00    1.49e-03  0.000    3.34e-03  0.000    1.63e-03  0.000    5.06e-03  0.000    3.70e-03  0.000
+   8   -2.50  -14.00    1.82e-04  3.033    4.18e-04  2.998    2.04e-04  2.999    6.40e-04  2.982    4.84e-04  2.932
+  16   -3.50  -14.00    2.32e-05  2.969    5.23e-05  2.999    2.55e-05  3.000    8.32e-05  2.944    6.16e-05  2.976
+  32   -4.50  -14.00    2.90e-06  3.002    6.53e-06  3.000    3.19e-06  3.000    1.06e-05  2.969    7.74e-06  2.992
+  64   -5.50  -14.00    3.63e-07  2.998    8.17e-07  3.000    3.99e-07  3.000    1.34e-06  2.989    9.68e-07  2.998
+
+ConvergenceResults: t_end=1.0, example1_manufactured(3.51), Lagrange{3}, Scheme1(), elapsed=25395.38 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
+   4   -1.50  -14.00    3.15e-05  0.000    7.15e-05  0.000    3.54e-05  0.000    4.05e-04  0.000    1.37e-04  0.000
+   8   -2.50  -14.00    2.07e-06  3.926    4.89e-06  3.868    2.42e-06  3.867    4.05e-05  3.325    1.13e-05  3.598
+  16   -3.50  -14.00    1.37e-07  3.919    3.29e-07  3.894    1.63e-07  3.895    2.54e-06  3.994    7.14e-07  3.984
+  32   -4.50  -14.00    9.22e-09  3.893    2.19e-08  3.910    1.08e-08  3.910    1.49e-07  4.094    4.30e-08  4.052
+  64   -5.50  -14.00    8.73e-09  0.078    1.79e-09  3.609    2.36e-08 -1.123    8.81e-09  4.077    2.64e-09  4.027
+
+ConvergenceResults: t_end=1.0, example1_manufactured(4.4), Lagrange{3}, Scheme1(), elapsed=24974.17 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
+   4   -1.50  -14.00    1.04e-04  0.000    2.21e-04  0.000    1.19e-04  0.000    5.88e-04  0.000    1.47e-04  0.000
+   8   -2.50  -14.00    6.59e-06  3.973    1.40e-05  3.984    7.52e-06  3.987    1.01e-04  2.545    2.41e-05  2.608
+  16   -3.50  -14.00    3.79e-07  4.120    8.76e-07  3.996    4.70e-07  3.999    7.05e-06  3.838    1.69e-06  3.835
+  32   -4.50  -14.00    2.38e-08  3.997    5.48e-08  3.999    2.94e-08  3.999    4.16e-07  4.083    1.00e-07  4.078
+  64   -5.50  -14.00    6.00e-09  1.986    3.44e-09  3.993    2.81e-08  0.065    2.43e-08  4.099    5.86e-09  4.093
+
+julia&gt; cases2 = (
+    (fe = Lagrange{1}, id = example2_manufactured(1.76), Nx = [2^i for i in 2:6], τ = 2.0^-14),
+    (fe = Lagrange{1}, id = example2_manufactured(2.4 ), Nx = [2^i for i in 2:6], τ = 2.0^-14),
+    (fe = Lagrange{2}, id = example2_manufactured(2.58), Nx = [2^i for i in 2:6], τ = 2.0^-14),
+    (fe = Lagrange{2}, id = example2_manufactured(3.4 ), Nx = [2^i for i in 2:6], τ = 2.0^-14),
+    (fe = Lagrange{3}, id = example2_manufactured(3.51), Nx = [2^i for i in 2:6], τ = 2.0^-14),
+    (fe = Lagrange{3}, id = example2_manufactured(4.4 ), Nx = [2^i for i in 2:6], τ = 2.0^-14)
+    );
+
+julia&gt; results2 = run_cases(Scheme1(), cases2)
+6-element Vector{ConvergenceResults}:
+ ConvergenceResults: t_end=1.0, example2_manufactured(1.76), Lagrange{1}, Scheme1(), elapsed=1458.03 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
+   4   -1.50  -14.00    1.11e-02  0.000    3.08e-02  0.000    9.01e-03  0.000    2.21e-02  0.000    2.60e-02  0.000
+   8   -2.50  -14.00    2.80e-03  1.986    7.96e-03  1.954    2.31e-03  1.967    5.05e-03  2.129    6.06e-03  2.101
+  16   -3.50  -14.00    7.08e-04  1.982    2.09e-03  1.931    5.90e-04  1.967    1.21e-03  2.066    1.48e-03  2.029
+  32   -4.50  -14.00    2.11e-04  1.749    5.69e-04  1.874    1.52e-04  1.960    3.10e-04  1.960    3.78e-04  1.973
+  64   -5.50  -14.00    1.17e-04  0.848    1.71e-04  1.734    3.97e-05  1.934    9.99e-05  1.634    1.09e-04  1.796
+
+ ConvergenceResults: t_end=1.0, example2_manufactured(2.4), Lagrange{1}, Scheme1(), elapsed=1787.84 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
+   4   -1.50  -14.00    1.90e-02  0.000    4.45e-02  0.000    1.87e-02  0.000    2.21e-02  0.000    2.80e-02  0.000
+   8   -2.50  -14.00    4.86e-03  1.964    1.10e-02  2.021    4.63e-03  2.012    5.09e-03  2.120    6.58e-03  2.091
+  16   -3.50  -14.00    1.23e-03  1.986    2.73e-03  2.006    1.16e-03  2.004    1.23e-03  2.045    1.62e-03  2.025
+  32   -4.50  -14.00    3.08e-04  1.994    6.82e-04  2.002    2.89e-04  2.001    3.05e-04  2.017    4.02e-04  2.007
+  64   -5.50  -14.00    7.72e-05  1.997    1.70e-04  2.001    7.21e-05  2.000    7.59e-05  2.006    1.00e-04  2.002
+
+ ConvergenceResults: t_end=1.0, example2_manufactured(2.58), Lagrange{2}, Scheme1(), elapsed=9168.16 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
+   4   -1.50  -14.00    5.88e-04  0.000    1.45e-03  0.000    6.13e-04  0.000    1.41e-03  0.000    2.44e-03  0.000
+   8   -2.50  -14.00    8.33e-05  2.819    1.93e-04  2.911    8.14e-05  2.913    2.03e-04  2.795    3.31e-04  2.881
+  16   -3.50  -14.00    1.06e-05  2.969    2.53e-05  2.929    1.07e-05  2.930    2.73e-05  2.894    4.26e-05  2.958
+  32   -4.50  -14.00    1.48e-06  2.844    3.31e-06  2.936    1.39e-06  2.943    3.59e-06  2.927    5.41e-06  2.979
+  64   -5.50  -14.00    2.75e-07  2.429    4.40e-07  2.910    1.79e-07  2.951    4.81e-07  2.900    6.92e-07  2.966
+
+ ConvergenceResults: t_end=1.0, example2_manufactured(3.4), Lagrange{2}, Scheme1(), elapsed=9701.21 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
+   4   -1.50  -14.00    1.47e-03  0.000    3.34e-03  0.000    1.63e-03  0.000    1.66e-03  0.000    2.35e-03  0.000
+   8   -2.50  -14.00    1.81e-04  3.025    4.18e-04  2.998    2.04e-04  2.999    2.10e-04  2.984    3.12e-04  2.918
+  16   -3.50  -14.00    2.31e-05  2.963    5.23e-05  2.999    2.55e-05  3.000    2.64e-05  2.994    3.96e-05  2.978
+  32   -4.50  -14.00    2.89e-06  2.999    6.53e-06  3.000    3.19e-06  3.000    3.31e-06  2.998    4.96e-06  2.994
+  64   -5.50  -14.00    3.62e-07  2.997    8.17e-07  3.000    3.99e-07  3.000    4.13e-07  2.999    6.21e-07  2.999
+
+ ConvergenceResults: t_end=1.0, example2_manufactured(3.51), Lagrange{3}, Scheme1(), elapsed=24261.82 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
+   4   -1.50  -14.00    3.12e-05  0.000    7.15e-05  0.000    3.54e-05  0.000    4.64e-05  0.000    6.93e-05  0.000
+   8   -2.50  -14.00    2.06e-06  3.923    4.90e-06  3.869    2.42e-06  3.868    3.12e-06  3.895    4.29e-06  4.016
+  16   -3.50  -14.00    1.36e-07  3.915    3.29e-07  3.895    1.63e-07  3.895    2.05e-07  3.930    2.69e-07  3.997
+  32   -4.50  -14.00    9.21e-09  3.888    2.19e-08  3.910    1.08e-08  3.910    1.34e-08  3.934    1.69e-08  3.991
+  64   -5.50  -14.00    8.52e-09  0.113    1.80e-09  3.609    2.36e-08 -1.122    8.88e-10  3.914    1.07e-09  3.983
+
+ ConvergenceResults: t_end=1.0, example2_manufactured(4.4), Lagrange{3}, Scheme1(), elapsed=25292.88 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
+   4   -1.50  -14.00    1.02e-04  0.000    2.21e-04  0.000    1.19e-04  0.000    4.92e-05  0.000    5.59e-05  0.000
+   8   -2.50  -14.00    6.55e-06  3.958    1.40e-05  3.985    7.52e-06  3.988    2.94e-06  4.064    3.38e-06  4.050
+  16   -3.50  -14.00    3.81e-07  4.105    8.76e-07  3.997    4.70e-07  3.999    1.78e-07  4.051    2.09e-07  4.013
+  32   -4.50  -14.00    2.38e-08  4.001    5.48e-08  3.999    2.94e-08  3.999    1.09e-08  4.029    1.30e-08  4.003
+  64   -5.50  -14.00    6.07e-09  1.970    3.45e-09  3.992    2.81e-08  0.065    6.84e-10  3.991    8.15e-10  4.001
+
+julia&gt; cases3 = (
+    (fe = Lagrange{1}, id = example1_manufactured(2.4 ), Nx = 2^9, τ = [2.0^-i for i in 2:5]),
+    (fe = Lagrange{1}, id = example2_manufactured(2.4 ), Nx = 2^9, τ = [2.0^-i for i in 2:5])
+    );
+
+julia&gt; results3 = run_cases(Scheme1(), cases3)
+2-element Vector{ConvergenceResults}:
+ ConvergenceResults: t_end=1.0, example1_manufactured(2.4), Lagrange{1}, Scheme1(), elapsed=4549.74 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
+ 512   -8.50   -2.00    1.09e-02  0.000    3.47e-03  0.000    1.45e-03  0.000    7.12e-03  0.000    5.41e-03  0.000
+ 512   -8.50   -3.00    2.72e-03  1.997    8.95e-04  1.955    3.00e-04  2.267    1.79e-03  1.990    1.36e-03  1.991
+ 512   -8.50   -4.00    6.76e-04  2.008    2.27e-04  1.980    6.17e-05  2.285    4.50e-04  1.995    3.41e-04  1.997
+ 512   -8.50   -5.00    1.68e-04  2.009    5.80e-05  1.967    1.60e-05  1.950    1.13e-04  1.996    8.54e-05  1.997
+
+ ConvergenceResults: t_end=1.0, example2_manufactured(2.4), Lagrange{1}, Scheme1(), elapsed=5119.49 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
+ 512   -8.50   -2.00    1.12e-02  0.000    3.90e-03  0.000    1.47e-03  0.000    1.44e-03  0.000    6.56e-04  0.000
+ 512   -8.50   -3.00    2.82e-03  1.995    9.80e-04  1.992    3.03e-04  2.283    4.24e-04  1.760    1.62e-04  2.018
+ 512   -8.50   -4.00    7.01e-04  2.007    2.47e-04  1.990    6.47e-05  2.226    1.12e-04  1.925    4.07e-05  1.992
+ 512   -8.50   -5.00    1.74e-04  2.009    6.26e-05  1.977    1.67e-05  1.958    2.87e-05  1.962    1.05e-05  1.961
+
+julia&gt; versioninfo()
+Julia Version 1.12.6
+Commit 15346901f00 (2026-04-09 19:20 UTC)
+Build Info:
+  Official https://julialang.org release
+Platform Info:
+  OS: Linux (x86_64-linux-gnu)
+  CPU: 14 × Intel(R) Core(TM) Ultra 5 225H
+  WORD_SIZE: 64
+  LLVM: libLLVM-18.1.7 (ORCJIT, arrowlake)
+  GC: Built with stock GC
+Threads: 1 default, 1 interactive, 1 GC (on 14 virtual cores)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../schemes/scheme2/">« Scheme 2</a><a class="docs-footer-nextpage" href="../scheme2/">Scheme 2 »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Friday 24 July 2026 12:13">Friday 24 July 2026</span>. Using Julia version 1.12.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
