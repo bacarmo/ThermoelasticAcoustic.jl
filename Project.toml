@@ -1,6 +1,6 @@
 name = "ThermoelasticAcoustic"
 uuid = "bc13a611-4105-49a1-97a9-04cd0a26510a"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Bruno Alves do Carmo <bruno.carmo@ppgi.ufrj.br>"]
 
 [workspace]
