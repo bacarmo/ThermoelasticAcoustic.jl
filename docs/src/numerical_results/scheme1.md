@@ -13,7 +13,7 @@ julia> cases1 = (
 
 julia> results1 = run_cases(Scheme1(), cases1)
 6-element Vector{ConvergenceResults}:
-ConvergenceResults: t_end=1.0, example1_manufactured(1.76), Lagrange{1}, Scheme1(), elapsed=1455.32 s
+ ConvergenceResults: t_end=1.0, example1_manufactured(1.76), Lagrange{1}, Scheme1(), elapsed=1779.97 s
   Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
    4   -1.50  -14.00    1.07e-02  0.000    3.08e-02  0.000    9.00e-03  0.000    6.68e-02  0.000    4.64e-02  0.000
    8   -2.50  -14.00    2.75e-03  1.965    7.90e-03  1.963    2.30e-03  1.968    1.51e-02  2.142    1.07e-02  2.123
@@ -21,7 +21,7 @@ ConvergenceResults: t_end=1.0, example1_manufactured(1.76), Lagrange{1}, Scheme1
   32   -4.50  -14.00    1.89e-04  1.905    5.38e-04  1.924    1.50e-04  1.969    8.56e-04  2.055    6.28e-04  2.028
   64   -5.50  -14.00    6.23e-05  1.600    1.50e-04  1.846    3.87e-05  1.955    2.12e-04  2.014    1.57e-04  1.997
 
-ConvergenceResults: t_end=1.0, example1_manufactured(2.4), Lagrange{1}, Scheme1(), elapsed=1844.07 s
+ ConvergenceResults: t_end=1.0, example1_manufactured(2.4), Lagrange{1}, Scheme1(), elapsed=1934.50 s
   Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
    4   -1.50  -14.00    1.92e-02  0.000    4.51e-02  0.000    1.86e-02  0.000    6.68e-02  0.000    4.95e-02  0.000
    8   -2.50  -14.00    4.95e-03  1.958    1.11e-02  2.020    4.62e-03  2.013    1.50e-02  2.153    1.15e-02  2.113
@@ -29,15 +29,15 @@ ConvergenceResults: t_end=1.0, example1_manufactured(2.4), Lagrange{1}, Scheme1(
   32   -4.50  -14.00    3.13e-04  1.995    6.92e-04  2.002    2.88e-04  2.001    8.88e-04  2.022    6.92e-04  2.012
   64   -5.50  -14.00    7.85e-05  1.998    1.73e-04  2.001    7.19e-05  2.000    2.21e-04  2.009    1.73e-04  2.004
 
-ConvergenceResults: t_end=1.0, example1_manufactured(2.58), Lagrange{2}, Scheme1(), elapsed=9555.21 s
+ ConvergenceResults: t_end=1.0, example1_manufactured(2.58), Lagrange{2}, Scheme1(), elapsed=10330.54 s
   Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
    4   -1.50  -14.00    5.92e-04  0.000    1.45e-03  0.000    6.13e-04  0.000    4.14e-03  0.000    3.75e-03  0.000
    8   -2.50  -14.00    8.37e-05  2.821    1.93e-04  2.911    8.14e-05  2.913    6.15e-04  2.751    5.23e-04  2.843
   16   -3.50  -14.00    1.06e-05  2.982    2.53e-05  2.929    1.07e-05  2.930    8.37e-05  2.877    6.84e-05  2.934
   32   -4.50  -14.00    1.41e-06  2.907    3.30e-06  2.940    1.39e-06  2.943    1.10e-05  2.928    8.77e-06  2.964
-  64   -5.50  -14.00    1.96e-07  2.849    4.31e-07  2.936    1.79e-07  2.952    1.42e-06  2.948    1.12e-06  2.974
+  64   -5.50  -14.00    1.96e-07  2.848    4.31e-07  2.936    1.79e-07  2.952    1.42e-06  2.948    1.12e-06  2.974
 
-ConvergenceResults: t_end=1.0, example1_manufactured(3.4), Lagrange{2}, Scheme1(), elapsed=9976.50 s
+ ConvergenceResults: t_end=1.0, example1_manufactured(3.4), Lagrange{2}, Scheme1(), elapsed=10173.53 s
   Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
    4   -1.50  -14.00    1.49e-03  0.000    3.34e-03  0.000    1.63e-03  0.000    5.06e-03  0.000    3.70e-03  0.000
    8   -2.50  -14.00    1.82e-04  3.033    4.18e-04  2.998    2.04e-04  2.999    6.40e-04  2.982    4.84e-04  2.932
@@ -45,21 +45,21 @@ ConvergenceResults: t_end=1.0, example1_manufactured(3.4), Lagrange{2}, Scheme1(
   32   -4.50  -14.00    2.90e-06  3.002    6.53e-06  3.000    3.19e-06  3.000    1.06e-05  2.969    7.74e-06  2.992
   64   -5.50  -14.00    3.63e-07  2.998    8.17e-07  3.000    3.99e-07  3.000    1.34e-06  2.989    9.68e-07  2.998
 
-ConvergenceResults: t_end=1.0, example1_manufactured(3.51), Lagrange{3}, Scheme1(), elapsed=25395.38 s
+ ConvergenceResults: t_end=1.0, example1_manufactured(3.51), Lagrange{3}, Scheme1(), elapsed=27327.23 s
   Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
    4   -1.50  -14.00    3.15e-05  0.000    7.15e-05  0.000    3.54e-05  0.000    4.05e-04  0.000    1.37e-04  0.000
    8   -2.50  -14.00    2.07e-06  3.926    4.89e-06  3.868    2.42e-06  3.867    4.05e-05  3.325    1.13e-05  3.598
   16   -3.50  -14.00    1.37e-07  3.919    3.29e-07  3.894    1.63e-07  3.895    2.54e-06  3.994    7.14e-07  3.984
-  32   -4.50  -14.00    9.22e-09  3.893    2.19e-08  3.910    1.08e-08  3.910    1.49e-07  4.094    4.30e-08  4.052
-  64   -5.50  -14.00    8.73e-09  0.078    1.79e-09  3.609    2.36e-08 -1.123    8.81e-09  4.077    2.64e-09  4.027
+  32   -4.50  -14.00    9.21e-09  3.894    2.19e-08  3.910    1.08e-08  3.910    1.49e-07  4.094    4.30e-08  4.052
+  64   -5.50  -14.00    1.23e-09  2.901    1.46e-09  3.910    1.37e-09  2.985    8.81e-09  4.077    2.64e-09  4.025
 
-ConvergenceResults: t_end=1.0, example1_manufactured(4.4), Lagrange{3}, Scheme1(), elapsed=24974.17 s
+ ConvergenceResults: t_end=1.0, example1_manufactured(4.4), Lagrange{3}, Scheme1(), elapsed=25139.46 s
   Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
    4   -1.50  -14.00    1.04e-04  0.000    2.21e-04  0.000    1.19e-04  0.000    5.88e-04  0.000    1.47e-04  0.000
    8   -2.50  -14.00    6.59e-06  3.973    1.40e-05  3.984    7.52e-06  3.987    1.01e-04  2.545    2.41e-05  2.608
   16   -3.50  -14.00    3.79e-07  4.120    8.76e-07  3.996    4.70e-07  3.999    7.05e-06  3.838    1.69e-06  3.835
-  32   -4.50  -14.00    2.38e-08  3.997    5.48e-08  3.999    2.94e-08  3.999    4.16e-07  4.083    1.00e-07  4.078
-  64   -5.50  -14.00    6.00e-09  1.986    3.44e-09  3.993    2.81e-08  0.065    2.43e-08  4.099    5.86e-09  4.093
+  32   -4.50  -14.00    2.38e-08  3.996    5.48e-08  3.999    2.94e-08  3.999    4.16e-07  4.083    1.00e-07  4.078
+  64   -5.50  -14.00    1.79e-09  3.734    3.43e-09  3.996    1.87e-09  3.975    2.43e-08  4.099    5.86e-09  4.093
 
 julia> cases2 = (
     (fe = Lagrange{1}, id = example2_manufactured(1.76), Nx = [2^i for i in 2:6], τ = 2.0^-14),
@@ -72,7 +72,7 @@ julia> cases2 = (
 
 julia> results2 = run_cases(Scheme1(), cases2)
 6-element Vector{ConvergenceResults}:
- ConvergenceResults: t_end=1.0, example2_manufactured(1.76), Lagrange{1}, Scheme1(), elapsed=1458.03 s
+ ConvergenceResults: t_end=1.0, example2_manufactured(1.76), Lagrange{1}, Scheme1(), elapsed=1752.15 s
   Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
    4   -1.50  -14.00    1.11e-02  0.000    3.08e-02  0.000    9.01e-03  0.000    2.21e-02  0.000    2.60e-02  0.000
    8   -2.50  -14.00    2.80e-03  1.986    7.96e-03  1.954    2.31e-03  1.967    5.05e-03  2.129    6.06e-03  2.101
@@ -80,7 +80,7 @@ julia> results2 = run_cases(Scheme1(), cases2)
   32   -4.50  -14.00    2.11e-04  1.749    5.69e-04  1.874    1.52e-04  1.960    3.10e-04  1.960    3.78e-04  1.973
   64   -5.50  -14.00    1.17e-04  0.848    1.71e-04  1.734    3.97e-05  1.934    9.99e-05  1.634    1.09e-04  1.796
 
- ConvergenceResults: t_end=1.0, example2_manufactured(2.4), Lagrange{1}, Scheme1(), elapsed=1787.84 s
+ ConvergenceResults: t_end=1.0, example2_manufactured(2.4), Lagrange{1}, Scheme1(), elapsed=1819.19 s
   Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
    4   -1.50  -14.00    1.90e-02  0.000    4.45e-02  0.000    1.87e-02  0.000    2.21e-02  0.000    2.80e-02  0.000
    8   -2.50  -14.00    4.86e-03  1.964    1.10e-02  2.021    4.63e-03  2.012    5.09e-03  2.120    6.58e-03  2.091
@@ -88,15 +88,15 @@ julia> results2 = run_cases(Scheme1(), cases2)
   32   -4.50  -14.00    3.08e-04  1.994    6.82e-04  2.002    2.89e-04  2.001    3.05e-04  2.017    4.02e-04  2.007
   64   -5.50  -14.00    7.72e-05  1.997    1.70e-04  2.001    7.21e-05  2.000    7.59e-05  2.006    1.00e-04  2.002
 
- ConvergenceResults: t_end=1.0, example2_manufactured(2.58), Lagrange{2}, Scheme1(), elapsed=9168.16 s
+ ConvergenceResults: t_end=1.0, example2_manufactured(2.58), Lagrange{2}, Scheme1(), elapsed=9717.25 s
   Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
    4   -1.50  -14.00    5.88e-04  0.000    1.45e-03  0.000    6.13e-04  0.000    1.41e-03  0.000    2.44e-03  0.000
    8   -2.50  -14.00    8.33e-05  2.819    1.93e-04  2.911    8.14e-05  2.913    2.03e-04  2.795    3.31e-04  2.881
   16   -3.50  -14.00    1.06e-05  2.969    2.53e-05  2.929    1.07e-05  2.930    2.73e-05  2.894    4.26e-05  2.958
   32   -4.50  -14.00    1.48e-06  2.844    3.31e-06  2.936    1.39e-06  2.943    3.59e-06  2.927    5.41e-06  2.979
-  64   -5.50  -14.00    2.75e-07  2.429    4.40e-07  2.910    1.79e-07  2.951    4.81e-07  2.900    6.92e-07  2.966
+  64   -5.50  -14.00    2.75e-07  2.431    4.40e-07  2.910    1.79e-07  2.951    4.81e-07  2.899    6.92e-07  2.966
 
- ConvergenceResults: t_end=1.0, example2_manufactured(3.4), Lagrange{2}, Scheme1(), elapsed=9701.21 s
+ ConvergenceResults: t_end=1.0, example2_manufactured(3.4), Lagrange{2}, Scheme1(), elapsed=9758.69 s
   Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
    4   -1.50  -14.00    1.47e-03  0.000    3.34e-03  0.000    1.63e-03  0.000    1.66e-03  0.000    2.35e-03  0.000
    8   -2.50  -14.00    1.81e-04  3.025    4.18e-04  2.998    2.04e-04  2.999    2.10e-04  2.984    3.12e-04  2.918
@@ -104,21 +104,21 @@ julia> results2 = run_cases(Scheme1(), cases2)
   32   -4.50  -14.00    2.89e-06  2.999    6.53e-06  3.000    3.19e-06  3.000    3.31e-06  2.998    4.96e-06  2.994
   64   -5.50  -14.00    3.62e-07  2.997    8.17e-07  3.000    3.99e-07  3.000    4.13e-07  2.999    6.21e-07  2.999
 
- ConvergenceResults: t_end=1.0, example2_manufactured(3.51), Lagrange{3}, Scheme1(), elapsed=24261.82 s
+ ConvergenceResults: t_end=1.0, example2_manufactured(3.51), Lagrange{3}, Scheme1(), elapsed=25211.34 s
   Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
    4   -1.50  -14.00    3.12e-05  0.000    7.15e-05  0.000    3.54e-05  0.000    4.64e-05  0.000    6.93e-05  0.000
    8   -2.50  -14.00    2.06e-06  3.923    4.90e-06  3.869    2.42e-06  3.868    3.12e-06  3.895    4.29e-06  4.016
   16   -3.50  -14.00    1.36e-07  3.915    3.29e-07  3.895    1.63e-07  3.895    2.05e-07  3.930    2.69e-07  3.997
-  32   -4.50  -14.00    9.21e-09  3.888    2.19e-08  3.910    1.08e-08  3.910    1.34e-08  3.934    1.69e-08  3.991
-  64   -5.50  -14.00    8.52e-09  0.113    1.80e-09  3.609    2.36e-08 -1.122    8.88e-10  3.914    1.07e-09  3.983
+  32   -4.50  -14.00    9.19e-09  3.892    2.19e-08  3.910    1.08e-08  3.910    1.34e-08  3.934    1.69e-08  3.991
+  64   -5.50  -14.00    1.33e-09  2.787    1.46e-09  3.906    1.37e-09  2.985    8.76e-10  3.933    1.06e-09  3.989
 
- ConvergenceResults: t_end=1.0, example2_manufactured(4.4), Lagrange{3}, Scheme1(), elapsed=25292.88 s
+ ConvergenceResults: t_end=1.0, example2_manufactured(4.4), Lagrange{3}, Scheme1(), elapsed=25935.68 s
   Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
    4   -1.50  -14.00    1.02e-04  0.000    2.21e-04  0.000    1.19e-04  0.000    4.92e-05  0.000    5.59e-05  0.000
    8   -2.50  -14.00    6.55e-06  3.958    1.40e-05  3.985    7.52e-06  3.988    2.94e-06  4.064    3.38e-06  4.050
   16   -3.50  -14.00    3.81e-07  4.105    8.76e-07  3.997    4.70e-07  3.999    1.78e-07  4.051    2.09e-07  4.013
   32   -4.50  -14.00    2.38e-08  4.001    5.48e-08  3.999    2.94e-08  3.999    1.09e-08  4.029    1.30e-08  4.003
-  64   -5.50  -14.00    6.07e-09  1.970    3.45e-09  3.992    2.81e-08  0.065    6.84e-10  3.991    8.15e-10  4.001
+  64   -5.50  -14.00    1.82e-09  3.711    3.43e-09  3.996    1.87e-09  3.973    6.99e-10  3.960    8.15e-10  4.001
 
 julia> cases3 = (
     (fe = Lagrange{1}, id = example1_manufactured(2.4 ), Nx = 2^9, τ = [2.0^-i for i in 2:5]),
@@ -127,14 +127,14 @@ julia> cases3 = (
 
 julia> results3 = run_cases(Scheme1(), cases3)
 2-element Vector{ConvergenceResults}:
- ConvergenceResults: t_end=1.0, example1_manufactured(2.4), Lagrange{1}, Scheme1(), elapsed=4549.74 s
+ ConvergenceResults: t_end=1.0, example1_manufactured(2.4), Lagrange{1}, Scheme1(), elapsed=5352.74 s
   Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
  512   -8.50   -2.00    1.09e-02  0.000    3.47e-03  0.000    1.45e-03  0.000    7.12e-03  0.000    5.41e-03  0.000
  512   -8.50   -3.00    2.72e-03  1.997    8.95e-04  1.955    3.00e-04  2.267    1.79e-03  1.990    1.36e-03  1.991
  512   -8.50   -4.00    6.76e-04  2.008    2.27e-04  1.980    6.17e-05  2.285    4.50e-04  1.995    3.41e-04  1.997
  512   -8.50   -5.00    1.68e-04  2.009    5.80e-05  1.967    1.60e-05  1.950    1.13e-04  1.996    8.54e-05  1.997
 
- ConvergenceResults: t_end=1.0, example2_manufactured(2.4), Lagrange{1}, Scheme1(), elapsed=5119.49 s
+ ConvergenceResults: t_end=1.0, example2_manufactured(2.4), Lagrange{1}, Scheme1(), elapsed=5300.40 s
   Nx   log₂h   log₂τ    L∞L²_V    rate     L∞L²_U    rate     L∞L²_Θ    rate     L∞L²_R    rate     L∞L²_Z    rate
  512   -8.50   -2.00    1.12e-02  0.000    3.90e-03  0.000    1.47e-03  0.000    1.44e-03  0.000    6.56e-04  0.000
  512   -8.50   -3.00    2.82e-03  1.995    9.80e-04  1.992    3.03e-04  2.283    4.24e-04  1.760    1.62e-04  2.018

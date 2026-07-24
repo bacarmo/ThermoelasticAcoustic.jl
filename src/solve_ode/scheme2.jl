@@ -418,9 +418,9 @@ function solve_nonlinear_system!(
         quad::QuadratureSetup,
         input_data::PDEInputData,
         τα::T;
-        abstol::T = T(1e-14),
-        reltol::T = T(1e-9),
-        maxiter::Int = 5) where {T}
+        abstol::T = T(1e-15),
+        reltol::T = T(1e-12),
+        maxiter::Int = 6) where {T}
     Δx, Δy = element_side_lengths
 
     # Warm start: X ← vⁿ⁻¹
