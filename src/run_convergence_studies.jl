@@ -2,7 +2,7 @@
 # Convergence studies
 # ==============================================================================
 """
-    ConvergenceResults{T,I}
+    ConvergenceResults
 
 Stores the output of a mesh-refinement convergence study.
 
@@ -13,14 +13,16 @@ Fields
 - `τ`     : time-step size at each level
 - `errors`: L∞(L²) error norms; size `(n_levels, n_fields)`
 - `rates` : convergence rates log(eᵢ₋₁/eᵢ)/log(δᵢ₋₁/δᵢ) where δ = h (2D spatial/coupled study), δ = Δx (1D spatial/coupled study) or δ = τ (temporal study); same size as `errors`
+- `walltime` : wall-clock time (s) of each PDE solve, one entry per refinement level
 """
-struct ConvergenceResults{T <: AbstractFloat, I <: Integer}
+struct ConvergenceResults
     info::String
-    Nx::Vector{I}
-    h::Vector{T}
-    τ::Vector{T}
-    errors::Matrix{T}  # (n_levels, n_fields)
-    rates::Matrix{T}   # (n_levels, n_fields); first row is always zero
+    Nx::Vector{Int}
+    h::Vector{Float64}
+    τ::Vector{Float64}
+    errors::Matrix{Float64}  # (n_levels, n_fields)
+    rates::Matrix{Float64}   # (n_levels, n_fields); first row is always zero
+    walltime::Vector{Float64}# (n_levels,)
 end
 
 """
