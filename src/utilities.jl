@@ -149,7 +149,7 @@ function QuadratureSetup(
         ::Val{nb²} = num_local_dof(fe2D)
 ) where {Deg, T, nb, nb²}
     Δx, Δy = element_side_lengths
-    Npg = Deg + 4
+    Npg = 5
     P_raw, W_raw = legendre(T, Npg)
     P = SVector{Npg, T}(P_raw)
     W = SVector{Npg, T}(W_raw)
