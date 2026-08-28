@@ -3,8 +3,23 @@
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://bacarmo.github.io/ThermoelasticAcoustic.jl/dev/) 
 [![Build Status](https://github.com/bacarmo/ThermoelasticAcoustic.jl/a-tions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/bacarmo/ThermoelasticAcoustic.jl/actions/workflows/CI.yml?query=branch%3Amain)
 [![License: MIT](https://img.shields.io/badge/License-MIT-success.svg)](https://opensource.org/licenses/MIT)
+[![DOI](https://zenodo.org/badge/1158101550.svg)](https://doi.org/10.5281/zenodo.22149939)
 
 This repository provides all the code required to reproduce the numerical results presented in the article "Acoustic Boundary Conditions for a Nonlinear Coupled Thermoelastic System: Numerical Analysis".
+
+If you find these results useful, please cite the article mentioned above. 
+If you use the implementations provided in this repository, please also cite it as follows:
+```bibtex
+@software{ThermoelasticAcoustic,
+  author    = {Bruno Alves do Carmo},
+  title     = {Reproducibility repository for "Acoustic Boundary Conditions for a Nonlinear Coupled Thermoelastic System: Numerical Analysis"},
+  year      = 2026,
+  publisher = {Zenodo},
+  version   = {v0.1.3},
+  doi       = {10.5281/zenodo.22149940},
+  url       = {https://doi.org/10.5281/zenodo.22149940},
+}
+```
 
 ## Installation
 1. Install Julia v1.12.6
