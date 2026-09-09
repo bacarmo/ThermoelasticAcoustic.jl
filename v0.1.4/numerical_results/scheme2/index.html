@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Scheme 2 · ThermoelasticAcoustic.jl</title><meta name="title" content="Scheme 2 · ThermoelasticAcoustic.jl"/><meta property="og:title" content="Scheme 2 · ThermoelasticAcoustic.jl"/><meta property="twitter:title" content="Scheme 2 · ThermoelasticAcoustic.jl"/><meta name="description" content="Documentation for ThermoelasticAcoustic.jl."/><meta property="og:description" content="Documentation for ThermoelasticAcoustic.jl."/><meta property="twitter:description" content="Documentation for ThermoelasticAcoustic.jl."/><meta property="og:url" content="https://bacarmo.github.io/ThermoelasticAcoustic.jl/numerical_results/scheme2/"/><meta property="twitter:url" content="https://bacarmo.github.io/ThermoelasticAcoustic.jl/numerical_results/scheme2/"/><link rel="canonical" href="https://bacarmo.github.io/ThermoelasticAcoustic.jl/numerical_results/scheme2/"/><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">ThermoelasticAcoustic.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><a class="tocitem" href="../../model/">Model</a></li><li><span class="tocitem">Approximation Problem</span><ul><li><a class="tocitem" href="../../schemes/scheme1/">Scheme 1</a></li><li><a class="tocitem" href="../../schemes/scheme2/">Scheme 2</a></li></ul></li><li><span class="tocitem">Numerical Results</span><ul><li><a class="tocitem" href="../scheme1/">Scheme 1</a></li><li class="is-active"><a class="tocitem" href>Scheme 2</a></li></ul></li><li><a class="tocitem" href="../../api/">API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Numerical Results</a></li><li class="is-active"><a href>Scheme 2</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Scheme 2</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/bacarmo/ThermoelasticAcoustic.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/bacarmo/ThermoelasticAcoustic.jl/blob/main/docs/src/numerical_results/scheme2.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Scheme-2"><a class="docs-heading-anchor" href="#Scheme-2">Scheme 2</a><a id="Scheme-2-1"></a><a class="docs-heading-anchor-permalink" href="#Scheme-2" title="Permalink"></a></h1><pre><code class="language-julia-repl hljs">julia&gt; using ThermoelasticAcoustic
+
+julia&gt; cases1a = (
+    (fe = Lagrange{1}, id = example1_manufactured(1.76), Nx = [2^i for i in 2:5], τ = 2.0^-13),
+    (fe = Lagrange{1}, id = example1_manufactured(2.4 ), Nx = [2^i for i in 2:5], τ = 2.0^-13),
+    (fe = Lagrange{2}, id = example1_manufactured(2.58), Nx = [2^i for i in 2:5], τ = 2.0^-13),
+    (fe = Lagrange{2}, id = example1_manufactured(3.4 ), Nx = [2^i for i in 2:5], τ = 2.0^-13),
+    (fe = Lagrange{3}, id = example1_manufactured(3.51), Nx = [2^i for i in 2:5], τ = 2.0^-13),
+    (fe = Lagrange{3}, id = example1_manufactured(4.4 ), Nx = [2^i for i in 2:5], τ = 2.0^-13)
+    );
+
+julia&gt; cases1b = (
+    (fe = Lagrange{1}, id = example1_manufactured(1.76), Nx = [2^i for i in 2:6], τ = 2.0^-15),
+    (fe = Lagrange{1}, id = example1_manufactured(2.4 ), Nx = [2^i for i in 2:6], τ = 2.0^-15),
+    (fe = Lagrange{2}, id = example1_manufactured(2.58), Nx = [2^i for i in 2:6], τ = 2.0^-15),
+    (fe = Lagrange{2}, id = example1_manufactured(3.4 ), Nx = [2^i for i in 2:6], τ = 2.0^-15),
+    (fe = Lagrange{3}, id = example1_manufactured(3.51), Nx = [2^i for i in 2:6], τ = 2.0^-15),
+    (fe = Lagrange{3}, id = example1_manufactured(4.4 ), Nx = [2^i for i in 2:6], τ = 2.0^-15)
+    );
+
+julia&gt; results1a = run_cases(Scheme2(), cases1a)
+6-element Vector{ConvergenceResults}:
+ConvergenceResults: t_end=1.0, example1_manufactured(1.76), Lagrange{1}, Scheme2(), sum(walltime)=129.10 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+   4   -1.50  -13.00    1.07e-02  0.00    3.08e-02  0.00    9.00e-03  0.00    6.68e-02  0.00    4.64e-02  0.00    1.4829e+00
+   8   -2.50  -13.00    2.75e-03  1.97    7.90e-03  1.96    2.30e-03  1.97    1.51e-02  2.14    1.07e-02  2.12    5.9235e+00
+  16   -3.50  -13.00    7.08e-04  1.96    2.04e-03  1.95    5.87e-04  1.97    3.56e-03  2.09    2.56e-03  2.06    2.3915e+01
+  32   -4.50  -13.00    1.89e-04  1.91    5.38e-04  1.92    1.50e-04  1.97    8.56e-04  2.06    6.28e-04  2.03    9.7778e+01
+
+ConvergenceResults: t_end=1.0, example1_manufactured(2.4), Lagrange{1}, Scheme2(), sum(walltime)=130.87 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+   4   -1.50  -13.00    1.92e-02  0.00    4.51e-02  0.00    1.86e-02  0.00    6.68e-02  0.00    4.95e-02  0.00    1.4893e+00
+   8   -2.50  -13.00    4.95e-03  1.96    1.11e-02  2.02    4.62e-03  2.01    1.50e-02  2.15    1.15e-02  2.11    5.9360e+00
+  16   -3.50  -13.00    1.25e-03  1.99    2.77e-03  2.01    1.15e-03  2.00    3.61e-03  2.06    2.79e-03  2.04    2.4144e+01
+  32   -4.50  -13.00    3.13e-04  2.00    6.92e-04  2.00    2.88e-04  2.00    8.88e-04  2.02    6.92e-04  2.01    9.9302e+01
+
+ConvergenceResults: t_end=1.0, example1_manufactured(2.58), Lagrange{2}, Scheme2(), sum(walltime)=251.32 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+   4   -1.50  -13.00    5.92e-04  0.00    1.45e-03  0.00    6.13e-04  0.00    4.14e-03  0.00    3.75e-03  0.00    2.2763e+00
+   8   -2.50  -13.00    8.37e-05  2.82    1.93e-04  2.91    8.14e-05  2.91    6.15e-04  2.75    5.23e-04  2.84    9.3703e+00
+  16   -3.50  -13.00    1.06e-05  2.98    2.53e-05  2.93    1.07e-05  2.93    8.37e-05  2.88    6.84e-05  2.93    4.1107e+01
+  32   -4.50  -13.00    1.41e-06  2.91    3.30e-06  2.94    1.39e-06  2.94    1.10e-05  2.93    8.77e-06  2.96    1.9856e+02
+
+ConvergenceResults: t_end=1.0, example1_manufactured(3.4), Lagrange{2}, Scheme2(), sum(walltime)=254.68 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+   4   -1.50  -13.00    1.49e-03  0.00    3.34e-03  0.00    1.63e-03  0.00    5.06e-03  0.00    3.70e-03  0.00    2.2660e+00
+   8   -2.50  -13.00    1.82e-04  3.03    4.18e-04  3.00    2.04e-04  3.00    6.40e-04  2.98    4.84e-04  2.93    9.3670e+00
+  16   -3.50  -13.00    2.32e-05  2.97    5.23e-05  3.00    2.55e-05  3.00    8.32e-05  2.94    6.16e-05  2.98    4.1248e+01
+  32   -4.50  -13.00    2.90e-06  3.00    6.53e-06  3.00    3.19e-06  3.00    1.06e-05  2.97    7.74e-06  2.99    2.0180e+02
+
+ConvergenceResults: t_end=1.0, example1_manufactured(3.51), Lagrange{3}, Scheme2(), sum(walltime)=528.44 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+   4   -1.50  -13.00    3.15e-05  0.00    7.15e-05  0.00    3.54e-05  0.00    4.05e-04  0.00    1.37e-04  0.00    3.4721e+00
+   8   -2.50  -13.00    2.07e-06  3.93    4.89e-06  3.87    2.42e-06  3.87    4.05e-05  3.32    1.13e-05  3.60    1.5145e+01
+  16   -3.50  -13.00    1.37e-07  3.92    3.29e-07  3.89    1.63e-07  3.90    2.54e-06  3.99    7.14e-07  3.98    7.2208e+01
+  32   -4.50  -13.00    9.29e-09  3.88    2.19e-08  3.91    1.08e-08  3.91    1.49e-07  4.09    4.31e-08  4.05    4.3762e+02
+
+ConvergenceResults: t_end=1.0, example1_manufactured(4.4), Lagrange{3}, Scheme2(), sum(walltime)=538.19 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+   4   -1.50  -13.00    1.04e-04  0.00    2.21e-04  0.00    1.19e-04  0.00    5.88e-04  0.00    1.47e-04  0.00    3.4585e+00
+   8   -2.50  -13.00    6.59e-06  3.97    1.40e-05  3.98    7.52e-06  3.99    1.01e-04  2.55    2.41e-05  2.61    1.5111e+01
+  16   -3.50  -13.00    3.79e-07  4.12    8.76e-07  4.00    4.70e-07  4.00    7.05e-06  3.84    1.69e-06  3.84    7.2350e+01
+  32   -4.50  -13.00    2.39e-08  3.99    5.48e-08  4.00    2.94e-08  4.00    4.16e-07  4.08    1.00e-07  4.08    4.4727e+02
+
+julia&gt; results1b = run_cases(Scheme2(), cases1b)
+6-element Vector{ConvergenceResults}:
+ConvergenceResults: t_end=1.0, example1_manufactured(1.76), Lagrange{1}, Scheme2(), sum(walltime)=2146.04 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+   4   -1.50  -15.00    1.07e-02  0.00    3.08e-02  0.00    9.00e-03  0.00    6.68e-02  0.00    4.64e-02  0.00    5.9087e+00
+   8   -2.50  -15.00    2.75e-03  1.97    7.90e-03  1.96    2.30e-03  1.97    1.51e-02  2.14    1.07e-02  2.12    2.3721e+01
+  16   -3.50  -15.00    7.08e-04  1.96    2.04e-03  1.95    5.87e-04  1.97    3.56e-03  2.09    2.56e-03  2.06    9.5151e+01
+  32   -4.50  -15.00    1.89e-04  1.91    5.38e-04  1.92    1.50e-04  1.97    8.56e-04  2.06    6.28e-04  2.03    3.8875e+02
+  64   -5.50  -15.00    6.23e-05  1.60    1.50e-04  1.85    3.87e-05  1.95    2.12e-04  2.01    1.57e-04  2.00    1.6325e+03
+
+ConvergenceResults: t_end=1.0, example1_manufactured(2.4), Lagrange{1}, Scheme2(), sum(walltime)=2146.10 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+   4   -1.50  -15.00    1.92e-02  0.00    4.51e-02  0.00    1.86e-02  0.00    6.68e-02  0.00    4.95e-02  0.00    5.9038e+00
+   8   -2.50  -15.00    4.95e-03  1.96    1.11e-02  2.02    4.62e-03  2.01    1.50e-02  2.15    1.15e-02  2.11    2.3528e+01
+  16   -3.50  -15.00    1.25e-03  1.99    2.77e-03  2.01    1.15e-03  2.00    3.61e-03  2.06    2.79e-03  2.04    9.5005e+01
+  32   -4.50  -15.00    3.13e-04  2.00    6.92e-04  2.00    2.88e-04  2.00    8.88e-04  2.02    6.92e-04  2.01    3.8904e+02
+  64   -5.50  -15.00    7.85e-05  2.00    1.73e-04  2.00    7.19e-05  2.00    2.21e-04  2.01    1.73e-04  2.00    1.6326e+03
+
+ConvergenceResults: t_end=1.0, example1_manufactured(2.58), Lagrange{2}, Scheme2(), sum(walltime)=4917.17 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+   4   -1.50  -15.00    5.92e-04  0.00    1.45e-03  0.00    6.13e-04  0.00    4.14e-03  0.00    3.75e-03  0.00    8.9167e+00
+   8   -2.50  -15.00    8.37e-05  2.82    1.93e-04  2.91    8.14e-05  2.91    6.15e-04  2.75    5.23e-04  2.84    3.6351e+01
+  16   -3.50  -15.00    1.06e-05  2.98    2.53e-05  2.93    1.07e-05  2.93    8.37e-05  2.88    6.84e-05  2.93    1.5613e+02
+  32   -4.50  -15.00    1.41e-06  2.91    3.30e-06  2.94    1.39e-06  2.94    1.10e-05  2.93    8.77e-06  2.96    7.2392e+02
+  64   -5.50  -15.00    1.96e-07  2.85    4.31e-07  2.94    1.79e-07  2.95    1.42e-06  2.95    1.12e-06  2.97    3.9919e+03
+
+ConvergenceResults: t_end=1.0, example1_manufactured(3.4), Lagrange{2}, Scheme2(), sum(walltime)=4925.35 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+   4   -1.50  -15.00    1.49e-03  0.00    3.34e-03  0.00    1.63e-03  0.00    5.06e-03  0.00    3.70e-03  0.00    8.9151e+00
+   8   -2.50  -15.00    1.82e-04  3.03    4.18e-04  3.00    2.04e-04  3.00    6.40e-04  2.98    4.84e-04  2.93    3.6356e+01
+  16   -3.50  -15.00    2.32e-05  2.97    5.23e-05  3.00    2.55e-05  3.00    8.32e-05  2.94    6.16e-05  2.98    1.5599e+02
+  32   -4.50  -15.00    2.90e-06  3.00    6.53e-06  3.00    3.19e-06  3.00    1.06e-05  2.97    7.74e-06  2.99    7.2207e+02
+  64   -5.50  -15.00    3.63e-07  3.00    8.17e-07  3.00    3.99e-07  3.00    1.34e-06  2.99    9.68e-07  3.00    4.0020e+03
+
+ConvergenceResults: t_end=1.0, example1_manufactured(3.51), Lagrange{3}, Scheme2(), sum(walltime)=12173.14 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+   4   -1.50  -15.00    3.15e-05  0.00    7.15e-05  0.00    3.54e-05  0.00    4.05e-04  0.00    1.37e-04  0.00    1.3279e+01
+   8   -2.50  -15.00    2.07e-06  3.93    4.89e-06  3.87    2.42e-06  3.87    4.05e-05  3.32    1.13e-05  3.60    5.6436e+01
+  16   -3.50  -15.00    1.37e-07  3.92    3.29e-07  3.89    1.63e-07  3.90    2.54e-06  3.99    7.14e-07  3.98    2.5953e+02
+  32   -4.50  -15.00    9.21e-09  3.89    2.19e-08  3.91    1.08e-08  3.91    1.49e-07  4.09    4.30e-08  4.05    1.4667e+03
+  64   -5.50  -15.00    6.12e-10  3.91    1.45e-09  3.92    7.16e-10  3.92    8.81e-09  4.08    2.62e-09  4.04    1.0377e+04
+
+ConvergenceResults: t_end=1.0, example1_manufactured(4.4), Lagrange{3}, Scheme2(), sum(walltime)=12160.92 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+   4   -1.50  -15.00    1.04e-04  0.00    2.21e-04  0.00    1.19e-04  0.00    5.88e-04  0.00    1.47e-04  0.00    1.3268e+01
+   8   -2.50  -15.00    6.59e-06  3.97    1.40e-05  3.98    7.52e-06  3.99    1.01e-04  2.55    2.41e-05  2.61    5.6409e+01
+  16   -3.50  -15.00    3.79e-07  4.12    8.76e-07  4.00    4.70e-07  4.00    7.05e-06  3.84    1.69e-06  3.84    2.6000e+02
+  32   -4.50  -15.00    2.38e-08  4.00    5.48e-08  4.00    2.94e-08  4.00    4.16e-07  4.08    1.00e-07  4.08    1.4650e+03
+  64   -5.50  -15.00    1.53e-09  3.96    3.43e-09  4.00    1.84e-09  4.00    2.43e-08  4.10    5.84e-09  4.10    1.0366e+04
+
+julia&gt; cases2a = (
+    (fe = Lagrange{1}, id = example2_manufactured(1.76), Nx = [2^i for i in 2:5], τ = 2.0^-13),
+    (fe = Lagrange{1}, id = example2_manufactured(2.4 ), Nx = [2^i for i in 2:5], τ = 2.0^-13),
+    (fe = Lagrange{2}, id = example2_manufactured(2.58), Nx = [2^i for i in 2:5], τ = 2.0^-13),
+    (fe = Lagrange{2}, id = example2_manufactured(3.4 ), Nx = [2^i for i in 2:5], τ = 2.0^-13),
+    (fe = Lagrange{3}, id = example2_manufactured(3.51), Nx = [2^i for i in 2:5], τ = 2.0^-13),
+    (fe = Lagrange{3}, id = example2_manufactured(4.4 ), Nx = [2^i for i in 2:5], τ = 2.0^-13)
+    );
+
+julia&gt; cases2b = (
+    (fe = Lagrange{1}, id = example2_manufactured(1.76), Nx = [2^i for i in 2:6], τ = 2.0^-15),
+    (fe = Lagrange{1}, id = example2_manufactured(2.4 ), Nx = [2^i for i in 2:6], τ = 2.0^-15),
+    (fe = Lagrange{2}, id = example2_manufactured(2.58), Nx = [2^i for i in 2:6], τ = 2.0^-15),
+    (fe = Lagrange{2}, id = example2_manufactured(3.4 ), Nx = [2^i for i in 2:6], τ = 2.0^-15),
+    (fe = Lagrange{3}, id = example2_manufactured(3.51), Nx = [2^i for i in 2:6], τ = 2.0^-15),
+    (fe = Lagrange{3}, id = example2_manufactured(4.4 ), Nx = [2^i for i in 2:6], τ = 2.0^-15)
+    );
+
+julia&gt; results2a = run_cases(Scheme2(), cases2a)
+6-element Vector{ConvergenceResults}:
+ConvergenceResults: t_end=1.0, example2_manufactured(1.76), Lagrange{1}, Scheme2(), sum(walltime)=128.27 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+   4   -1.50  -13.00    1.11e-02  0.00    3.08e-02  0.00    9.01e-03  0.00    2.21e-02  0.00    2.60e-02  0.00    1.4723e+00
+   8   -2.50  -13.00    2.80e-03  1.99    7.96e-03  1.95    2.31e-03  1.97    5.05e-03  2.13    6.06e-03  2.10    5.8728e+00
+  16   -3.50  -13.00    7.08e-04  1.98    2.09e-03  1.93    5.90e-04  1.97    1.21e-03  2.07    1.48e-03  2.03    2.3745e+01
+  32   -4.50  -13.00    2.11e-04  1.75    5.69e-04  1.87    1.52e-04  1.96    3.10e-04  1.96    3.78e-04  1.97    9.7183e+01
+
+ConvergenceResults: t_end=1.0, example2_manufactured(2.4), Lagrange{1}, Scheme2(), sum(walltime)=128.31 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+   4   -1.50  -13.00    1.90e-02  0.00    4.45e-02  0.00    1.87e-02  0.00    2.21e-02  0.00    2.80e-02  0.00    1.4685e+00
+   8   -2.50  -13.00    4.86e-03  1.96    1.10e-02  2.02    4.63e-03  2.01    5.09e-03  2.12    6.58e-03  2.09    5.8902e+00
+  16   -3.50  -13.00    1.23e-03  1.99    2.73e-03  2.01    1.16e-03  2.00    1.23e-03  2.04    1.62e-03  2.03    2.3732e+01
+  32   -4.50  -13.00    3.08e-04  1.99    6.82e-04  2.00    2.89e-04  2.00    3.05e-04  2.02    4.02e-04  2.01    9.7216e+01
+
+ConvergenceResults: t_end=1.0, example2_manufactured(2.58), Lagrange{2}, Scheme2(), sum(walltime)=231.51 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+   4   -1.50  -13.00    5.88e-04  0.00    1.45e-03  0.00    6.13e-04  0.00    1.41e-03  0.00    2.44e-03  0.00    2.2204e+00
+   8   -2.50  -13.00    8.33e-05  2.82    1.93e-04  2.91    8.14e-05  2.91    2.03e-04  2.80    3.31e-04  2.88    9.0709e+00
+  16   -3.50  -13.00    1.06e-05  2.97    2.53e-05  2.93    1.07e-05  2.93    2.73e-05  2.89    4.26e-05  2.96    3.9278e+01
+  32   -4.50  -13.00    1.48e-06  2.84    3.31e-06  2.94    1.39e-06  2.94    3.59e-06  2.93    5.41e-06  2.98    1.8094e+02
+
+ConvergenceResults: t_end=1.0, example2_manufactured(3.4), Lagrange{2}, Scheme2(), sum(walltime)=230.97 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+   4   -1.50  -13.00    1.47e-03  0.00    3.34e-03  0.00    1.63e-03  0.00    1.66e-03  0.00    2.35e-03  0.00    2.2250e+00
+   8   -2.50  -13.00    1.81e-04  3.03    4.18e-04  3.00    2.04e-04  3.00    2.10e-04  2.98    3.12e-04  2.92    9.0807e+00
+  16   -3.50  -13.00    2.31e-05  2.96    5.23e-05  3.00    2.55e-05  3.00    2.64e-05  2.99    3.96e-05  2.98    3.9055e+01
+  32   -4.50  -13.00    2.89e-06  3.00    6.53e-06  3.00    3.19e-06  3.00    3.31e-06  3.00    4.96e-06  2.99    1.8061e+02
+
+ConvergenceResults: t_end=1.0, example2_manufactured(3.51), Lagrange{3}, Scheme2(), sum(walltime)=449.56 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+   4   -1.50  -13.00    3.12e-05  0.00    7.15e-05  0.00    3.54e-05  0.00    4.64e-05  0.00    6.93e-05  0.00    3.3211e+00
+   8   -2.50  -13.00    2.06e-06  3.92    4.90e-06  3.87    2.42e-06  3.87    3.12e-06  3.90    4.29e-06  4.02    1.4193e+01
+  16   -3.50  -13.00    1.36e-07  3.91    3.29e-07  3.89    1.63e-07  3.90    2.05e-07  3.93    2.69e-07  4.00    6.5086e+01
+  32   -4.50  -13.00    9.28e-09  3.88    2.19e-08  3.91    1.08e-08  3.91    1.34e-08  3.93    1.69e-08  3.99    3.6696e+02
+
+ConvergenceResults: t_end=1.0, example2_manufactured(4.4), Lagrange{3}, Scheme2(), sum(walltime)=449.02 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+   4   -1.50  -13.00    1.02e-04  0.00    2.21e-04  0.00    1.19e-04  0.00    4.92e-05  0.00    5.59e-05  0.00    3.3047e+00
+   8   -2.50  -13.00    6.55e-06  3.96    1.40e-05  3.98    7.52e-06  3.99    2.94e-06  4.06    3.38e-06  4.05    1.4108e+01
+  16   -3.50  -13.00    3.81e-07  4.11    8.76e-07  4.00    4.70e-07  4.00    1.78e-07  4.05    2.09e-07  4.01    6.5022e+01
+  32   -4.50  -13.00    2.39e-08  4.00    5.48e-08  4.00    2.94e-08  4.00    1.11e-08  4.00    1.30e-08  4.00    3.6658e+02
+
+julia&gt; results2b = run_cases(Scheme2(), cases2b)
+6-element Vector{ConvergenceResults}:
+ConvergenceResults: t_end=1.0, example2_manufactured(1.76), Lagrange{1}, Scheme2(), sum(walltime)=2148.14 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+   4   -1.50  -15.00    1.11e-02  0.00    3.08e-02  0.00    9.01e-03  0.00    2.21e-02  0.00    2.60e-02  0.00    5.8774e+00
+   8   -2.50  -15.00    2.80e-03  1.99    7.96e-03  1.95    2.31e-03  1.97    5.05e-03  2.13    6.06e-03  2.10    2.3511e+01
+  16   -3.50  -15.00    7.08e-04  1.98    2.09e-03  1.93    5.90e-04  1.97    1.21e-03  2.07    1.48e-03  2.03    9.5033e+01
+  32   -4.50  -15.00    2.11e-04  1.75    5.69e-04  1.87    1.52e-04  1.96    3.10e-04  1.96    3.78e-04  1.97    3.8869e+02
+  64   -5.50  -15.00    1.17e-04  0.85    1.71e-04  1.73    3.97e-05  1.93    9.99e-05  1.63    1.09e-04  1.80    1.6350e+03
+
+ConvergenceResults: t_end=1.0, example2_manufactured(2.4), Lagrange{1}, Scheme2(), sum(walltime)=2146.34 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+   4   -1.50  -15.00    1.90e-02  0.00    4.45e-02  0.00    1.87e-02  0.00    2.21e-02  0.00    2.80e-02  0.00    5.8817e+00
+   8   -2.50  -15.00    4.86e-03  1.96    1.10e-02  2.02    4.63e-03  2.01    5.09e-03  2.12    6.58e-03  2.09    2.3497e+01
+  16   -3.50  -15.00    1.23e-03  1.99    2.73e-03  2.01    1.16e-03  2.00    1.23e-03  2.04    1.62e-03  2.03    9.4985e+01
+  32   -4.50  -15.00    3.08e-04  1.99    6.82e-04  2.00    2.89e-04  2.00    3.05e-04  2.02    4.02e-04  2.01    3.8878e+02
+  64   -5.50  -15.00    7.72e-05  2.00    1.70e-04  2.00    7.21e-05  2.00    7.59e-05  2.01    1.00e-04  2.00    1.6332e+03
+
+ConvergenceResults: t_end=1.0, example2_manufactured(2.58), Lagrange{2}, Scheme2(), sum(walltime)=4927.76 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+   4   -1.50  -15.00    5.88e-04  0.00    1.45e-03  0.00    6.13e-04  0.00    1.41e-03  0.00    2.44e-03  0.00    8.9305e+00
+   8   -2.50  -15.00    8.33e-05  2.82    1.93e-04  2.91    8.14e-05  2.91    2.03e-04  2.80    3.31e-04  2.88    3.6831e+01
+  16   -3.50  -15.00    1.06e-05  2.97    2.53e-05  2.93    1.07e-05  2.93    2.73e-05  2.89    4.26e-05  2.96    1.5577e+02
+  32   -4.50  -15.00    1.48e-06  2.84    3.31e-06  2.94    1.39e-06  2.94    3.59e-06  2.93    5.41e-06  2.98    7.2035e+02
+  64   -5.50  -15.00    2.75e-07  2.43    4.40e-07  2.91    1.79e-07  2.95    4.81e-07  2.90    6.92e-07  2.97    4.0059e+03
+
+ConvergenceResults: t_end=1.0, example2_manufactured(3.4), Lagrange{2}, Scheme2(), sum(walltime)=4922.58 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+   4   -1.50  -15.00    1.47e-03  0.00    3.34e-03  0.00    1.63e-03  0.00    1.66e-03  0.00    2.35e-03  0.00    8.8946e+00
+   8   -2.50  -15.00    1.80e-04  3.03    4.18e-04  3.00    2.04e-04  3.00    2.10e-04  2.98    3.12e-04  2.92    3.6305e+01
+  16   -3.50  -15.00    2.31e-05  2.96    5.23e-05  3.00    2.55e-05  3.00    2.64e-05  2.99    3.96e-05  2.98    1.5568e+02
+  32   -4.50  -15.00    2.89e-06  3.00    6.53e-06  3.00    3.19e-06  3.00    3.31e-06  3.00    4.96e-06  2.99    7.2201e+02
+  64   -5.50  -15.00    3.62e-07  3.00    8.17e-07  3.00    3.99e-07  3.00    4.13e-07  3.00    6.21e-07  3.00    3.9997e+03
+
+ConvergenceResults: t_end=1.0, example2_manufactured(3.51), Lagrange{3}, Scheme2(), sum(walltime)=12148.37 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+   4   -1.50  -15.00    3.12e-05  0.00    7.15e-05  0.00    3.54e-05  0.00    4.64e-05  0.00    6.93e-05  0.00    1.3324e+01
+   8   -2.50  -15.00    2.06e-06  3.92    4.90e-06  3.87    2.42e-06  3.87    3.12e-06  3.90    4.29e-06  4.02    5.6615e+01
+  16   -3.50  -15.00    1.36e-07  3.91    3.29e-07  3.89    1.63e-07  3.90    2.05e-07  3.93    2.69e-07  4.00    2.5999e+02
+  32   -4.50  -15.00    9.19e-09  3.89    2.19e-08  3.91    1.08e-08  3.91    1.34e-08  3.93    1.69e-08  3.99    1.4671e+03
+  64   -5.50  -15.00    6.23e-10  3.88    1.45e-09  3.92    7.16e-10  3.92    8.73e-10  3.94    1.06e-09  3.99    1.0351e+04
+
+ConvergenceResults: t_end=1.0, example2_manufactured(4.4), Lagrange{3}, Scheme2(), sum(walltime)=12168.06 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+   4   -1.50  -15.00    1.02e-04  0.00    2.21e-04  0.00    1.19e-04  0.00    4.92e-05  0.00    5.59e-05  0.00    1.3277e+01
+   8   -2.50  -15.00    6.55e-06  3.96    1.40e-05  3.98    7.52e-06  3.99    2.94e-06  4.06    3.38e-06  4.05    5.6606e+01
+  16   -3.50  -15.00    3.81e-07  4.11    8.76e-07  4.00    4.70e-07  4.00    1.78e-07  4.05    2.09e-07  4.01    2.6001e+02
+  32   -4.50  -15.00    2.38e-08  4.00    5.48e-08  4.00    2.94e-08  4.00    1.09e-08  4.03    1.30e-08  4.00    1.4666e+03
+  64   -5.50  -15.00    1.53e-09  3.96    3.43e-09  4.00    1.84e-09  4.00    6.86e-10  3.99    8.15e-10  4.00    1.0372e+04
+
+julia&gt; cases3 = (
+    (fe = Lagrange{1}, id = example1_manufactured(2.4 ), Nx = 2^9, τ = [2.0^-i for i in 2:5]),
+    (fe = Lagrange{1}, id = example2_manufactured(2.4 ), Nx = 2^9, τ = [2.0^-i for i in 2:5])
+    );
+
+julia&gt; results3 = run_cases(Scheme2(), cases3)
+2-element Vector{ConvergenceResults}:
+ConvergenceResults: t_end=1.0, example1_manufactured(2.4), Lagrange{1}, Scheme2(), sum(walltime)=822.03 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+ 512   -8.50   -2.00    1.15e-02  0.00    2.67e-03  0.00    1.45e-03  0.00    8.41e-03  0.00    5.85e-03  0.00    7.0585e+01
+ 512   -8.50   -3.00    2.21e-03  2.38    5.32e-04  2.33    3.01e-04  2.27    2.09e-03  2.01    1.50e-03  1.97    1.2059e+02
+ 512   -8.50   -4.00    4.45e-04  2.32    1.21e-04  2.13    6.95e-05  2.11    5.20e-04  2.00    3.77e-04  1.99    2.2622e+02
+ 512   -8.50   -5.00    1.02e-04  2.12    2.97e-05  2.03    1.77e-05  1.97    1.30e-04  2.00    9.48e-05  1.99    4.0464e+02
+
+ConvergenceResults: t_end=1.0, example2_manufactured(2.4), Lagrange{1}, Scheme2(), sum(walltime)=626.36 s
+  Nx   log₂h   log₂τ    L∞L²_V    rate    L∞L²_U    rate    L∞L²_Θ    rate    L∞L²_R    rate    L∞L²_Z    rate    walltime[s]
+ 512   -8.50   -2.00    1.17e-02  0.00    2.81e-03  0.00    1.48e-03  0.00    3.96e-03  0.00    1.55e-03  0.00    5.1237e+01
+ 512   -8.50   -3.00    2.26e-03  2.37    5.54e-04  2.35    3.03e-04  2.29    9.45e-04  2.07    4.34e-04  1.84    8.8902e+01
+ 512   -8.50   -4.00    4.58e-04  2.30    1.24e-04  2.16    6.83e-05  2.15    2.31e-04  2.04    1.13e-04  1.94    1.6575e+02
+ 512   -8.50   -5.00    1.05e-04  2.12    3.01e-05  2.04    1.76e-05  1.96    5.75e-05  2.00    2.88e-05  1.97    3.2047e+02
+
+julia&gt; versioninfo()
+Julia Version 1.12.7
+Commit 6d172b025e4 (2026-08-15 08:05 UTC)
+Build Info:
+  Official https://julialang.org release
+Platform Info:
+  OS: Linux (x86_64-linux-gnu)
+  CPU: 14 × Intel(R) Core(TM) Ultra 5 225H
+  WORD_SIZE: 64
+  LLVM: libLLVM-18.1.7 (ORCJIT, arrowlake)
+  GC: Built with stock GC
+Threads: 1 default, 1 interactive, 1 GC (on 14 virtual cores)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../scheme1/">« Scheme 1</a><a class="docs-footer-nextpage" href="../../api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Wednesday 9 September 2026 19:09">Wednesday 9 September 2026</span>. Using Julia version 1.12.7.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
