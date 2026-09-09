@@ -32,5 +32,6 @@ makedocs(;
 
 deploydocs(;
     repo = "github.com/bacarmo/ThermoelasticAcoustic.jl",
-    devbranch = "main"
+    devbranch = "main",
+    versions = ["stable" => "v^", "v#.#.#", "dev" => "dev"]
 )
