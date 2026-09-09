@@ -15,14 +15,14 @@ If you use the implementations provided in this repository, please also cite it 
   title     = {Reproducibility repository for "Acoustic Boundary Conditions for a Nonlinear Coupled Thermoelastic System: Numerical Analysis"},
   year      = 2026,
   publisher = {Zenodo},
-  version   = {v0.1.3},
-  doi       = {10.5281/zenodo.22149940},
-  url       = {https://doi.org/10.5281/zenodo.22149940},
+  version   = {v0.1.4},
+  doi       = {10.5281/zenodo.22149939},
+  url       = {https://doi.org/10.5281/zenodo.22149939},
 }
 ```
 
 ## Installation
-1. Install Julia v1.12.6
+1. Install Julia v1.12.7
 2. Get the repository, either by cloning it:
     ```bash
     git clone https://github.com/bacarmo/ThermoelasticAcoustic.jl.git
