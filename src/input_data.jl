@@ -81,22 +81,22 @@ For manufactured solution cases, provide analytical solutions for convergence st
 For physical simulations without known solutions, these fields are `nothing`.
 """
 struct PDEInputData{
-    Tα, Tβ, Tdβ, Tf, Tdf, Tg, T∂ₛg,
-    Tu₀, T∂ₓu₀, T∂ᵧu₀,
-    Tv₀, T∂ₓv₀, T∂ᵧv₀,
-    Tθ₀, T∂ₓθ₀, T∂ᵧθ₀,
-    Tz₀, Tr₀,
-    Tf₁, Tf₂, Tf₃,
-    Tu, Tv, Tθ, Tz, Tr}
+    Tα,Tβ,Tdβ,Tf,Tdf,Tg,T∂ₛg,
+    Tu₀,T∂ₓu₀,T∂ᵧu₀,
+    Tv₀,T∂ₓv₀,T∂ᵧv₀,
+    Tθ₀,T∂ₓθ₀,T∂ᵧθ₀,
+    Tz₀,Tr₀,
+    Tf₁,Tf₂,Tf₃,
+    Tu,Tv,Tθ,Tz,Tr}
     # Problem Identification
     name::String
 
     # Domain geometry
-    pmin::NTuple{2, Float64}
-    pmax::NTuple{2, Float64}
+    pmin::NTuple{2,Float64}
+    pmax::NTuple{2,Float64}
 
     # Physical parameters
-    a::NTuple{2, Float64}
+    a::NTuple{2,Float64}
     q₁::Float64
     q₂::Float64
     q₃::Float64
@@ -169,7 +169,7 @@ where the acoustic displacement ``z(x,t)`` is obtained by integrating
 # Returns
 `PDEInputData` with analytical solution for convergence study.
 """
-function example1_manufactured(p::Float64 = 2.4)
+function example1_manufactured(p::Float64=2.4)
     # Precompute exponent-related constants
     p1 = p - 1.0
     p2 = p - 2.0
@@ -239,13 +239,13 @@ function example1_manufactured(p::Float64 = 2.4)
     f₁ = (x,
         y,
         t) -> ∂ₜₜu(x, y, t) - α(t) * Δu(x, y, t) + f(u(x, y, t)) +
-              a[1] * θₓ(x, y, t) + a[2] * θᵧ(x, y, t)
+        a[1] * θₓ(x, y, t) + a[2] * θᵧ(x, y, t)
     f₂ = (x,
         y,
         t) -> ∂ₜθ(x, y, t) - β(∫θ(t)) * Δθ(x, y, t) +
-              a[1] * vₓ(x, y, t) + a[2] * vᵧ(x, y, t)
+        a[1] * vₓ(x, y, t) + a[2] * vᵧ(x, y, t)
     f₃ = (x, t) -> q₁ * ∂ₜₜz(x, t) + q₂ * r(x, t) + q₃ * z(x, t) +
-                   q₄ * v(x, ymin, t)
+        q₄ * v(x, ymin, t)
 
     # Initial conditions
     u₀ = (x, y) -> (x^p - x) * (y^p - 1.0) * 4.0
@@ -291,7 +291,7 @@ No analytical solution available.
 # Returns
 `PDEInputData` with analytical solutions set to `nothing`.
 """
-function example1_zero_source(p::Float64 = 2.4)
+function example1_zero_source(p::Float64=2.4)
     # Precompute exponent-related constants
     p1 = p - 1.0
 
@@ -326,7 +326,7 @@ function example1_zero_source(p::Float64 = 2.4)
 
     # Initial conditions
     u₀ = (x, y) -> (x^p - x) * (y^p - 1.0) * 4.0
-    ∂ₓu₀ = (x, y) -> (p * x^p1 - 1.0) * (yp - 1.0) * 4.0
+    ∂ₓu₀ = (x, y) -> (p * x^p1 - 1.0) * (y^p - 1.0) * 4.0
     ∂ᵧu₀ = (x, y) -> (x^p - x) * (p * y^p1) * 4.0
 
     v₀ = (x, y) -> 0.0
@@ -382,7 +382,7 @@ where the acoustic displacement ``z(x,t)`` is obtained by integrating
 # Returns
 `PDEInputData` with analytical solution for convergence study.
 """
-function example2_manufactured(p::Float64 = 2.4)
+function example2_manufactured(p::Float64=2.4)
     # Precompute exponent-related constants
     p1 = p - 1.0
     p2 = p - 2.0
@@ -439,13 +439,13 @@ function example2_manufactured(p::Float64 = 2.4)
     f₁ = (x,
         y,
         t) -> ∂ₜₜu(x, y, t) - α(t) * Δu(x, y, t) + f(u(x, y, t)) +
-              a[1] * θₓ(x, y, t) + a[2] * θᵧ(x, y, t)
+        a[1] * θₓ(x, y, t) + a[2] * θᵧ(x, y, t)
     f₂ = (x,
         y,
         t) -> ∂ₜθ(x, y, t) - β(∫θ(t)) * Δθ(x, y, t) +
-              a[1] * vₓ(x, y, t) + a[2] * vᵧ(x, y, t)
+        a[1] * vₓ(x, y, t) + a[2] * vᵧ(x, y, t)
     f₃ = (x, t) -> q₁ * ∂ₜₜz(x, t) + q₂ * r(x, t) + q₃ * z(x, t) +
-                   q₄ * v(x, ymin, t)
+        q₄ * v(x, ymin, t)
 
     # Initial conditions
     u₀ = (x, y) -> (x^p - x) * (y^p - 1.0) * 4.0
@@ -491,7 +491,7 @@ No analytical solution available.
 # Returns
 `PDEInputData` with analytical solutions set to `nothing`.
 """
-function example2_zero_source(p::Float64 = 2.4)
+function example2_zero_source(p::Float64=2.4)
     # Precompute exponent-related constants
     p1 = p - 1.0
 
@@ -526,7 +526,7 @@ function example2_zero_source(p::Float64 = 2.4)
 
     # Initial conditions
     u₀ = (x, y) -> (x^p - x) * (y^p - 1.0) * 4.0
-    ∂ₓu₀ = (x, y) -> (p * x^p1 - 1.0) * (yp - 1.0) * 4.0
+    ∂ₓu₀ = (x, y) -> (p * x^p1 - 1.0) * (y^p - 1.0) * 4.0
     ∂ᵧu₀ = (x, y) -> (x^p - x) * (p * y^p1) * 4.0
 
     v₀ = (x, y) -> 0.0
