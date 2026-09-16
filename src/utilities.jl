@@ -17,14 +17,14 @@ Global FEM matrices for the PDE system.
 - `τA_m₂xm₁`: coupling matrix with test functions in ``m_2``-space and trial functions in ``m_1``-space; arises from the term ``(ψ,(a⋅∇)\\hat{V}^n)``.
 - `b`: global integral vector for the ``m_2``-space,  ``b_i = \\int_Ω ψᵢ \\, d\\Omega``, ``i = 1, \\ldots, m_2``
 """
-struct SystemMatrices{T <: AbstractFloat, I <: Integer}
-    _2M_m₁xm₁::Symmetric{T, SparseMatrixCSC{T, I}}
-    _2M_m₂xm₂::Symmetric{T, SparseMatrixCSC{T, I}}
-    M_m₃xm₃::Symmetric{T, SparseMatrixCSC{T, I}}
-    K_m₁xm₁::Symmetric{T, SparseMatrixCSC{T, I}}
-    K_m₂xm₂::Symmetric{T, SparseMatrixCSC{T, I}}
-    τA_m₁xm₂::SparseMatrixCSC{T, I}
-    τA_m₂xm₁::SparseMatrixCSC{T, I}
+struct SystemMatrices{T<:AbstractFloat,I<:Integer}
+    _2M_m₁xm₁::Symmetric{T,SparseMatrixCSC{T,I}}
+    _2M_m₂xm₂::Symmetric{T,SparseMatrixCSC{T,I}}
+    M_m₃xm₃::Symmetric{T,SparseMatrixCSC{T,I}}
+    K_m₁xm₁::Symmetric{T,SparseMatrixCSC{T,I}}
+    K_m₂xm₂::Symmetric{T,SparseMatrixCSC{T,I}}
+    τA_m₁xm₂::SparseMatrixCSC{T,I}
+    τA_m₂xm₁::SparseMatrixCSC{T,I}
     b::Vector{T}
 end
 
@@ -44,15 +44,15 @@ Construct the global FEM matrices for the PDE system.
 - `τ`: Time step.
 """
 function SystemMatrices(
-        fe1D::AbstractFEBasis{Deg, 1},
-        fe2D::AbstractFEBasis{Deg, 2},
-        element_side_lengths::NTuple{2, T},
-        dof_map_m₁::DOFMap,
-        dof_map_m₂::DOFMap,
-        dof_map_m₃::DOFMap,
-        a::NTuple{2, T},
-        τ::T
-) where {T, Deg}
+    fe1D::AbstractFEBasis{Deg,1},
+    fe2D::AbstractFEBasis{Deg,2},
+    element_side_lengths::NTuple{2,T},
+    dof_map_m₁::DOFMap,
+    dof_map_m₂::DOFMap,
+    dof_map_m₃::DOFMap,
+    a::NTuple{2,T},
+    τ::T
+) where {T,Deg}
     Δx, Δy = element_side_lengths
 
     # Local matrices — 1D
@@ -117,23 +117,23 @@ xeP = @. xP + (ex - 1) * Δx
 yeP = @. yP + (ey - 1) * Δy
 ```
 """
-struct QuadratureSetup{T <: AbstractFloat, Npg, Npg², nb, nb², nb⁴}
-    P::SVector{Npg, T}
-    W::SVector{Npg, T}
-    ϕP::SVector{Npg, SVector{nb, T}}
-    W_ϕP::SVector{Npg, SVector{nb, T}}
-    W_ϕPϕP::SVector{Npg, SMatrix{nb, nb, T, nb²}}
-    φP::SMatrix{Npg, Npg, SVector{nb², T}, Npg²}
-    W_φP::SMatrix{Npg, Npg, SVector{nb², T}, Npg²}
-    W_φPφP::SMatrix{Npg, Npg, SMatrix{nb², nb², T, nb⁴}, Npg²}
-    W_∂φ∂ξP::SMatrix{Npg, Npg, SVector{nb², T}, Npg²}
-    W_∂φ∂ηP::SMatrix{Npg, Npg, SVector{nb², T}, Npg²}
-    xP::SVector{Npg, T}
-    yP::SVector{Npg, T}
+struct QuadratureSetup{T<:AbstractFloat,Npg,Npg²,nb,nb²,nb⁴}
+    P::SVector{Npg,T}
+    W::SVector{Npg,T}
+    ϕP::SVector{Npg,SVector{nb,T}}
+    W_ϕP::SVector{Npg,SVector{nb,T}}
+    W_ϕPϕP::SVector{Npg,SMatrix{nb,nb,T,nb²}}
+    φP::SMatrix{Npg,Npg,SVector{nb²,T},Npg²}
+    W_φP::SMatrix{Npg,Npg,SVector{nb²,T},Npg²}
+    W_φPφP::SMatrix{Npg,Npg,SMatrix{nb²,nb²,T,nb⁴},Npg²}
+    W_∂φ∂ξP::SMatrix{Npg,Npg,SVector{nb²,T},Npg²}
+    W_∂φ∂ηP::SMatrix{Npg,Npg,SVector{nb²,T},Npg²}
+    xP::SVector{Npg,T}
+    yP::SVector{Npg,T}
 end
 
 # Return the number of local degrees of freedom for the finite element `fe`.
-num_local_dof(::Lagrange{Deg, Dim}) where {Dim, Deg} = Val((Deg + 1)^Dim)
+num_local_dof(::Lagrange{Deg,Dim}) where {Dim,Deg} = Val((Deg + 1)^Dim)
 
 """
     QuadratureSetup(fe1D, fe2D, element_side_lengths, pmin)
@@ -141,36 +141,36 @@ num_local_dof(::Lagrange{Deg, Dim}) where {Dim, Deg} = Val((Deg + 1)^Dim)
 Construct a `QuadratureSetup` for given 1D and 2D finite element basis.
 """
 function QuadratureSetup(
-        fe1D::AbstractFEBasis{Deg, 1},
-        fe2D::AbstractFEBasis{Deg, 2},
-        element_side_lengths::NTuple{2, T},
-        pmin::NTuple{2, T},
-        ::Val{nb} = num_local_dof(fe1D),
-        ::Val{nb²} = num_local_dof(fe2D)
-) where {Deg, T, nb, nb²}
+    fe1D::AbstractFEBasis{Deg,1},
+    fe2D::AbstractFEBasis{Deg,2},
+    element_side_lengths::NTuple{2,T},
+    pmin::NTuple{2,T},
+    ::Val{nb}=num_local_dof(fe1D),
+    ::Val{nb²}=num_local_dof(fe2D)
+) where {Deg,T,nb,nb²}
     Δx, Δy = element_side_lengths
-    Npg = Deg + 4
+    Npg = Deg + 5
     P_raw, W_raw = legendre(T, Npg)
-    P = SVector{Npg, T}(P_raw)
-    W = SVector{Npg, T}(W_raw)
+    P = SVector{Npg,T}(P_raw)
+    W = SVector{Npg,T}(W_raw)
 
     ϕP = SVector{Npg}([basis_functions(fe1D, P[i]) for i in 1:Npg])
     W_ϕP = SVector{Npg}([W[i] * ϕP[i] for i in 1:Npg])
-    W_ϕPϕP = SVector{Npg}([SMatrix{nb, nb, T}(W[j] * ϕP[j][a] * ϕP[j][b]
-                           for a in 1:nb, b in 1:nb)
+    W_ϕPϕP = SVector{Npg}([SMatrix{nb,nb,T}(W[j] * ϕP[j][a] * ϕP[j][b]
+                                            for a in 1:nb, b in 1:nb)
                            for j in 1:Npg])
 
-    φP = SMatrix{Npg, Npg}([basis_functions(fe2D, P[i], P[j]) for i in 1:Npg, j in 1:Npg])
-    W_φP = SMatrix{Npg, Npg}([W[i] * W[j] * φP[i, j] for i in 1:Npg, j in 1:Npg])
-    W_φPφP = SMatrix{Npg, Npg}([SMatrix{nb², nb², T}(
-                                    W[i] * W[j] * φP[i, j][a] * φP[i, j][b]
-                                for a in 1:nb², b in 1:nb²)
-                                for i in 1:Npg, j in 1:Npg])
+    φP = SMatrix{Npg,Npg}([basis_functions(fe2D, P[i], P[j]) for i in 1:Npg, j in 1:Npg])
+    W_φP = SMatrix{Npg,Npg}([W[i] * W[j] * φP[i, j] for i in 1:Npg, j in 1:Npg])
+    W_φPφP = SMatrix{Npg,Npg}([SMatrix{nb²,nb²,T}(
+        W[i] * W[j] * φP[i, j][a] * φP[i, j][b]
+        for a in 1:nb², b in 1:nb²)
+                               for i in 1:Npg, j in 1:Npg])
 
-    ∂φP = SMatrix{Npg, Npg}([basis_functions_derivatives(fe2D, P[i], P[j])
-                             for i in 1:Npg, j in 1:Npg])
-    W_∂φ∂ξP = SMatrix{Npg, Npg}([W[i] * W[j] * ∂φP[i, j][1] for i in 1:Npg, j in 1:Npg])
-    W_∂φ∂ηP = SMatrix{Npg, Npg}([W[i] * W[j] * ∂φP[i, j][2] for i in 1:Npg, j in 1:Npg])
+    ∂φP = SMatrix{Npg,Npg}([basis_functions_derivatives(fe2D, P[i], P[j])
+                            for i in 1:Npg, j in 1:Npg])
+    W_∂φ∂ξP = SMatrix{Npg,Npg}([W[i] * W[j] * ∂φP[i, j][1] for i in 1:Npg, j in 1:Npg])
+    W_∂φ∂ηP = SMatrix{Npg,Npg}([W[i] * W[j] * ∂φP[i, j][2] for i in 1:Npg, j in 1:Npg])
 
     xP = (Δx / 2) .* (P .+ one(T)) .+ pmin[1]
     yP = (Δy / 2) .* (P .+ one(T)) .+ pmin[2]
