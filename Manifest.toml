@@ -961,10 +961,10 @@ version = "2.9.0"
 
 [[deps.StaticArrays]]
 deps = ["LinearAlgebra", "PrecompileTools", "Random", "StaticArraysCore"]
-git-tree-sha1 = "e206cf4850fd7ac4255ffd2b98922f563e18ac53"
+git-tree-sha1 = "de349d5585559b692f518b6d3fc7c179d64b2364"
 registries = "General"
 uuid = "90137ffa-7385-5640-81b9-e52037218182"
-version = "1.9.20"
+version = "1.9.23"
 
     [deps.StaticArrays.extensions]
     StaticArraysChainRulesCoreExt = "ChainRulesCore"
@@ -1062,7 +1062,7 @@ version = "1.1.0"
 deps = ["Dates", "FEM", "GaussQuadrature", "InteractiveUtils", "LinearAlgebra", "LinearSolve", "Printf", "SparseArrays", "StaticArrays"]
 path = "."
 uuid = "bc13a611-4105-49a1-97a9-04cd0a26510a"
-version = "0.1.4"
+version = "0.1.5"
 
 [[deps.TranscodingStreams]]
 git-tree-sha1 = "0c45878dcfdcfa8480052b6ab162cdd138781742"
