@@ -5,14 +5,14 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-success.svg)](https://opensource.org/licenses/MIT)
 [![DOI](https://zenodo.org/badge/1158101550.svg)](https://doi.org/10.5281/zenodo.22149939)
 
-This repository provides all the code required to reproduce the numerical results presented in the article "Acoustic Boundary Conditions for a Nonlinear Coupled Thermoelastic System: Numerical Analysis".
+This repository provides all the code required to reproduce the numerical results presented in the article "Numerical Analysis for a Nonlinear Coupled Thermoelastic System with Acoustic Boundary Conditions".
 
 If you find these results useful, please cite the article mentioned above. 
 If you use the implementations provided in this repository, please also cite it as follows:
 ```bibtex
 @software{ThermoelasticAcoustic,
   author    = {Bruno Alves do Carmo},
-  title     = {Reproducibility repository for "Acoustic Boundary Conditions for a Nonlinear Coupled Thermoelastic System: Numerical Analysis"},
+  title     = {Reproducibility repository for "{N}umerical {A}nalysis for a {N}onlinear {C}oupled {T}hermoelastic {S}ystem with {A}coustic {B}oundary {C}onditions"},
   year      = 2026,
   publisher = {Zenodo},
   version   = {v0.1.5},
